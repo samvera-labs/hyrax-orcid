@@ -1,0 +1,26 @@
+inherit_gem:
+  bixby: bixby_default.yml
+
+AllCops:
+  TargetRubyVersion: 2.7.3
+  DisplayCopNames: true
+  Exclude:
+    - 'spec/internal_test_hyrax/**/*'
+    - 'vendor/**/*'
+Metrics/BlockLength:
+  Max: 80
+  Exclude:
+    - 'spec/**/*.rb'
+    -
+RSpec/ExampleLength:
+  Max: 25
+
+Layout/LineLength:
+  Max: 250
+
+RSpec/DescribeClass:
+  Exclude:
+    - 'spec/config/hyrax_events_spec.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: true

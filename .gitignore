@@ -12,5 +12,9 @@ spec/internal_test_hyku/node_modules/
 spec/internal_test_hyku/yarn-error.log
 spec/internal_test_hyku/storage/
 spec/internal_test_hyku/tmp/
+db/migrate/*.hyrax.rb
+.byebug_history
+coverage/
+tmp/
 # rspec failure tracking
 .rspec_status
