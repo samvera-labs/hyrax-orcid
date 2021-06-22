@@ -25,7 +25,7 @@ RSpec.configure do |config|
 
   # Look for an overriding spec file and skip if it exists
   config.around do |example|
-    if example.file_path.starts_with?('./spec/internal_test_hyku') && File.exist?(example.file_path.sub('./spec/internal_test_hyku', '.'))
+    if example.file_path.starts_with?('./spec/internal_test_hyrax') && File.exist?(example.file_path.sub('./spec/internal_test_hyrax', '.'))
       skip "Override exists of this test file in engine."
     else
       example.run
@@ -33,5 +33,5 @@ RSpec.configure do |config|
   end
 end
 
-require File.expand_path('internal_test_hyku/spec/rails_helper.rb', __dir__)
-require File.expand_path('internal_test_hyku/spec/spec_helper.rb', __dir__)
+require File.expand_path('internal_test_hyrax/spec/rails_helper.rb', __dir__)
+require File.expand_path('internal_test_hyrax/spec/spec_helper.rb', __dir__)
