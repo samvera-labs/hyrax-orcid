@@ -4,7 +4,7 @@
 # installed from the root of your application.
 
 ENGINE_ROOT = File.expand_path('..', __dir__)
-ENGINE_PATH = File.expand_path('../lib/hyku_addons/engine', __dir__)
+ENGINE_PATH = File.expand_path('../lib/hyrax/orcid/engine', __dir__)
 APP_PATH = File.expand_path('../spec/internal_test_hyku/config/application', __dir__)
 
 # Set up gems listed in the Gemfile.

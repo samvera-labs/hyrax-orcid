@@ -20,7 +20,7 @@ module Hyrax
       end
 
       # Append our locales so they have precedence
-      I18n.load_path += Dir[HykuAddons::Engine.root.join('config', 'locales', '*.{rb,yml}')]
+      I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join('config', 'locales', '*.{rb,yml}')]
     end
   end
 end
