@@ -1,0 +1,16 @@
+/.bundle/
+/.yardoc
+/_yardoc/
+/coverage/
+/doc/
+/pkg/
+/spec/reports/
+/tmp/
+log/*.log
+spec/internal_test_hyku/log/*.log
+spec/internal_test_hyku/node_modules/
+spec/internal_test_hyku/yarn-error.log
+spec/internal_test_hyku/storage/
+spec/internal_test_hyku/tmp/
+# rspec failure tracking
+.rspec_status
