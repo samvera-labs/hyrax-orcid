@@ -20,4 +20,7 @@ load 'rails/tasks/engine.rake'
 
 load 'rails/tasks/statistics.rake'
 
+# Required for tenant migrations
+load 'tasks/apartment.rake'
+
 require 'bundler/gem_tasks'
