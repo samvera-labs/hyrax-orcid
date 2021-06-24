@@ -69,7 +69,9 @@ services:
       DATABASE_PASSWORD: DatabaseFTW
       DATABASE_USER: postgres
       DATABASE_TEST_NAME: hyrax_test
-      # End of copy
+      DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: 'true'
+      DATABASE_TEST_URL: postgresql://postgres:DatabaseFTW@db/hyrax_test?pool=5
+      DATABASE_URL: postgresql://postgres:DatabaseFTW@db/hyrax?pool=5
       FCREPO_HOST: fcrepo
       FCREPO_PORT: 8080
       FCREPO_REST_PATH: fcrepo/rest
