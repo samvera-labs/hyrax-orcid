@@ -1,140 +1,166 @@
-version: '3.4'
-
-volumes:
-  fcrepo:
-  solr:
-  db:
-  redis:
-  app:
-  assets:
-  cache:
-
-networks:
-  internal:
+version: '3.7'
 
 services:
-  solr: &solr
-    # Any greater version of solr fails due to a change in supported data types in schema.xml
-    image: solr:8.6.2
-    volumes:
-      - ./spec/internal_test_hyrax/solr/config:/opt/solr/server/configsets/hyrax_conf
-      - solr:/var/solr/data:cached
-    command:
-      - sh
-      - "-c"
-      - "precreate-core hyrax-test /opt/solr/server/configsets/hyrax_conf; solr-precreate hyrax-development /opt/solr/server/configsets/hyrax_conf"
-    ports:
-      - "8983:8983"
-    networks:
-      internal:
-
-  fcrepo: &fcrepo
-    image: cbeer/fcrepo4:4.7
-    ports:
-      - "8080:8080"
-    volumes:
-      - fcrepo:/data
-    environment:
-      JAVA_OPTS: '${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"'
-    networks:
-      internal:
-
-  db: &db
-    image: postgres:10-alpine
-    environment: &db_environment
-      PGDATA: /data
-      POSTGRES_PASSWORD: DatabaseFTW
-      POSTGRES_USER: postgres
-      POSTGRES_MULTIPLE_DATABASES: hyrax,hyrax_test
-    volumes:
-      - ./.docker-postgres:/docker-entrypoint-initdb.d
-      - db:/data
-    ports:
-      - "5432:5432"
-    networks:
-      internal:
-
   app: &app
     build:
       context: .
-      dockerfile: Dockerfile
-      target: dev
-    image: hyrax-orcid/dev:latest
-    command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
-    environment: &web_environment
-      CHROME_HOSTNAME: chrome
-      DATABASE_ADAPTER: postgresql
-      DATABASE_NAME: hyrax
-      DATABASE_HOST: db
-      DATABASE_PASSWORD: DatabaseFTW
-      DATABASE_USER: postgres
-      DATABASE_TEST_NAME: hyrax_test
-      DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: 'true'
-      DATABASE_TEST_URL: postgresql://postgres:DatabaseFTW@db/hyrax_test?pool=5
-      DATABASE_URL: postgresql://postgres:DatabaseFTW@db/hyrax?pool=5
-      FCREPO_HOST: fcrepo
-      FCREPO_PORT: 8080
-      FCREPO_REST_PATH: fcrepo/rest
-      FCREPO_DEV_BASE_PATH: /dev
-      FCREPO_TEST_BASE_PATH: /test
-      IN_DOCKER: "true"
-      LD_LIBRARY_PATH: /opt/fits/tools/mediainfo/linux
-      RAILS_LOG_TO_STDOUT: "true"
-      REDIS_HOST: redis
-      SECRET_KEY_BASE: asdf
-      SOLR_DEVELOPMENT_URL: http://solr:8983/solr/hyrax-development
-      SOLR_TEST_URL: http://solr:8983/solr/hyrax-development
-      PASSENGER_APP_ENV: development
-    volumes:
-      - app:/home/app/spec/internal_test_hyrax/tmp/uploads
-      - assets:/home/app/spec/internal_test_hyrax/public/assets
-      - cache:/home/app/spec/internal_test_hyrax/tmp/cache
-      - .:/home/app
-    networks:
-      internal:
-
-  web:
-    <<: *app
-    environment:
-      <<: *web_environment
-    depends_on:
-      - db
-      - solr
-      - fcrepo
-      - redis
-      - chrome
-      - db_migrate
-    # expose:
-      # - 3000
+      target: hyrax-orcid-dev
+    #  args:
+    #    - EXTRA_APK_PACKAGES=git less
+    #image: ghcr.io/samvera/dassie
     stdin_open: true
     tty: true
-    ports:
-      - 3000:3000 # uncomment this if you dont use dory or another proxy
-
-  db_migrate:
-    <<: *app
-    entrypoint: ["sh", "-c"]
-    command: 'cd /home/app/bin/ && ./db-migrate-seed.sh'
+    user: root
+    env_file:
+      - .env
+      #- .dassie/.env
     environment:
-      <<: *web_environment
-      DB_HOST: db
-      DB_PORT: 5432
-      #FCREPO_HOST: fcrepo
-      #FCREPO_PORT: 8080
-      SOLR_HOST: solr
-      SOLR_PORT: 8983
+      - RAILS_ROOT=/app/samvera/hyrax-webapp
+      - HYRAX_ENGINE_
     depends_on:
-      - db
-
-  redis: &redis
-    image: redis:4
-    command: redis-server
+      - chrome
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
+    ports:
+      - 3000:3000
     volumes:
-      - redis:/data
+      #- .dassie:/app/samvera/hyrax-webapp:cached
+      - .:/app/samvera/hyrax-engine:cached
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
     networks:
-      internal:
+      - hyrax
 
   chrome:
     image: selenium/standalone-chrome:3.141
+    logging:
+      driver: none
+    volumes:
+      - /dev/shm:/dev/shm
+    shm_size: 2G
+    ports:
+      - "4444:4444"
+      - "5959:5900"
     networks:
-      internal:
+      - hyrax
+
+  db_migrate:
+    build:
+      context: .
+      target: hyrax-orcid-dev
+    #image: ghcr.io/samvera/dassie
+    user: root
+    env_file:
+      - .env
+    entrypoint: ["sh", "-c"]
+    command: db-migrate-seed.sh
+    depends_on:
+      - postgres
+    volumes:
+      #- .dassie:/app/samvera/hyrax-webapp:cached
+      - .:/app/samvera/hyrax-engine:cached
+      - rails-public:/app/samvera/hyrax-webapp/public
+      - rails-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
+
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=hyrax_user
+      - POSTGRES_PASSWORD=hyrax_password
+      - POSTGRES_DB=hyrax
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    ports:
+      - "5432:5432"
+    volumes:
+      - db:/var/lib/postgresql/data
+    networks:
+      - hyrax
+
+  fcrepo:
+    image: ghcr.io/samvera/fcrepo4:4.7.5
+    volumes:
+      - fcrepo:/data:cached
+    ports:
+      - 8080:8080
+    networks:
+      - hyrax
+
+  memcached:
+    image: bitnami/memcached
+    ports:
+      - '11211:11211'
+    networks:
+      - hyrax
+
+  redis:
+    image: redis:5-alpine
+    volumes:
+      - redis:/data
+    networks:
+      - hyrax
+
+  sidekiq:
+    build:
+      context: .
+      target: hyrax-orcid-dev-worker
+    #image: ghcr.io/samvera/dassie-worker
+    env_file:
+      - .env
+    depends_on:
+      - db_migrate
+      - fcrepo
+      - memcached
+      - postgres
+      - redis
+      - solr
+    volumes:
+      #- .dassie:/app/samvera/hyrax-webapp:cached
+      - .:/app/samvera/hyrax-engine:cached
+      - hyrax-derivatives:/app/samvera/hyrax-webapp/derivatives
+      - hyrax-uploads:/app/samvera/hyrax-webapp/uploads
+      - sidekiq-public:/app/samvera/hyrax-webapp/public
+      - sidekiq-tmp:/app/samvera/hyrax-webapp/tmp
+    networks:
+      - hyrax
+
+  solr:
+    image: solr:8.7
+    ports:
+      - 8983:8983
+    command:
+      - sh
+      - "-c"
+      - "precreate-core hyrax_test /opt/solr/server/configsets/hyraxconf; solr-precreate hyrax /opt/solr/server/configsets/hyraxconf"
+    volumes:
+      - solr_home:/var/solr/data:cached
+      #- .dassie/solr/conf:/opt/solr/server/configsets/hyraxconf
+      - ./solr/conf:/opt/solr/server/configsets/hyraxconf
+    networks:
+      - hyrax
+
+volumes:
+  db:
+  fcrepo:
+  hyrax-derivatives:
+  hyrax-uploads:
+  rails-public:
+  rails-tmp:
+  redis:
+  sidekiq-public:
+  sidekiq-tmp:
+  solr_home:
+
+networks:
+  hyrax:
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: br-hyrax-orcid

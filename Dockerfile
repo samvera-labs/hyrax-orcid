@@ -1,101 +1,31 @@
-# Ripped off from Avalon
-# Base stage for building gems
-FROM        ruby:2.7.2-buster as bundle
-RUN         echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
-         && apt-get update \
-         && rm -rf /var/lib/apt/lists/* \
-         && apt-get clean
+ARG HYRAX_IMAGE_VERSION=latest
+FROM ghcr.io/samvera/dassie:$HYRAX_IMAGE_VERSION as hyrax-orcid-dev
 
-COPY        lib/hyrax/orcid/version.rb ./lib/hyrax/orcid/version.rb
-COPY        hyrax-orcid.gemspec ./hyrax-orcid.gemspec
-COPY        Gemfile ./Gemfile
-COPY        Gemfile.lock ./Gemfile.lock
-COPY        spec/internal_test_hyrax/Gemfile ./spec/internal_test_hyrax/Gemfile
-COPY        spec/internal_test_hyrax/Gemfile.lock ./spec/internal_test_hyrax/Gemfile.lock
+#ARG APP_PATH=.dassie
+ARG BUNDLE_WITHOUT=
 
-RUN         gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)" \
-         && bundle config build.nokogiri --use-system-libraries
+ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
+
+#COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+COPY --chown=1001:101 ./Gemfile.dassie /app/samvera/hyrax-webapp/Gemfile
+COPY --chown=1001:101 . /app/samvera/hyrax-engine
+
+RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
+RUN cd /app/samvera/hyrax-webapp && bundle install --jobs "$(nproc)"
+#RUN cd /app/samvera/hyrax-webapp && RAILS_ENV=production SECRET_KEY_BASE='fakesecret1234' DB_ADAPTER=nulldb DATABASE_URL='postgresql://fake' bundle exec rake assets:precompile
 
 
-# Build development gems
-FROM        bundle as bundle-dev
-RUN         bundle config set without 'production'
-RUN         bundle config set with 'aws development test postgres'
-ENV         CFLAGS=-Wno-error=format-overflow
-RUN         bundle install --jobs=4 --retry=3
+FROM ghcr.io/samvera/dassie-worker:$HYRAX_IMAGE_VERSION as hyrax-orcid-dev-worker
 
+#ARG APP_PATH=.dassie
+ARG BUNDLE_WITHOUT=
 
-# Base stage for building final images
-FROM        ruby:2.7.1-slim-buster as base
+ENV HYRAX_ENGINE_PATH /app/samvera/hyrax-engine
 
-RUN         apt-get update && apt-get install -y --no-install-recommends curl gnupg2 \
-         && curl -sL http://deb.nodesource.com/setup_8.x | bash - 
-RUN         apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
-            nodejs \
-            sendmail \
-            git \
-            libxml2-dev \
-            libxslt-dev \
-            openssh-client \
-            zip \
-            dumb-init \
-            default-jre \
-            # Below copied from hyku's Dockerfile
-            build-essential \
-            ghostscript \
-            imagemagick \
-            libpq-dev \
-            libreoffice \
-            libsasl2-dev \
-            netcat \
-            postgresql-client \
-            rsync \
-            tzdata \
-            unzip \
-            && \
-            apt-get clean && \
-            rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+#COPY --chown=1001:101 $APP_PATH /app/samvera/hyrax-webapp
+COPY --chown=1001:101 ./Gemfile.dassie /app/samvera/hyrax-webapp/Gemfile
+COPY --chown=1001:101 . /app/samvera/hyrax-engine
 
-# If changes are made to fits version or location,
-# amend `LD_LIBRARY_PATH` in docker-compose.yml accordingly.
-RUN mkdir -p /opt/fits && \
-    curl -fSL -o /opt/fits/fits-latest.zip https://projects.iq.harvard.edu/files/fits/files/fits-1.3.0.zip && \
-    cd /opt/fits && unzip fits-latest.zip && chmod +X /opt/fits/fits.sh
+RUN cd /app/samvera/hyrax-webapp && bundle install --jobs "$(nproc)"
+RUN cd /app/samvera/hyrax-engine && bundle install --jobs "$(nproc)"
 
-RUN         useradd -m -U app \
-         && su -s /bin/bash -c "mkdir -p /home/app" app
-WORKDIR     /home/app
-
-
-# Build devevelopment image
-FROM        base as dev
-
-COPY        --from=bundle-dev /usr/local/bundle /usr/local/bundle
-
-ARG         RAILS_ENV=development
-RUN         dpkg -i /chrome.deb || apt-get install -yf
-
-
-# Build production gems
-FROM        bundle as bundle-prod
-RUN         bundle install --jobs=4 --retry=3 --without development test --with aws production postgres
-
-
-# Build production assets
-FROM        base as assets
-COPY        --from=bundle-prod --chown=app:app /usr/local/bundle /usr/local/bundle
-COPY        --chown=app:app . .
-
-USER        app
-ENV         RAILS_ENV=production
-
-RUN         SECRET_KEY_BASE=$(ruby -r 'securerandom' -e 'puts SecureRandom.hex(64)') bundle exec rake assets:precompile
-
-
-# Build production image
-FROM        base as prod
-COPY        --from=assets --chown=app:app /home/app /home/app
-COPY        --from=bundle-prod --chown=app:app /usr/local/bundle /usr/local/bundle
-
-USER        app
-ENV         RAILS_ENV=production
