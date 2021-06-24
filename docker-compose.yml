@@ -1,0 +1,138 @@
+version: '3.4'
+
+volumes:
+  fcrepo:
+  solr:
+  db:
+  redis:
+  app:
+  assets:
+  cache:
+
+networks:
+  internal:
+
+services:
+  solr: &solr
+    # Any greater version of solr fails due to a change in supported data types in schema.xml
+    image: solr:8.6.2
+    volumes:
+      - ./spec/internal_test_hyrax/solr/config:/opt/solr/server/configsets/hyrax_conf
+      - solr:/var/solr/data:cached
+    command:
+      - sh
+      - "-c"
+      - "precreate-core hyrax-test /opt/solr/server/configsets/hyrax_conf; solr-precreate hyrax-development /opt/solr/server/configsets/hyrax_conf"
+    ports:
+      - "8983:8983"
+    networks:
+      internal:
+
+  fcrepo: &fcrepo
+    image: cbeer/fcrepo4:4.7
+    ports:
+      - "8080:8080"
+    volumes:
+      - fcrepo:/data
+    environment:
+      JAVA_OPTS: '${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"'
+    networks:
+      internal:
+
+  db: &db
+    image: postgres:10-alpine
+    environment: &db_environment
+      PGDATA: /data
+      POSTGRES_PASSWORD: DatabaseFTW
+      POSTGRES_USER: postgres
+      POSTGRES_MULTIPLE_DATABASES: hyrax,hyrax_test
+    volumes:
+      - ./.docker-postgres:/docker-entrypoint-initdb.d
+      - db:/data
+    ports:
+      - "5432:5432"
+    networks:
+      internal:
+
+  app: &app
+    build:
+      context: .
+      dockerfile: Dockerfile
+      target: dev
+    image: hyrax-orcid/dev:latest
+    command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    environment: &web_environment
+      CHROME_HOSTNAME: chrome
+      DATABASE_ADAPTER: postgresql
+      DATABASE_NAME: hyrax
+      DATABASE_HOST: db
+      DATABASE_PASSWORD: DatabaseFTW
+      DATABASE_USER: postgres
+      DATABASE_TEST_NAME: hyrax_test
+      # End of copy
+      FCREPO_HOST: fcrepo
+      FCREPO_PORT: 8080
+      FCREPO_REST_PATH: fcrepo/rest
+      FCREPO_DEV_BASE_PATH: /dev
+      FCREPO_TEST_BASE_PATH: /test
+      IN_DOCKER: "true"
+      LD_LIBRARY_PATH: /opt/fits/tools/mediainfo/linux
+      RAILS_LOG_TO_STDOUT: "true"
+      REDIS_HOST: redis
+      SECRET_KEY_BASE: asdf
+      SOLR_DEVELOPMENT_URL: http://solr:8983/solr/hyrax-development
+      SOLR_TEST_URL: http://solr:8983/solr/hyrax-development
+      PASSENGER_APP_ENV: development
+    volumes:
+      - app:/home/app/spec/internal_test_hyrax/tmp/uploads
+      - assets:/home/app/spec/internal_test_hyrax/public/assets
+      - cache:/home/app/spec/internal_test_hyrax/tmp/cache
+      - .:/home/app
+    networks:
+      internal:
+
+  web:
+    <<: *app
+    environment:
+      <<: *web_environment
+    depends_on:
+      - db
+      - solr
+      - fcrepo
+      - redis
+      - chrome
+      - db_migrate
+    # expose:
+      # - 3000
+    stdin_open: true
+    tty: true
+    ports:
+      - 3000:3000 # uncomment this if you dont use dory or another proxy
+
+  db_migrate:
+    <<: *app
+    entrypoint: ["sh", "-c"]
+    command: 'cd /home/app/bin/ && ./db-migrate-seed.sh'
+    environment:
+      <<: *web_environment
+      DB_HOST: db
+      DB_PORT: 5432
+      #FCREPO_HOST: fcrepo
+      #FCREPO_PORT: 8080
+      SOLR_HOST: solr
+      SOLR_PORT: 8983
+    depends_on:
+      - db
+
+  redis: &redis
+    image: redis:4
+    command: redis-server
+    volumes:
+      - redis:/data
+    networks:
+      internal:
+
+  chrome:
+    image: selenium/standalone-chrome:3.141
+    networks:
+      internal:
