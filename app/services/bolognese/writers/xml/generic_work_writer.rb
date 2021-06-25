@@ -33,12 +33,9 @@ module Bolognese
         def build
           @xml[:work].title do
             @xml[:common].title @metadata.write_title.first
-            @xml[:common].subtitle @metadata.write_alt_title&.first
           end
 
           @xml[:work].type @type
-
-          xml_date_published
 
           # NOTE: A full list of external-id-type: https://pub.orcid.org/v2.1/identifiers
           @xml[:common].send("external-ids") do
@@ -110,16 +107,6 @@ module Bolognese
                 xml_contributor_orcid(find_valid_orcid(contributor))
                 xml_contributor_name("#{contributor['givenName']} #{contributor['familyName']}")
                 xml_contributor_role(false, contributor["contributorType"])
-              end
-            end
-          end
-
-          def xml_date_published
-            return if (date = @metadata.date_published&.first).blank?
-
-            @xml[:common].send("publication-date") do
-              %i[year month day].each do |int|
-                @xml[:common].send(int, date.dig("date_published_#{int}"))
               end
             end
           end

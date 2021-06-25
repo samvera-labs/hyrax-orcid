@@ -118,13 +118,13 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
 
-  config.before(:suite) do
-    ActiveFedora::Cleaner.clean!
-  end
+  # config.before(:suite) do
+  #   ActiveFedora::Cleaner.clean!
+  # end
 
-  config.after do
-    ActiveFedora::Cleaner.clean!
-  end
+  # config.after do
+  #   ActiveFedora::Cleaner.clean!
+  # end
 
   include Noid::Rails::RSpec
   config.before(:suite) { disable_production_minter! }
@@ -148,26 +148,26 @@ RSpec.configure do |config|
   end
 
   # Configuration for feature tests
-  config.include Features::SessionHelpers, type: :feature
-  config.include Warden::Test::Helpers, type: :feature
-  config.after(:each, type: :feature) do
-    Warden.test_reset!
-    Capybara.reset_sessions!
-    page.driver.reset!
-  end
-  config.before(:all, type: :feature) do
-    # Assets take a long time to compile. This causes two problems:
-    # 1) the profile will show the first feature test taking much longer than it
-    #    normally would.
-    # 2) The first feature test will trigger rack-timeout
-    #
-    # Precompile the assets to prevent these issues.
-    visit "/assets/application.css"
-    visit "/assets/application.js"
-  end
-  config.around(:each, type: :feature) do |example|
-    Rails.application.routes.send(:eval_block, proc { mount Hyrax::Orcid::Engine, at: '/orcid', as: "hyrax_orcid" })
-    example.run
-    Rails.application.reload_routes!
-  end
+  #config.include Features::SessionHelpers, type: :feature
+  #config.include Warden::Test::Helpers, type: :feature
+  #config.after(:each, type: :feature) do
+  #  Warden.test_reset!
+  #  Capybara.reset_sessions!
+  #  page.driver.reset!
+  #end
+  #config.before(:all, type: :feature) do
+  #  # Assets take a long time to compile. This causes two problems:
+  #  # 1) the profile will show the first feature test taking much longer than it
+  #  #    normally would.
+  #  # 2) The first feature test will trigger rack-timeout
+  #  #
+  #  # Precompile the assets to prevent these issues.
+  #  visit "/assets/application.css"
+  #  visit "/assets/application.js"
+  #end
+  #config.around(:each, type: :feature) do |example|
+  #  Rails.application.routes.send(:eval_block, proc { mount Hyrax::Orcid::Engine, at: '/orcid', as: "hyrax_orcid" })
+  #  example.run
+  #  Rails.application.reload_routes!
+  #end
 end

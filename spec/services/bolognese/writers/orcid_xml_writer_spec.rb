@@ -3,9 +3,7 @@
 require "rails_helper"
 
 RSpec.describe Bolognese::Writers::OrcidXmlWriter do
-  let(:abstract) { "Swedish comic about the adventures of the residents of Moominvalley." }
-  let(:add_info) { "Nothing to report" }
-  let(:alt_title) { "alt-title" }
+  let(:description) { "Swedish comic about the adventures of the residents of Moominvalley." }
   let(:creator1_first_name) { "Sebastian" }
   let(:creator1_last_name) { "Hageneuer" }
   let(:creator1) do
@@ -43,42 +41,28 @@ RSpec.describe Bolognese::Writers::OrcidXmlWriter do
     }
   end
   let(:date_created) { "#{created_year}-08-19" }
-  let(:date_published) { "#{published_year}-09-27" }
   let(:doi) { "10.18130/v3-k4an-w022" }
   let(:isbn) { "9781770460621" }
   let(:issn) { "0987654321" }
   let(:keyword) { "Lighthouses" }
   let(:language) { "Swedish" }
-  let(:official_link) { "http://test-url.com" }
-  let(:place_of_publication) { "Finland" }
-  let(:published_year) { "2019" }
   let(:created_year) { "1983" }
   let(:publisher) { "Schildts" }
   let(:resource_type) { "Book" }
   let(:title) { "Moomin" }
-  let(:volume) { 2 }
-  let(:issue) { "2" }
 
   let(:attributes) do
     {
-      doi: [doi],
       title: [title],
-      alt_title: [alt_title],
       resource_type: [resource_type],
       creator: [[creator1, creator2].to_json],
       contributor: [[contributor1].to_json],
       publisher: [publisher],
-      abstract: abstract,
+      description: [description],
       keyword: [keyword],
       date_created: [date_created],
-      date_published: date_published,
-      isbn: isbn,
-      place_of_publication: [place_of_publication],
+      identifier: [isbn, doi],
       language: [language],
-      add_info: add_info,
-      issue: issue,
-      official_link: official_link,
-      volume: [volume]
     }
   end
 
@@ -154,13 +138,6 @@ RSpec.describe Bolognese::Writers::OrcidXmlWriter do
 
       describe "titles" do
         it { expect(doc.xpath("//common:title/text()").to_s).to eq title }
-        it { expect(doc.xpath("//common:subtitle/text()").to_s).to eq alt_title }
-      end
-
-      describe "publication-date" do
-        it { expect(doc.xpath("//common:publication-date/common:year/text()").to_s).to eq published_year }
-        it { expect(doc.xpath("//common:publication-date/common:month/text()").to_s).to eq "9" }
-        it { expect(doc.xpath("//common:publication-date/common:day/text()").to_s).to eq "27" }
       end
 
       describe "external-ids" do
