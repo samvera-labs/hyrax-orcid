@@ -24,7 +24,7 @@ module Hyrax
 
         # Find the identity and farm out the rest of the logic to a background worker
         def perform_user_strategy(orcid_id)
-          return unless (identity = OrcidIdentity.find_by(orcid_id: orcid_id)).present?
+          return if (identity = OrcidIdentity.find_by(orcid_id: orcid_id)).blank?
 
           # TODO: Put this in a configuration object
           action = "perform_#{Rails.env.development? ? 'now' : 'later'}"

@@ -3,7 +3,7 @@
 module Hyrax
   module Orcid
     class WorkOrcidExtractor
-      include HykuAddons::WorkFormNameable
+      include Hyrax::Orcid::WorkFormNameHelper
       include Hyrax::Orcid::OrcidHelper
 
       TARGET_TERMS = %i[creator contributor].freeze
@@ -20,7 +20,7 @@ module Hyrax
           target = "#{term}_orcid"
           json = json_for_term(term)
 
-          next unless json.present?
+          next if json.blank?
 
           JSON.parse(json).select { |person| person.dig(target).present? }.each do |person|
             @orcids << validate_orcid(person.dig(target))
@@ -28,6 +28,10 @@ module Hyrax
         end
 
         @orcids.compact.uniq
+
+      # If we have no JSON fields, like in default Hyrax, then we should not crash
+      rescue JSON::ParserError
+        []
       end
 
       def target_terms

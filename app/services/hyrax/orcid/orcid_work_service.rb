@@ -22,10 +22,10 @@ module Hyrax
       def unpublish
         @response = Faraday.send(:delete, request_url, nil, headers)
 
-        if @response.success?
-          notify_unpublished
-          orcid_work.destroy
-        end
+        return unless @response.success?
+
+        notify_unpublished
+        orcid_work.destroy
       end
 
       protected

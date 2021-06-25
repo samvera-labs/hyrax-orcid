@@ -10,12 +10,11 @@ module Hyrax
         def new
           request_authorization
 
-          current_user.orcid_identity_from_authorization(authorization_body)
-
           if authorization_successful?
+            current_user.orcid_identity_from_authorization(authorization_body)
             flash[:notice] = I18n.t("orcid_identity.preferences.create.success")
           else
-            flash[:error] = I18n.t("orcid_identity.preferences.create.failure")
+            flash[:error] = I18n.t("orcid_identity.preferences.create.failure", error: authorization_body.dig("error"))
           end
 
           redirect_to dashboard_profile_path(current_user)
@@ -33,7 +32,7 @@ module Hyrax
 
         def destroy
           # This is pretty ugly, but for a has_one relation we can't do a find_by! from User
-          raise ActiveRecord::RecordNotFound unless current_user.orcid_identity.id == params["id"].to_i
+          raise ActiveRecord::RecordNotFound unless current_user.orcid_identity&.id == params["id"].to_i
 
           current_user.orcid_identity.destroy
           flash[:notice] = I18n.t("orcid_identity.preferences.destroy.success")
@@ -49,8 +48,8 @@ module Hyrax
 
           def request_authorization
             data = {
-              client_id: Site.instance.account.settings["orcid_client_id"],
-              client_secret: Site.instance.account.settings["orcid_client_secret"],
+              client_id: ENV["ORCID_CLIENT_ID"],
+              client_secret: ENV["ORCID_CLIENT_SECRET"],
               grant_type: "authorization_code",
               code: code
             }

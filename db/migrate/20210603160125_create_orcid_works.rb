@@ -6,6 +6,7 @@ class CreateOrcidWorks < ActiveRecord::Migration[5.2]
       t.references :orcid_identity
       t.string :work_uuid
       t.integer :put_code
+      t.timestamps
 
       t.index :work_uuid
     end

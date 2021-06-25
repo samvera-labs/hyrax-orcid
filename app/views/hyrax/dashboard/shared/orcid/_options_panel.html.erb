@@ -10,7 +10,7 @@
       <%== t("orcid_identity.preferences.linked", link: link) %>
     </div>
 
-    <% path = hyku_addons.orcid_identity_path(current_user.orcid_identity) %>
+    <% path = hyrax_orcid_routes.orcid_identity_path(current_user.orcid_identity) %>
     <%= form_for current_user.orcid_identity, url: path, method: :patch, html: { class: "form" } do |f| %>
       <div class="list-group-item">
         <p><%= t("orcid_identity.preferences.work_sync.intro") %></p>
@@ -37,7 +37,8 @@
                   <%= label_tag do %>
                     <% checked = current_user.orcid_identity.profile_sync_preference.dig(pref.to_s) == "1" %>
                     <%= sf.check_box pref, value: true, checked: checked, class: "form-check-input", id: "profile_sync_preference_#{pref}" %>
-                    <%= t("orcid_identity.preferences.profile_sync.preference.#{pref}") %>
+
+                    <%= t("orcid_identity.preferences.profile_sync.preferences.#{pref}") %>
                   <% end %>
                 </div>
 
@@ -52,7 +53,7 @@
 
       <%= f.submit t("orcid_identity.preferences.button_text"), class: "btn btn-primary margin-top" %>
       <% options = { method: :delete, class: "btn btn-danger margin-top float-right", data: { confirm: t("orcid_identity.preferences.destroy.confirm") } } %>
-      <%= link_to t("orcid_identity.preferences.destroy.button_text"), hyku_addons.orcid_identity_path(current_user.orcid_identity), options %>
+      <%= link_to t("orcid_identity.preferences.destroy.button_text"), hyrax_orcid_routes.orcid_identity_path(current_user.orcid_identity), options %>
     <% end %>
   <% else %>
     <div class="list-group-item">

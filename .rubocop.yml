@@ -24,3 +24,6 @@ RSpec/DescribeClass:
 
 Style/FrozenStringLiteralComment:
   Enabled: true
+
+Layout/IndentationConsistency:
+  EnforcedStyle: indented_internal_methods

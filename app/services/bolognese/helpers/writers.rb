@@ -136,7 +136,7 @@ module Bolognese
       # l: 27
       # res: 27
       def write_pagination
-        return unless container.present?
+        return if container.blank?
 
         pagination = [container.dig("firstPage"), "-", container.dig("lastPage")].compact
 
@@ -197,7 +197,7 @@ module Bolognese
         # Group the funders by their name, as we might not have a unique DOI for them.
         # This is a big of a sledge hammer approach, but I believe it'll work for now.
         def grouped_funders
-          return unless funding_references.present?
+          return if funding_references.blank?
 
           funding_references.group_by { |funder| funder["funderName"] }.map do |_name, group|
             funder = group.first

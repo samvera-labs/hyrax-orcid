@@ -6,7 +6,7 @@ module Hyrax
       extend ActiveSupport::Concern
 
       included do
-        has_one :orcid_identity
+        has_one :orcid_identity, dependent: :destroy
       end
 
       def orcid_identity_from_authorization(params)

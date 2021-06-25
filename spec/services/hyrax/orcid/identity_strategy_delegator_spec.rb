@@ -78,4 +78,3 @@ RSpec.describe Hyrax::Orcid::IdentityStrategyDelegator do
     end
   end
 end
-

@@ -29,6 +29,7 @@ module Bolognese
 
         # Fields guide:
         # https://github.com/ORCID/ORCID-Source/blob/master/orcid-api-web/tutorial/works.md#work-fields
+        # rubocop:disable Metrics/MethodLength
         def build
           @xml[:work].title do
             @xml[:common].title @metadata.write_title.first
@@ -51,12 +52,13 @@ module Bolognese
             xml_contributors
           end
         end
+        # rubocop:enable Metrics/MethodLength
 
         protected
 
           def xml_internal_identifier
             # We should always have a UUID, but specs might not be saving works and will fail otherwise
-            return unless @metadata.write_uuid.present?
+            return if @metadata.write_uuid.blank?
 
             @xml[:common].send("external-id") do
               @xml[:common].send("external-id-type", "other-id")
@@ -78,7 +80,7 @@ module Bolognese
 
           def xml_external_identifiers
             PERMITTED_EXTERNAL_IDENTIFIERS.each do |item|
-              next unless (value = @metadata.meta.dig(item)).present?
+              next if (value = @metadata.meta.dig(item)).blank?
 
               @xml[:common].send("external-id") do
                 @xml[:common].send("external-id-type", item)
@@ -89,7 +91,7 @@ module Bolognese
           end
 
           def xml_creators
-            return unless @metadata.creators.present?
+            return if @metadata.creators.blank?
 
             @metadata.creators.each_with_index do |creator, i|
               @xml[:work].contributor do
@@ -101,7 +103,7 @@ module Bolognese
           end
 
           def xml_contributors
-            return unless @metadata.contributors.present?
+            return if @metadata.contributors.blank?
 
             @metadata.contributors.each do |contributor|
               @xml[:work].contributor do
@@ -113,7 +115,7 @@ module Bolognese
           end
 
           def xml_date_published
-            return unless (date = @metadata.date_published&.first).present?
+            return if (date = @metadata.date_published&.first).blank?
 
             @xml[:common].send("publication-date") do
               %i[year month day].each do |int|
@@ -137,7 +139,7 @@ module Bolognese
           end
 
           def xml_contributor_orcid(orcid)
-            return unless orcid.present?
+            return if orcid.blank?
 
             @xml[:common].send("contributor-orcid") do
               @xml[:common].uri "https://orcid.org/#{orcid}"

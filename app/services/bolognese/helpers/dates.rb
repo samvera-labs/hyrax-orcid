@@ -16,7 +16,7 @@ module Bolognese
 
       # Date values are formatted without number padding in the form
       def date_from_string(date_string)
-        return unless date_string.present?
+        return if date_string.blank?
 
         Date.edtf(date_string)
       end

@@ -44,7 +44,7 @@ RSpec.describe Hyrax::Orcid::OrcidWorkService do
       let(:put_code) { "198765" }
       let(:url) { "https://api.sandbox.orcid.org/#{api_version}/#{orcid_id}/work" }
       let(:response_headers) do
-        { "location" => "https://api.sandbox.orcid.org/#{api_version}/#{orcid_id}/work/#{put_code}"  }
+        { "location" => "https://api.sandbox.orcid.org/#{api_version}/#{orcid_id}/work/#{put_code}" }
       end
 
       it "calls Faraday" do
@@ -137,10 +137,6 @@ RSpec.describe Hyrax::Orcid::OrcidWorkService do
         expect { service.unpublish }.to change { UserMailbox.new(user2).inbox.count }.by(1)
       end
     end
-  end
-
-  describe "#notify_unpublished" do
-
   end
 
   describe "#request_url" do

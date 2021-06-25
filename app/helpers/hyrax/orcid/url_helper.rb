@@ -11,10 +11,10 @@ module Hyrax
 
       def orcid_authorize_uri
         params = {
-          client_id: Site.instance.account.settings["orcid_client_id"],
+          client_id: ENV["ORCID_CLIENT_ID"],
           scope: "/activities/update /read-limited",
           response_type: "code",
-          redirect_uri: Site.instance.account.settings["orcid_redirect"]
+          redirect_uri: ENV["ORCID_REDIRECT"]
         }
 
         "https://#{orcid_domain}/oauth/authorize?#{params.to_query}"
@@ -46,8 +46,8 @@ module Hyrax
           Hyrax::Engine.routes.url_helpers
         end
 
-        def hyku_addons_routes
-          HykuAddons::Engine.routes.url_helpers
+        def hyrax_orcid_routes
+          Hyrax::Orcid::Engine.routes.url_helpers
         end
 
         def routes

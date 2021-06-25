@@ -6,7 +6,8 @@ en:
       button_text:  Save Preferences
       create:
         success: Your repository account was successfully linked to your ORCID profile
-        failure: An error seems to have occured.
+        failure: |
+          An error seems to have occured, "%{error}"
       update:
         success: Your preferences were updated successfully
         failure: An error seems to have occured.
