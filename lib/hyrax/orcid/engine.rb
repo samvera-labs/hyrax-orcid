@@ -45,6 +45,8 @@ module Hyrax
 
         # Prepend our views so they have precedence
         ActionController::Base.prepend_view_path(paths['app/views'].existent)
+
+        Hyrax::CurationConcern.actor_factory.insert_before Hyrax::Actors::ModelActor, Hyrax::Actors::Orcid::JSONFieldsActor
       end
 
       if Rails.env.development?
