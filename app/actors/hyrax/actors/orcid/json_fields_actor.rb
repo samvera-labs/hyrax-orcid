@@ -14,7 +14,6 @@ module Hyrax
         private
 
           def jsonify_fields(env)
-            byebug
             env.curation_concern.class.json_fields.each do |field|
               if name_blank?(field, env.attributes[field]) || recursive_blank?(env.attributes[field])
                 env.attributes.delete(field)
@@ -27,7 +26,8 @@ module Hyrax
           end
 
           def name_blank?(field, obj)
-            return false unless field.in? [:creator, :contributor, :editor]
+            return false unless field.in? [:creator]
+
             recursive_blank?(Array(obj).map { |o| o.reject { |k, _v| k == "#{field}_name_type" } })
           end
 

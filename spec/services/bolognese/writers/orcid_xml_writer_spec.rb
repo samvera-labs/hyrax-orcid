@@ -62,7 +62,7 @@ RSpec.describe Bolognese::Writers::OrcidXmlWriter do
       keyword: [keyword],
       date_created: [date_created],
       identifier: [isbn, doi],
-      language: [language],
+      language: [language]
     }
   end
 
