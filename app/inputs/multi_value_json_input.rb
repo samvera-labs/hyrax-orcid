@@ -6,6 +6,7 @@ class MultiValueJsonInput < SimpleForm::Inputs::CollectionInput
     "multi_value"
   end
 
+  # TODO: This needs to be moved to an external configutation
   def subfields
     [:name, :orcid]
   end
@@ -18,13 +19,7 @@ class MultiValueJsonInput < SimpleForm::Inputs::CollectionInput
     outer_wrapper do
       buffer_each(collection) do |subfields|
         inner_wrapper do
-          inputs = subfields.map do |subfield|
-            subfield_name, value = subfield
-
-            input_html_options[:name] = "#{object_name}[#{attribute_name}][][#{subfield_name}]"
-
-            build_field(subfield_name, value)
-          end.join("")
+          process_subfields(subfields)
         end
       end
     end
@@ -61,6 +56,17 @@ class MultiValueJsonInput < SimpleForm::Inputs::CollectionInput
           #{yield}
         </li>
       HTML
+    end
+
+    # Return a sting of HTML
+    def process_subfields(subfields)
+      subfields.map do |subfield|
+        subfield_name, value = subfield
+
+        input_html_options[:name] = "#{object_name}[#{attribute_name}][][#{subfield_name}]"
+
+        build_field(subfield_name, value)
+      end.join("")
     end
 
     def build_field(subfield_name, value)
