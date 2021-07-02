@@ -22,16 +22,4 @@ RSpec.configure do |config|
   end
 
   config.shared_context_metadata_behavior = :apply_to_host_groups
-
-  # Look for an overriding spec file and skip if it exists
-  config.around do |example|
-    if example.file_path.starts_with?('./spec/internal_test_hyrax') && File.exist?(example.file_path.sub('./spec/internal_test_hyrax', '.'))
-      skip "Override exists of this test file in engine."
-    else
-      example.run
-    end
-  end
 end
-
-require File.expand_path('internal_test_hyrax/spec/rails_helper.rb', __dir__)
-require File.expand_path('internal_test_hyrax/spec/spec_helper.rb', __dir__)

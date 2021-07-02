@@ -15,7 +15,6 @@ RDoc::Task.new(:rdoc) do |rdoc|
   rdoc.rdoc_files.include('lib/**/*.rb')
 end
 
-APP_RAKEFILE = File.expand_path("spec/internal_test_hyrax/Rakefile", __dir__)
 load 'rails/tasks/engine.rake'
 
 load 'rails/tasks/statistics.rake'

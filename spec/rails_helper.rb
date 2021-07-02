@@ -2,9 +2,7 @@
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
-require File.expand_path('internal_test_hyrax/spec/rails_helper.rb', __dir__)
 ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('internal_test_hyrax/config/environment', __dir__)
 
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
@@ -134,17 +132,6 @@ RSpec.configure do |config|
     config.include Devise::Test::ControllerHelpers, type: :controller
   else
     config.include Devise::TestHelpers, type: :controller
-  end
-
-  # Internal Tests to skip
-  # Make sure this around is declared first so it runs before other around callbacks
-  skip_internal_test_list = ['./spec/internal_test_hyrax/spec/features/create_generic_work_spec.rb']
-  config.around do |example|
-    if skip_internal_test_list.include? example.file_path
-      skip "Internal test skipped."
-    else
-      example.run
-    end
   end
 
   # Configuration for feature tests

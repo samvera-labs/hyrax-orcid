@@ -5,8 +5,8 @@ services:
     build:
       context: .
       target: hyrax-orcid-dev
-    #  args:
-    #    - EXTRA_APK_PACKAGES=git less
+      args:
+        - HYRAX_IMAGE_VERSION=latest
     #image: ghcr.io/samvera/dassie
     stdin_open: true
     tty: true
@@ -112,6 +112,8 @@ services:
     build:
       context: .
       target: hyrax-orcid-dev-worker
+      args:
+        - HYRAX_IMAGE_VERSION=latest
     #image: ghcr.io/samvera/dassie-worker
     env_file:
       - .env
