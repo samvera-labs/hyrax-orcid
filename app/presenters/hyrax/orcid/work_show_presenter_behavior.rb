@@ -10,7 +10,7 @@ module Hyrax
 
         return if creator.blank?
 
-        Array.wrap creator.first.dig("creator_name")
+        creator.pluck("creator_name")
       end
     end
   end
