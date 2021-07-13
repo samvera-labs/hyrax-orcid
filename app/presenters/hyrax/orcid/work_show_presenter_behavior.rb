@@ -5,12 +5,12 @@ module Hyrax
     module WorkShowPresenterBehavior
       extend ActiveSupport::Concern
 
-      included do
-        delegate :creator, to: :hyrax_orcid_creator
-      end
+      def creator
+        creator = JSON.parse(solr_document.creator.first.presence || "[]")
 
-      def hyrax_orcid_creator
-        @_hyrax_orcid_creator ||= JSON.parse(solr_document.creator.first.presence || "[]")
+        return if creator.blank?
+
+        Array.wrap creator.first.dig("creator_name")
       end
     end
   end

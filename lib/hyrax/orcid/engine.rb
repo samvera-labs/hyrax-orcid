@@ -32,7 +32,7 @@ module Hyrax
         User.include Hyrax::Orcid::UserBehavior
         Hyrax::HyraxHelperBehavior.include Hyrax::Orcid::HelperBehavior
         Hyrax::GenericWorkForm.include Hyrax::Orcid::GenericWorkFormBehavior
-        Hyrax::WorkShowPresenter.include Hyrax::Orcid::WorkShowPresenterBehavior
+        Hyrax::WorkShowPresenter.prepend Hyrax::Orcid::WorkShowPresenterBehavior
 
         Bolognese::Metadata.prepend Bolognese::Writers::OrcidXmlWriter
         Hyrax::CurationConcern.actor_factory.use Hyrax::Actors::Orcid::PublishWorkActor
