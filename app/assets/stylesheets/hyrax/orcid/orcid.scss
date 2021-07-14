@@ -13,7 +13,35 @@
 }
 
 .badge-success {
-    color: #fff;
-    background-color: #28a745;
+  color: #fff;
+  background-color: #28a745;
 }
 
+.multi_value {
+  .clearfix {
+    height: 1px;
+    width: 100%;
+
+    &:after {
+      content: "";
+      display: table;
+      clear: both;
+    }
+  }
+
+  .json-fields-listing {
+    &.listing .input-group, .controlled_vocabulary .listing .input-group {
+      margin-bottom: 0;
+    }
+
+    li {
+      border-bottom: 1px solid #ebebeb;
+      margin: 0;
+      padding: 0 0 15px 0;
+
+      label {
+        margin: 10px 0 0px;
+      }
+    }
+  }
+}
