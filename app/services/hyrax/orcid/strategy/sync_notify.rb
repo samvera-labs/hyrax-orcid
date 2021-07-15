@@ -33,7 +33,7 @@ module Hyrax
 
           def message_body
             params = {
-              depositor_profile: orcid_profile_uri(depositor.orcid_identity.orcid_id),
+              depositor_profile: depositor.orcid_identity? ? orcid_profile_uri(depositor.orcid_identity.orcid_id) : nil,
               depositor_description: depositor_description,
               profile_path: hyrax_routes.dashboard_profile_path(@identity.user),
               work_title: @work.title.first,

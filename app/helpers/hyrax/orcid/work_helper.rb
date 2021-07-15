@@ -12,7 +12,11 @@ module Hyrax
       end
 
       def depositor_description
-        "#{depositor.orcid_identity.name} (#{depositor.orcid_identity.orcid_id})"
+        if depositor.orcid_identity?
+          "#{depositor.orcid_identity.name} (#{depositor.orcid_identity.orcid_id})"
+        else
+          "#{depositor.name} (#{depositor.email})"
+        end
       end
 
       def previously_uploaded?
