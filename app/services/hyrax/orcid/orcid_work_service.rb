@@ -14,6 +14,7 @@ module Hyrax
 
       def publish
         request_method = previously_uploaded? ? :put : :post
+
         @response = Faraday.send(request_method, request_url, xml, headers)
 
         update_identity if @response.success?
@@ -30,12 +31,12 @@ module Hyrax
 
       protected
 
+        # TODO: figure out how to get the correct types here
+        # TODO: try and think of a better way to get the put_code into the xml writer
         def xml
           input = @work.attributes.merge(has_model: @work.has_model.first).to_json
-          meta = Bolognese::Readers::GenericWorkReader.new(input: input, from: "work")
+          meta = Bolognese::Metadata.new(input: input, from: "orcid_hyrax_work")
 
-          # TODO: figure out how to get the correct types here
-          # TODO: try and think of a better way to get the put_code into the xml writer
           meta.orcid_xml("other", orcid_work.put_code)
         end
 

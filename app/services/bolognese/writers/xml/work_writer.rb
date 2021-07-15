@@ -4,7 +4,7 @@
 module Bolognese
   module Writers
     module Xml
-      class GenericWorkWriter
+      class WorkWriter
         PERMITTED_EXTERNAL_IDENTIFIERS = %w[issn isbn].freeze
         CONTRIBUTOR_MAP = {
           "author" => ["Author"],
@@ -32,7 +32,7 @@ module Bolognese
         # rubocop:disable Metrics/MethodLength
         def build
           @xml[:work].title do
-            @xml[:common].title @metadata.write_title.first
+            @xml[:common].title @metadata.titles.first.dig("title")
           end
 
           @xml[:work].type @type
@@ -55,17 +55,17 @@ module Bolognese
 
           def xml_internal_identifier
             # We should always have a UUID, but specs might not be saving works and will fail otherwise
-            return if @metadata.write_uuid.blank?
+            return if @metadata.id.blank?
 
             @xml[:common].send("external-id") do
               @xml[:common].send("external-id-type", "other-id")
-              @xml[:common].send("external-id-value", @metadata.write_uuid)
+              @xml[:common].send("external-id-value", @metadata.id)
               @xml[:common].send("external-id-relationship", "self")
             end
           end
 
           def xml_external_doi
-            return if @metadata.meta["doi"].blank?
+            return if @metadata.doi.blank?
 
             @xml[:common].send("external-id") do
               @xml[:common].send("external-id-type", "doi")
@@ -93,7 +93,7 @@ module Bolognese
             @metadata.creators.each_with_index do |creator, i|
               @xml[:work].contributor do
                 xml_contributor_orcid(find_valid_orcid(creator))
-                xml_contributor_name("#{creator['givenName']} #{creator['familyName']}")
+                xml_contributor_name(creator.dig("name"))
                 xml_contributor_role(i.zero?, "Author")
               end
             end
@@ -105,7 +105,7 @@ module Bolognese
             @metadata.contributors.each do |contributor|
               @xml[:work].contributor do
                 xml_contributor_orcid(find_valid_orcid(contributor))
-                xml_contributor_name("#{contributor['givenName']} #{contributor['familyName']}")
+                xml_contributor_name(contributor.dig("name"))
                 xml_contributor_role(false, contributor["contributorType"])
               end
             end

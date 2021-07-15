@@ -13,6 +13,10 @@ module Hyrax
             config.eager_load = true
           end
         end
+
+        # NOTE: Tempfix until admin interface is available
+        file = File.read(Rails.root.join("..", "..", ".env"))
+        file.split(/[\n\r]+/).map { |s| s.split(/:[\s]+/) }.to_h.map { |k, v| ENV[k] = v if v.present? } if file.present?
       end
 
       # Allow flipflop to load config/features.rb from the Hyrax gem:
@@ -34,13 +38,16 @@ module Hyrax
         Hyrax::GenericWorkForm.include Hyrax::Orcid::GenericWorkFormBehavior
         Hyrax::WorkShowPresenter.prepend Hyrax::Orcid::WorkShowPresenterBehavior
 
-        Bolognese::Metadata.prepend Bolognese::Writers::OrcidXmlWriter
-        Hyrax::CurationConcern.actor_factory.use Hyrax::Actors::Orcid::PublishWorkActor
+        Bolognese::Metadata.prepend Bolognese::Writers::Orcid::XmlWriter
+        Bolognese::Metadata.prepend Bolognese::Readers::Orcid::HyraxWorkReader
+        # TODO: Remove this when PR#121 is merged
+        Bolognese::Metadata.prepend Bolognese::UtilsBehaviors
 
         # Because the Hyrax::ModelActor does not call next_actor and continue the chain
         # for destroy requests, we require a new actor
         actors = [Hyrax::Actors::ModelActor, Hyrax::Actors::Orcid::UnpublishWorkActor]
         Hyrax::CurationConcern.actor_factory.insert_before(*actors)
+        Hyrax::CurationConcern.actor_factory.use Hyrax::Actors::Orcid::PublishWorkActor
 
         # Append our locales so they have precedence
         I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join('config', 'locales', '*.{rb,yml}')]
