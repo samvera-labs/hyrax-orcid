@@ -2,16 +2,13 @@
 
 require "rails_helper"
 
-RSpec.describe Bolognese::Writers::OrcidXmlWriter do
+RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
   let(:description) { "Swedish comic about the adventures of the residents of Moominvalley." }
   let(:creator1_first_name) { "Sebastian" }
   let(:creator1_last_name) { "Hageneuer" }
   let(:creator1) do
     {
-      "creator_name_type" => "Personal",
-      "creator_name" => "#{creator1_last_name}, #{creator1_first_name}",
-      "creator_given_name" => creator1_first_name,
-      "creator_family_name" => creator1_last_name
+      "creator_name" => "#{creator1_first_name} #{creator1_last_name}",
     }
   end
   let(:creator2_first_name) { "Johnny" }
@@ -19,10 +16,7 @@ RSpec.describe Bolognese::Writers::OrcidXmlWriter do
   let(:creator2_orcid) { "0000-0001-5109-3701" }
   let(:creator2) do
     {
-      "creator_name_type" => "Personal",
-      "creator_name" => "#{creator2_last_name}, #{creator2_first_name}",
-      "creator_given_name" => creator2_first_name,
-      "creator_family_name" => creator2_last_name,
+      "creator_name" => "#{creator2_first_name} #{creator2_last_name}",
       "creator_orcid" => "https://orcid.org/#{creator2_orcid}"
     }
   end
@@ -32,12 +26,8 @@ RSpec.describe Bolognese::Writers::OrcidXmlWriter do
   let(:contributor1_role) { "Other" }
   let(:contributor1) do
     {
-      "contributor_name_type" => "Personal",
-      "contributor_name" => "#{contributor1_last_name}, #{contributor1_first_name}",
-      "contributor_given_name" => contributor1_first_name,
-      "contributor_family_name" => contributor1_last_name,
+      "contributor_name" => "#{contributor1_first_name} #{contributor1_last_name}",
       "contributor_orcid" => "https://orcid.org/#{contributor1_orcid}",
-      "contributor_type" => contributor1_role
     }
   end
   let(:date_created) { "#{created_year}-08-19" }
@@ -77,7 +67,7 @@ RSpec.describe Bolognese::Writers::OrcidXmlWriter do
   let(:model_class) { GenericWork }
   let(:work) { model_class.new(attributes) }
   let(:input) { work.attributes.merge(has_model: work.has_model.first).to_json }
-  let(:meta) { Bolognese::Readers::GenericWorkReader.new(input: input, from: "work") }
+  let(:meta) { Bolognese::Metadata.new(input: input, from: "orcid_hyrax_work") }
   let(:type) { "other" }
   let(:put_code) { nil }
   let(:orcid_xml) { meta.orcid_xml(type, put_code) }

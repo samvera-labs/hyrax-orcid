@@ -15,9 +15,7 @@ RSpec.describe Hyrax::Actors::Orcid::UnpublishWorkActor do
       "title" => ["Moomin"],
       "creator" => [
         [{
-          "creator_given_name" => "Smith",
-          "creator_family_name" => "John",
-          "creator_name_type" => "Personal",
+          "creator_name" => "John Smith",
           "creator_orcid" => orcid_id
         }].to_json
       ]

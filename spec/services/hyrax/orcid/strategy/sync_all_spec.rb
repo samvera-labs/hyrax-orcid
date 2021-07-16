@@ -5,17 +5,15 @@ require 'rails_helper'
 RSpec.describe Hyrax::Orcid::Strategy::SyncAll do
   let(:sync_preference) { "sync_all" }
   let(:strategy) { described_class.new(work, orcid_identity) }
-  let(:user) { create(:user, orcid_identity: orcid_identity) }
-  let(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference) }
+  let(:user) { create(:user) }
+  let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }
   let(:work) { create(:work, user: user, **work_attributes) }
   let(:work_attributes) do
     {
       "title" => ["Moomin"],
       "creator" => [
         [{
-          "creator_given_name" => "Smith",
-          "creator_family_name" => "John",
-          "creator_name_type" => "Personal",
+          "creator_name" => "John Smith",
           "creator_orcid" => orcid_id
         }].to_json
       ]
@@ -40,8 +38,8 @@ RSpec.describe Hyrax::Orcid::Strategy::SyncAll do
 
     context "when the referenced user is not the depositor" do
       let(:strategy) { described_class.new(work, orcid_identity2) }
-      let(:user2) { create(:user, orcid_identity: orcid_identity2) }
-      let(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference) }
+      let(:user2) { create(:user) }
+      let!(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference, user: user2) }
       let(:orcid_id) { user2.orcid_identity.orcid_id }
 
       it "creates a job" do

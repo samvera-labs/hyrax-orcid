@@ -4,6 +4,8 @@
 require 'spec_helper'
 require File.expand_path('internal_test_hyrax/spec/rails_helper.rb', __dir__)
 ENV['RAILS_ENV'] ||= 'test'
+# HACK: Not sure why this is required, but otherwise Rails.env will be set to development
+Rails.env = ENV["RAILS_ENV"]
 require File.expand_path('internal_test_hyrax/config/environment', __dir__)
 
 # Prevent database truncation if the environment is production
@@ -24,6 +26,10 @@ require 'webmock/rspec'
 WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
 
 Rails.application.routes.default_url_options[:host] = 'www.example.com'
+
+# This avoids us having issues with the test hyrax app factories being registered
+FactoryBot.definition_file_paths = [Rails.root.join("..", "..", "spec", "factories")]
+FactoryBot.find_definitions
 
 # Add additional requires below this line. Rails is not loaded until this point!
 # For testing generators

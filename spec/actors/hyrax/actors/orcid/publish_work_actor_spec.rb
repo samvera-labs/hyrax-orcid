@@ -7,7 +7,7 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
   let(:ability) { Ability.new(user) }
   let(:env) { Hyrax::Actors::Environment.new(work, ability, {}) }
   let(:next_actor) { Hyrax::Actors::Terminator.new }
-  let(:user) { FactoryBot.build(:base_user, :with_orcid_identity) }
+  let(:user) { create(:user, :with_orcid_identity) }
   let(:model_class) { GenericWork }
   let(:work) { model_class.create(work_attributes) }
   let(:work_attributes) do
@@ -15,15 +15,15 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
       "title" => ["Moomin"],
       "creator" => [
         [{
-          "creator_given_name" => "Smith",
-          "creator_family_name" => "John",
-          "creator_name_type" => "Personal",
+          "creator_name" => "Joan Smith",
           "creator_orcid" => orcid_id
         }].to_json
-      ]
+      ],
+      "keyword" => ["a keyword"],
+      "rights_statement" => ["http://rightsstatements.org/vocab/InC-OW-EU/1.0/"]
     }
   end
-  let(:orcid_id) { "0000-0003-0652-4625" }
+  let(:orcid_id) { user.orcid_identity.orcid_id }
 
   before do
     work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC

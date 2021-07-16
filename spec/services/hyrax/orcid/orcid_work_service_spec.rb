@@ -5,17 +5,15 @@ require 'rails_helper'
 RSpec.describe Hyrax::Orcid::OrcidWorkService do
   let(:sync_preference) { "sync_all" }
   let(:service) { described_class.new(work, orcid_identity) }
-  let(:user) { create(:user, orcid_identity: orcid_identity) }
-  let(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference) }
+  let(:user) { create(:user) }
+  let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }
   let(:work) { create(:work, :public, user: user, **work_attributes) }
   let(:work_attributes) do
     {
       "title" => ["Moomin"],
       "creator" => [
         [{
-          "creator_given_name" => "Smith",
-          "creator_family_name" => "John",
-          "creator_name_type" => "Personal",
+          "creator_name" => "John Smith",
           "creator_orcid" => orcid_id
         }].to_json
       ]
@@ -24,7 +22,7 @@ RSpec.describe Hyrax::Orcid::OrcidWorkService do
   let(:orcid_id) { user.orcid_identity.orcid_id }
   let(:api_version) { Hyrax::Orcid::UrlHelper::ORCID_API_VERSION }
   let(:input) { work.attributes.merge(has_model: work.has_model.first).to_json }
-  let(:meta) { Bolognese::Readers::GenericWorkReader.new(input: input, from: "work") }
+  let(:meta) { Bolognese::Metadata.new(input: input, from: "orcid_hyrax_work") }
   let(:type) { "other" }
   let(:put_code) { "123456" }
   let(:xml) { meta.orcid_xml(type, put_code) }
@@ -112,11 +110,12 @@ RSpec.describe Hyrax::Orcid::OrcidWorkService do
 
     context "when the creator is not the depositor" do
       let(:service) { described_class.new(work, orcid_identity2) }
-      let(:user2) { create(:user, orcid_identity: orcid_identity2) }
-      let(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference) }
+      let(:user2) { create(:user) }
+      let!(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference, user: user2) }
       let(:orcid_id) { user2.orcid_identity.orcid_id }
 
       before do
+        byebug
         orcid_identity2.orcid_works << orcid_work
         orcid_identity2.save
       end

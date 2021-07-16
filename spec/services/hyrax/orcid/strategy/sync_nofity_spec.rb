@@ -5,17 +5,15 @@ require 'rails_helper'
 RSpec.describe Hyrax::Orcid::Strategy::SyncNotify do
   let(:sync_preference) { "sync_notify" }
   let(:strategy) { described_class.new(work, orcid_identity) }
-  let(:user) { create(:user, orcid_identity: orcid_identity) }
-  let(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference) }
+  let(:user) { create(:user) }
+  let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }
   let(:work) { create(:work, :public, user: user, **work_attributes) }
   let(:work_attributes) do
     {
       "title" => ["Moomin"],
       "creator" => [
         [{
-          "creator_given_name" => "Smith",
-          "creator_family_name" => "John",
-          "creator_name_type" => "Personal",
+          "creator_name" => "John Smith",
           "creator_orcid" => orcid_id
         }].to_json
       ]
@@ -24,12 +22,12 @@ RSpec.describe Hyrax::Orcid::Strategy::SyncNotify do
   let(:orcid_id) { user.orcid_identity.orcid_id }
 
   describe "#perform" do
-    before do
-      allow(strategy).to receive(:notify)
-      allow(strategy).to receive(:publish_work)
-    end
-
     context "when the depositor is the primary referenced user" do
+      before do
+        allow(strategy).to receive(:notify)
+        allow(strategy).to receive(:publish_work)
+      end
+
       it "calls publish_work" do
         strategy.perform
 
@@ -39,9 +37,15 @@ RSpec.describe Hyrax::Orcid::Strategy::SyncNotify do
 
     context "when the referenced user is not the depositor" do
       let(:strategy) { described_class.new(work, orcid_identity2) }
-      let(:user2) { create(:user, orcid_identity: orcid_identity2) }
-      let(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference) }
+      let(:user2) { create(:user) }
+      let!(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference, user: user2) }
       let(:orcid_id) { user2.orcid_identity.orcid_id }
+
+      # NOTE: The strategies before block cannot be shared or this spec fails and I dont understand why
+      before do
+        allow(strategy).to receive(:notify)
+        allow(strategy).to receive(:publish_work)
+      end
 
       it "calls notify" do
         strategy.perform
@@ -77,8 +81,8 @@ RSpec.describe Hyrax::Orcid::Strategy::SyncNotify do
 
     context "when the depositing user is not the user being referenced" do
       let(:strategy) { described_class.new(work, orcid_identity2) }
-      let(:user2) { create(:user, orcid_identity: orcid_identity2) }
-      let(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference) }
+      let(:user2) { create(:user) }
+      let!(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference, user: user2) }
       let(:orcid_id) { user2.orcid_identity.orcid_id }
 
       it "returns false" do
@@ -89,8 +93,8 @@ RSpec.describe Hyrax::Orcid::Strategy::SyncNotify do
 
   describe "#notify" do
     let(:strategy) { described_class.new(work, orcid_identity2) }
-    let(:user2) { create(:user, orcid_identity: orcid_identity2) }
-    let(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference) }
+    let(:user2) { create(:user) }
+    let!(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference, user: user2) }
     let(:orcid_id) { user2.orcid_identity.orcid_id }
 
     it "increments the message count for the referenced user" do

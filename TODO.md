@@ -21,6 +21,3 @@ Bolognese:
 
 ## For readme
 
-when cloning, need to:
-
-`git submodule init && git submodule update`

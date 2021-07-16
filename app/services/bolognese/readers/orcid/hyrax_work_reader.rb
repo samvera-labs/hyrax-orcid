@@ -90,7 +90,6 @@ module Bolognese
         end
 
         # Prepare the json to be parsed through Bolognese get_authors method
-        # Bologese wants a hash with `givenName` not `creator_given_name` etc
         #
         # NOTE: The downcase is to counteract Bolognese potentially titleizing the values
         def prepare_author_json_fields(type, json)
