@@ -3,8 +3,8 @@
 require "rails_helper"
 
 RSpec.describe Hyrax::Orcid::PublishWorkJob do
-  let(:user) { create(:user, orcid_identity: orcid_identity) }
-  let(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference) }
+  let(:user) { create(:user) }
+  let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }
   let(:work) { create(:work, user: user, **work_attributes) }
   let(:work_attributes) do
     {

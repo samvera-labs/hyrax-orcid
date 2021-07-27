@@ -97,9 +97,10 @@ module Bolognese
           transformed = Array.wrap(obj).map { |c| c.transform_keys { |k| k.camelize(:lower) } }
 
           transformed.each do |t|
-            next if t["creatorOrcid"].blank?
+            # check for `creatorOrcid` or `contributorOrcid
+            next if t["#{type}Orcid"].blank?
 
-            t["nameIdentifier"] = { "nameIdentifierScheme" => "orcid", "__content__" => t["creatorOrcid"].downcase }
+            t["nameIdentifier"] = { "nameIdentifierScheme" => "orcid", "__content__" => t["#{type}Orcid"].downcase }
           end
 
           transformed.compact

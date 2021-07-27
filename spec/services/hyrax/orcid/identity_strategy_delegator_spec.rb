@@ -4,8 +4,8 @@ require 'rails_helper'
 
 RSpec.describe Hyrax::Orcid::IdentityStrategyDelegator do
   let(:service) { described_class.new(work) }
-  let(:user) { create(:user, orcid_identity: orcid_identity) }
-  let(:orcid_identity) { create(:orcid_identity, work_sync_preference: work_sync_preference) }
+  let(:user) { create(:user) }
+  let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: work_sync_preference, user: user) }
   let(:work) { create(:work, user: user, **work_attributes) }
 
   let(:work_attributes) do
@@ -19,7 +19,11 @@ RSpec.describe Hyrax::Orcid::IdentityStrategyDelegator do
       ]
     }
   end
-  let(:orcid_id) { user.orcid_identity.orcid_id }
+  let(:orcid_id) do
+    orcid_identity # Ensure the association has been created
+
+    user.orcid_identity.orcid_id
+  end
   let(:work_sync_preference) { "sync_all" }
 
   before do

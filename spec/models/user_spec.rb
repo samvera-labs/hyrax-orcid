@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 
-require 'spec_helper'
+require "rails_helper"
 
 RSpec.describe User, type: :model do
-  subject(:user) { FactoryBot.create(:base_user) }
+  subject(:user) { create(:user) }
 
   it { is_expected.to have_one(:orcid_identity) }
 
@@ -15,7 +15,7 @@ RSpec.describe User, type: :model do
     end
 
     context "when the association is found on the user" do
-      subject(:user) { FactoryBot.create(:base_user, :with_orcid_identity) }
+      subject(:user) { create(:user, :with_orcid_identity) }
 
       it "is true" do
         expect(user.orcid_identity?).to be_truthy

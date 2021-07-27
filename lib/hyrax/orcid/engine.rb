@@ -34,9 +34,11 @@ module Hyrax
 
       def self.dynamically_include_mixins
         User.include Hyrax::Orcid::UserBehavior
+
         Hyrax::HyraxHelperBehavior.include Hyrax::Orcid::HelperBehavior
         Hyrax::GenericWorkForm.include Hyrax::Orcid::GenericWorkFormBehavior
         Hyrax::WorkShowPresenter.prepend Hyrax::Orcid::WorkShowPresenterBehavior
+        GenericWork.include Hyrax::Orcid::WorkBehavior
 
         Bolognese::Metadata.prepend Bolognese::Writers::Orcid::XmlWriter
         Bolognese::Metadata.prepend Bolognese::Readers::Orcid::HyraxWorkReader

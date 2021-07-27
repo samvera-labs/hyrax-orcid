@@ -6,10 +6,14 @@ when cloning, need to:
 
 `git submodule init && git submodule update`
 
+## Activating for a model
+
+In your model, include the `Hyrax::Orcid::WorkBehavior` concern
+
 ## Testing
 
-```
- bundle exec rspec `find spec -name *_spec.rb | grep -v internal_test_hyrax`
+```bash
+bundle exec rspec `find spec -name *_spec.rb | grep -v internal_test_hyrax`
 ```
 
 ## License

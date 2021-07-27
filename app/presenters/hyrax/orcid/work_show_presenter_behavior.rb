@@ -6,11 +6,21 @@ module Hyrax
       extend ActiveSupport::Concern
 
       def creator
-        creator = JSON.parse(solr_document.creator.first.presence || "[]")
+        involved(:creator)
+      end
 
-        return if creator.blank?
+      def contributor
+        involved(:contributor)
+      end
 
-        creator.pluck("creator_name")
+      private
+
+      def involved(term)
+        involved = JSON.parse(solr_document.public_send(term).first.presence || "[]")
+
+        return if involved.blank?
+
+        involved.pluck("#{term}_name")
       end
     end
   end

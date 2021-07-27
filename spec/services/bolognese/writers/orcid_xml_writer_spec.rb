@@ -130,11 +130,6 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
         it { expect(doc.xpath("//common:title/text()").to_s).to eq title }
       end
 
-      describe "external-ids" do
-        it { expect(doc.xpath("//common:external-id[common:external-id-type='isbn']/common:external-id-value/text()").to_s).to eq isbn }
-        it { expect(doc.xpath("//common:external-id[common:external-id-type='doi']/common:external-id-url/text()").to_s).to eq "https://doi.org/#{doi}" }
-      end
-
       describe "creators" do
         it { expect(doc.xpath("//work:contributor").count).to eq 3 }
 

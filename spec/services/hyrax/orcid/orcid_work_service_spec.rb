@@ -109,13 +109,17 @@ RSpec.describe Hyrax::Orcid::OrcidWorkService do
     end
 
     context "when the creator is not the depositor" do
+      let!(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference, user: user2) }
       let(:service) { described_class.new(work, orcid_identity2) }
       let(:user2) { create(:user) }
-      let!(:orcid_identity2) { create(:orcid_identity, work_sync_preference: sync_preference, user: user2) }
-      let(:orcid_id) { user2.orcid_identity.orcid_id }
+      let(:orcid_id) do
+        # Not sure why, but the let! isn't acting soon enough and causing the assocition to be missing when called
+        orcid_identity2
+
+        user2.orcid_identity.orcid_id
+      end
 
       before do
-        byebug
         orcid_identity2.orcid_works << orcid_work
         orcid_identity2.save
       end
