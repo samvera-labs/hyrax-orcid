@@ -1,34 +1,44 @@
-<div class="list-group-item">
-	<b><%= t("orcid_identity.preferences.works.title") %></b>
-</div>
+<% if current_user.orcid_referenced_works.present? %>
+	<div class="list-group-item">
+		<b><%= t("orcid_identity.preferences.works.title") %></b>
+	</div>
 
-<div class="table-responsive" id="documents">
-	<table id="works-table" class="table table-striped works-list">
-		<thead>
-			<tr>
-				<th>Work title</th>
-				<th>Creator(s)</th>
-				<th>Work type</th>
-				<th>Visibility</th>
-				<th>Source</th>
-				<th>Sync to ORCID?</th>
-			</tr>
-		</thead>
-		<tbody>
-			<tr>
-				<td><a href="">The work title</a></td>
-				<td>John Smith, Elenor Johnson... </td>
-				<td>Generic Work</td>
-				<td><span class="badge badge-success">Public</span></td>
-				<td>ORID</td>
-				<td>
-					<div class="check">
-						<%= label_tag do %>
-							<input type="checkbox" class="form-check-input" checked="checked">
-						<% end %>
-					</div>
-				</td>
-			</tr>
-		</tbody>
-	</table>
-</div>
+	<div class="table-responsive" id="documents">
+		<table id="works-table" class="table table-striped works-list">
+			<thead>
+				<tr>
+					<th>Work title</th>
+					<th>Creator(s)</th>
+					<th>Work type</th>
+					<th>Visibility</th>
+					<th>Source</th>
+					<th>Sync to ORCID?</th>
+				</tr>
+			</thead>
+			<tbody>
+				<% published_works = current_user.orcid_identity.orcid_works.map(&:work_uuid) %>
+				<% current_user.orcid_referenced_works.each do |doc| %>
+					<tr>
+						<td><%= link_to doc["title_tesim"].first, nil %></td>
+						<td>
+							<%= doc["creator_tesim"].first
+								.then { |s| JSON.parse(s) }
+								.each_with_object([]) { |h, s| s << h["creator_name"] }
+								.join(", ") %>
+						</td>
+						<td><%= doc["human_readable_type_tesim"].first %></td>
+						<td><%= visibility_badge doc["visibility_ssi"] %></td>
+						<td>Local</td>
+						<td>
+							<div class="check">
+								<%= label_tag do %>
+									<%= check_box_tag :published, 1, published_works.include?(doc["id"]), class: "form-check-input" %>
+								<% end %>
+							</div>
+						</td>
+					</tr>
+				<% end %>
+			</tbody>
+		</table>
+	</div>
+<% end %>

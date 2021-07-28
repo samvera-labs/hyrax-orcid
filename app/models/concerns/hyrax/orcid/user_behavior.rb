@@ -19,6 +19,21 @@ module Hyrax
       def orcid_identity?
         orcid_identity.present?
       end
+
+      def orcid_referenced_works
+        @_orcid_referenced_works ||= begin
+          return [] if orcid_identity.blank?
+
+          # NOTE: I'm trying to avoid returning ID's and performing a Fedora query if I can help it,
+          # but if we need to instantiate the Model objects, this can be done by returning just the ID
+          # options = { fl: [:id], rows: 1_000_000 }
+
+          # For some reason, `'` causes the query to return no results, so we need to use `\"`
+          request = ActiveFedora::SolrService.get("creator_tesim:\"*#{orcid_identity.orcid_id}*\"", rows: 1_000_000)
+
+          request.dig("response", "docs")
+        end
+      end
     end
   end
 end
