@@ -17,4 +17,8 @@ class OrcidIdentity < ApplicationRecord
   def self.profile_sync_preference
     %i[employment funding education works distinctions websites memberships other].freeze
   end
+
+  def published_works
+    @_pubished_works ||= Hyrax::Orcid::Work::ReaderService.new(self).read
+  end
 end
