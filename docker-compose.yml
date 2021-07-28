@@ -102,12 +102,10 @@ services:
       - redis
       - chrome
       - db_migrate
-    # expose:
-      # - 3000
     stdin_open: true
     tty: true
     ports:
-      - 3000:3000 # uncomment this if you dont use dory or another proxy
+      - 3000:3000
 
   db_migrate:
     <<: *app
@@ -136,3 +134,4 @@ services:
     image: selenium/standalone-chrome:3.141
     networks:
       internal:
+
