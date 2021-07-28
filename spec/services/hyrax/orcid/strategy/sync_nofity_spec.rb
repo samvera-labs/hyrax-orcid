@@ -56,7 +56,7 @@ RSpec.describe Hyrax::Orcid::Strategy::SyncNotify do
   end
 
   describe "#publish_work" do
-    let(:service_class) { Hyrax::Orcid::OrcidWorkService }
+    let(:service_class) { Hyrax::Orcid::Work::PublisherService }
     let(:service) { instance_double(service_class, publish: nil) }
 
     before do

@@ -10,7 +10,7 @@ module Hyrax
         end
 
         def perform
-          Hyrax::Orcid::OrcidWorkService.new(@work, @identity).publish
+          Hyrax::Orcid::Work::PublisherService.new(@work, @identity).publish
         end
       end
     end

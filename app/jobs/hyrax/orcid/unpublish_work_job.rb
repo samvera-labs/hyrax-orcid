@@ -7,7 +7,7 @@ module Hyrax
       queue_as Hyrax.config.ingest_queue_name
 
       def perform(work, identity)
-        Hyrax::Orcid::OrcidWorkService.new(work, identity).unpublish
+        Hyrax::Orcid::Work::PublisherService.new(work, identity).unpublish
       end
     end
   end

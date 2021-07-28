@@ -37,7 +37,7 @@ RSpec.describe Hyrax::Orcid::PublishWorkJob do
   end
 
   describe ".perform" do
-    let(:sync_class) { Hyrax::Orcid::OrcidWorkService }
+    let(:sync_class) { Hyrax::Orcid::Work::PublisherService }
     let(:sync_instance) { instance_double(sync_class, publish: nil) }
 
     before do

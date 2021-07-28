@@ -24,7 +24,7 @@ module Hyrax
         protected
 
           def publish_work
-            Hyrax::Orcid::OrcidWorkService.new(@work, @identity).publish
+            Hyrax::Orcid::Work::PublisherService.new(@work, @identity).publish
           end
 
           def notify

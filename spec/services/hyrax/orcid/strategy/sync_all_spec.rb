@@ -20,7 +20,7 @@ RSpec.describe Hyrax::Orcid::Strategy::SyncAll do
     }
   end
   let(:orcid_id) { user.orcid_identity.orcid_id }
-  let(:service_class) { Hyrax::Orcid::OrcidWorkService }
+  let(:service_class) { Hyrax::Orcid::Work::PublisherService }
   let(:service) { instance_double(service_class, publish: nil) }
 
   before do
