@@ -9,6 +9,7 @@ module Hyrax
         "https://#{orcid_domain}/#{profile_id}"
       end
 
+      # TODO: Move ENV vars to options panel
       def orcid_authorize_uri
         params = {
           client_id: ENV["ORCID_CLIENT_ID"],
