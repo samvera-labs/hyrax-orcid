@@ -42,6 +42,8 @@ en:
           manual: Do not sync or notify you new public works automatically, however syncing is available via the works section below
       works:
         title: Works
+        nothing_found: |
+          There are currently no locals works in which your Orcid ID is referenced as a creator or contributor.
     unpublish:
       notification:
         subject: |
@@ -56,6 +58,6 @@ en:
           <a href="%{depositor_profile}">%{depositor_description}</a> has added you as a collatorator to <a href="%{work_path}">%{work_title}</a>.
           Because of your <a href="%{profile_path}">sync preferences</a>, we will only push this work to your ORCID
           profile, if you click here to <a href="%{approval_path}">approve this action</a>.
-      approved: |
+      published: |
         The work has been published to your ORCID profile, you can now delete the notification.
 

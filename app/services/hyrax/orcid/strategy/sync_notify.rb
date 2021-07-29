@@ -38,7 +38,7 @@ module Hyrax
               profile_path: hyrax_routes.dashboard_profile_path(@identity.user),
               work_title: @work.title.first,
               work_path: routes.send("hyrax_#{@work.class.name.underscore}_path", @work.id),
-              approval_path: hyrax_orcid_routes.orcid_works_approval_path(work_id: @work.id, orcid_id: @identity.orcid_id)
+              approval_path: hyrax_orcid_routes.orcid_works_publish_path(work_id: @work.id, orcid_id: @identity.orcid_id)
             }
             I18n.t("orcid_identity.notify.notification.body", params)
           end

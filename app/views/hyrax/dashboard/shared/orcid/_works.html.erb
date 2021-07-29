@@ -1,14 +1,17 @@
-<% if current_user.orcid_referenced_works.present? %>
-	<div class="list-group-item">
-		<b><%= t("orcid_identity.preferences.works.title") %></b>
-	</div>
+<div class="list-group-item">
+	<b><%= t("orcid_identity.preferences.works.title") %></b>
+</div>
 
-	<div class="table-responsive" id="documents">
+<div class="table-responsive" id="documents">
+	<% if current_user.orcid_referenced_works.present? %>
+		<% published_works = current_user.orcid_identity.orcid_works.map(&:work_uuid) %>
+
 		<table id="works-table" class="table table-striped works-list">
 			<thead>
 				<tr>
 					<th>Work title</th>
 					<th>Creator(s)</th>
+					<th>Contributor(s)</th>
 					<th>Work type</th>
 					<th>Visibility</th>
 					<th>Source</th>
@@ -16,23 +19,26 @@
 				</tr>
 			</thead>
 			<tbody>
-				<% published_works = current_user.orcid_identity.orcid_works.map(&:work_uuid) %>
 				<% current_user.orcid_referenced_works.each do |doc| %>
+					<% type = doc.dig("has_model_ssim").first.underscore %>
+
 					<tr>
-						<td><%= link_to doc["title_tesim"].first, nil %></td>
-						<td>
-							<%= doc["creator_tesim"].first
-								.then { |s| JSON.parse(s) }
-								.each_with_object([]) { |h, s| s << h["creator_name"] }
-								.join(", ") %>
-						</td>
+						<td><%= link_to doc["title_tesim"].first, routes.send("hyrax_#{type}_path", doc["id"]) %></td>
+						<td><%= involved_to_string(:creator, doc["creator_tesim"]) %></td>
+						<td><%= involved_to_string(:contributor, doc["contributor_tesim"]) %></td>
 						<td><%= doc["human_readable_type_tesim"].first %></td>
 						<td><%= visibility_badge doc["visibility_ssi"] %></td>
 						<td>Local</td>
 						<td>
+							<% checked = published_works.include?(doc["id"]) %>
+							<% route_options = { work_id: doc["id"], orcid_id: current_user.orcid_identity.orcid_id } %>
+							<% toggle_on_path = hyrax_orcid_routes.orcid_works_publish_path(**route_options) %>
+							<% toggle_off_path = hyrax_orcid_routes.orcid_works_unpublish_path(**route_options) %>
+
 							<div class="check">
 								<%= label_tag do %>
-									<%= check_box_tag :published, 1, published_works.include?(doc["id"]), class: "form-check-input" %>
+									<% options = { class: "form-check-input js-orcid-sync-work-toggle", data: { "toggle-on" => toggle_on_path, "toggle-off" => toggle_off_path } } %>
+									<%= check_box_tag :published, 1, checked, options %>
 								<% end %>
 							</div>
 						</td>
@@ -40,5 +46,9 @@
 				<% end %>
 			</tbody>
 		</table>
-	</div>
-<% end %>
+	<% else %>
+		<div class="list-group-item">
+			<p><%= t("orcid_identity.preferences.works.nothing_found") %></p>
+		</div>
+	<% end %>
+</div>
