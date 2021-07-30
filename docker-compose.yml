@@ -14,7 +14,6 @@ networks:
 
 services:
   solr: &solr
-    # Any greater version of solr fails due to a change in supported data types in schema.xml
     image: solr:8.6.2
     volumes:
       - ./spec/internal_test_hyrax/solr/config:/opt/solr/server/configsets/hyrax_conf
@@ -62,7 +61,6 @@ services:
     image: hyrax-orcid/dev:latest
     command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
     environment: &web_environment
-      CHROME_HOSTNAME: chrome
       DATABASE_ADAPTER: postgresql
       DATABASE_NAME: hyrax
       DATABASE_HOST: db
@@ -100,7 +98,6 @@ services:
       - solr
       - fcrepo
       - redis
-      - chrome
       - db_migrate
     stdin_open: true
     tty: true
@@ -127,11 +124,6 @@ services:
     command: redis-server
     volumes:
       - redis:/data
-    networks:
-      internal:
-
-  chrome:
-    image: selenium/standalone-chrome:3.141
     networks:
       internal:
 

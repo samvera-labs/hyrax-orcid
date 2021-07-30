@@ -29,7 +29,7 @@ RUN         bundle install --jobs=4 --retry=3
 FROM        ruby:2.7.1-slim-buster as base
 
 RUN         apt-get update && apt-get install -y --no-install-recommends curl gnupg2 \
-         && curl -sL http://deb.nodesource.com/setup_8.x | bash - 
+         && curl -sL http://deb.nodesource.com/setup_8.x | bash -
 RUN         apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
             nodejs \
             sendmail \
@@ -51,10 +51,18 @@ RUN         apt-get update && apt-get install -y --no-install-recommends --allow
             postgresql-client \
             rsync \
             tzdata \
-            unzip \
-            && \
-            apt-get clean && \
-            rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+         	  unzip \
+						wget \
+						fonts-liberation libgbm1 xdg-utils
+
+RUN					cd /tmp && \
+						wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+						dpkg -i google-chrome-stable_current_amd64.deb && \
+						apt-get install -f
+
+RUN					apt-get clean && \
+							rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
 
 # If changes are made to fits version or location,
 # amend `LD_LIBRARY_PATH` in docker-compose.yml accordingly.
@@ -74,7 +82,6 @@ COPY        --from=bundle-dev /usr/local/bundle /usr/local/bundle
 
 ARG         RAILS_ENV=development
 RUN         dpkg -i /chrome.deb || apt-get install -yf
-
 
 # Build production gems
 FROM        bundle as bundle-prod
