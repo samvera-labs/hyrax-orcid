@@ -113,5 +113,26 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true do
       expect(page).to have_content(user.name)
       expect(page).not_to have_link("Connect to ORCID")
     end
+
+    context "when the user has referenced works" do
+      let(:alt_user) { create(:user) }
+      let(:work) { create(:work, user: alt_user, **work_attributes) }
+      let(:work_attributes) do
+        {
+          "title" => ["Moomin"],
+          "creator" => [
+            [{
+              "creator_name" => user.name,
+              "creator_orcid" => user.orcid_identity.orcid_id
+            }].to_json
+          ],
+          "visibility" => "open"
+        }
+      end
+
+      it "displays the work" do
+        # ActiveFedora::SolrService.add(work.to_solr, commit: true)
+      end
+    end
   end
 end
