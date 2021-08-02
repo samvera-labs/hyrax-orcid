@@ -2,8 +2,10 @@
 
 # This file is copied to spec/ when you run 'rails generate rspec:install'
 require 'spec_helper'
-require File.expand_path('internal_test_hyrax/spec/rails_helper.rb', __dir__)
+# require File.expand_path('internal_test_hyrax/spec/rails_helper.rb', __dir__)
+
 ENV['RAILS_ENV'] ||= 'test'
+
 # HACK: Not sure why this is required, but otherwise Rails.env will be set to development
 Rails.env = ENV["RAILS_ENV"]
 require File.expand_path('internal_test_hyrax/config/environment', __dir__)
@@ -28,8 +30,8 @@ WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage
 Rails.application.routes.default_url_options[:host] = 'www.example.com'
 
 # This avoids us having issues with the test hyrax app factories being registered
-FactoryBot.definition_file_paths = [Rails.root.join("..", "..", "spec", "factories")]
-FactoryBot.find_definitions
+# FactoryBot.definition_file_paths = [Rails.root.join("..", "..", "spec", "factories")]
+# FactoryBot.find_definitions
 
 # Add additional requires below this line. Rails is not loaded until this point!
 # For testing generators
@@ -46,6 +48,7 @@ Capybara.register_driver :selenium_chrome_headless_sandboxless do |app|
   # client = Selenium::WebDriver::Remote::Http::Default.new
   # client.timeout = 90 # instead of the default 60
   # Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options, http_client: client)
+  browser_options.args << '--window-size=2880,1680'
   Capybara::Selenium::Driver.new(app, browser: :chrome, options: browser_options)
 end
 
@@ -54,7 +57,7 @@ Capybara.javascript_driver = :selenium_chrome_headless_sandboxless # This is slo
 Capybara.default_max_wait_time = 10 # We may have a slow application, let's give it some time.
 
 # FIXME: Pin to older version of chromedriver to avoid issue with clicking non-visible elements
-Webdrivers::Chromedriver.required_version = '72.0.3626.69'
+# Webdrivers::Chromedriver.required_version = '72.0.3626.69'
 
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
@@ -94,33 +97,12 @@ RSpec.configure do |config|
   # Remove this line if you're not using ActiveRecord or ActiveRecord fixtures
   config.fixture_path = "#{::Rails.root}/spec/fixtures"
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, remove the following line or assign false
-  # instead of true.
   config.use_transactional_fixtures = true
 
-  # You can uncomment this line to turn off ActiveRecord support entirely.
-  # config.use_active_record = false
-
-  # RSpec Rails can automatically mix in different behaviours to your tests
-  # based on their file location, for example enabling you to call `get` and
-  # `post` in specs under `spec/controllers`.
-  #
-  # You can disable this behaviour by removing the line below, and instead
-  # explicitly tag your specs with their type, e.g.:
-  #
-  #     RSpec.describe UsersController, type: :controller do
-  #       # ...
-  #     end
-  #
-  # The different available types are documented in the features, such as in
-  # https://relishapp.com/rspec/rspec-rails/docs
   config.infer_spec_type_from_file_location!
 
   # Filter lines from Rails gems in backtraces.
   config.filter_rails_from_backtrace!
-  # arbitrary gems may also be filtered via:
-  # config.filter_gems_from_backtrace("gem name")
 
   config.include FactoryBot::Syntax::Methods
 
@@ -131,7 +113,6 @@ RSpec.configure do |config|
   # config.after do
   #   ActiveFedora::Cleaner.clean!
   # end
-
   include Noid::Rails::RSpec
   config.before(:suite) { disable_production_minter! }
   config.after(:suite)  { enable_production_minter! }
@@ -156,11 +137,13 @@ RSpec.configure do |config|
   # Configuration for feature tests
   config.include Features::SessionHelpers, type: :feature
   config.include Warden::Test::Helpers, type: :feature
+
   config.after(:each, type: :feature) do
     Warden.test_reset!
     Capybara.reset_sessions!
     page.driver.reset!
   end
+
   config.before(:all, type: :feature) do
     visit "/assets/application.css"
     visit "/assets/application.js"

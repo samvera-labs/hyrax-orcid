@@ -3,10 +3,10 @@
 require 'rails_helper'
 
 RSpec.describe Hyrax::Orcid::WorkOrcidExtractor do
-  let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }
-  let(:service) { described_class.new(work) }
-  let(:sync_preference) { "sync_all" }
   let(:user) { create(:user) }
+  let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }
+  let(:sync_preference) { "sync_all" }
+  let(:service) { described_class.new(work) }
   let(:work) { create(:work, user: user, **work_attributes) }
   let(:work_attributes) do
     {
