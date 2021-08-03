@@ -123,6 +123,11 @@ RSpec.configure do |config|
     config.include Devise::TestHelpers, type: :controller
   end
 
+  config.before do |example|
+    # Pass `:clean' to destroy objects in fedora/solr and start from scratch
+    ActiveFedora::Cleaner.clean! if example.metadata[:clean]
+  end
+
   # Internal Tests to skip
   # Make sure this around is declared first so it runs before other around callbacks
   skip_internal_test_list = ['./spec/internal_test_hyrax/spec/features/create_generic_work_spec.rb']
