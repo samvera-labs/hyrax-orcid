@@ -42,8 +42,7 @@ en:
           manual: Do not sync or notify you new public works automatically, however syncing is available via the works section below
       works:
         title: Works
-        nothing_found: |
-          There are currently no locals works in which your Orcid ID is referenced as a creator or contributor.
+        nothing_found: There are currently no locals works in which your Orcid ID is referenced as a creator or contributor.
     unpublish:
       notification:
         subject: |

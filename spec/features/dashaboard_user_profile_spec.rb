@@ -2,8 +2,8 @@
 
 require "rails_helper"
 
-# FIXME: Need to figure out how to get the selenium chrome driver working
-RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true do
+# page.save_screenshot(full: true)
+RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clean: true do
   let(:user) { create(:admin) }
   let(:code) { "123456" }
   let(:orcid_id) { "0000-0003-0652-1234" }
@@ -101,9 +101,23 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true do
     let(:user) { create(:user) }
     let(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }
     let(:sync_preference) { "sync_all" }
+    let(:work) { create(:work, :public, **work_attributes) }
+    let(:work_attributes) do
+      {
+        "creator" => [
+          [{
+            "creator_name" => user.name,
+            "creator_orcid" => user.orcid_identity.orcid_id
+          }].to_json
+        ]
+      }
+    end
+    let(:orcid_work) {}
 
     before do
-      orcid_identity
+      # Using let! is causing strange fcrepo errors
+      # Ldp::Conflict: Can't call create on an existing resource
+      orcid_identity && work && orcid_work
 
       visit hyrax.dashboard_profile_path(user.to_param, locale: "en")
     end
@@ -115,23 +129,28 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true do
     end
 
     context "when the user has referenced works" do
-      let(:alt_user) { create(:user) }
-      let(:work) { create(:work, user: alt_user, **work_attributes) }
-      let(:work_attributes) do
-        {
-          "title" => ["Moomin"],
-          "creator" => [
-            [{
-              "creator_name" => user.name,
-              "creator_orcid" => user.orcid_identity.orcid_id
-            }].to_json
-          ],
-          "visibility" => "open"
-        }
+      it "displays the work with sync unchecked" do
+        expect(page).to have_selector("tr.referenced-work", count: 1)
+        expect(page).to have_unchecked_field("referenced-work-#{work.id}")
       end
+    end
 
-      it "displays the work" do
-        # ActiveFedora::SolrService.add(work.to_solr, commit: true)
+    context "when the user has a synced referenced work" do
+      let(:orcid_work) { orcid_identity.orcid_works.create(work_uuid: work.id, put_code: 123456) }
+
+      it "displays the work with sync checked" do
+        expect(page).to have_selector("tr.referenced-work", count: 1)
+        expect(page).to have_checked_field("referenced-work-#{work.id}")
+      end
+    end
+
+    context "when the work is private" do
+      let(:work) { create(:work, :private, **work_attributes) }
+
+      it "does not display the work" do
+        expect(page).to have_content(I18n.t("orcid_identity.preferences.works.nothing_found"))
+        expect(page).not_to have_selector("tr.referenced-work", count: 1)
+        expect(page).not_to have_field("referenced-work-#{work.id}")
       end
     end
   end

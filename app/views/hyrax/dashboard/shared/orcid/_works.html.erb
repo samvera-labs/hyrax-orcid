@@ -22,13 +22,13 @@
 				<% current_user.orcid_referenced_works.each do |doc| %>
 					<% type = doc.dig("has_model_ssim").first.underscore %>
 
-					<tr>
+					<tr class="referenced-work">
 						<td><%= link_to doc["title_tesim"].first, routes.send("hyrax_#{type}_path", doc["id"]) %></td>
 						<td><%= involved_to_string(:creator, doc["creator_tesim"]) %></td>
 						<td><%= involved_to_string(:contributor, doc["contributor_tesim"]) %></td>
 						<td><%= doc["human_readable_type_tesim"].first %></td>
 						<td><%= visibility_badge doc["visibility_ssi"] %></td>
-						<td>Local</td>
+						<td>Deposit</td>
 						<td>
 							<% checked = published_works.include?(doc["id"]) %>
 							<% route_options = { work_id: doc["id"], orcid_id: current_user.orcid_identity.orcid_id } %>
@@ -37,7 +37,11 @@
 
 							<div class="check">
 								<%= label_tag do %>
-									<% options = { class: "form-check-input js-orcid-sync-work-toggle", data: { "toggle-on" => toggle_on_path, "toggle-off" => toggle_off_path } } %>
+									<% options = {
+										id: "referenced-work-#{doc["id"]}",
+										class: "form-check-input js-orcid-sync-work-toggle",
+										data: { "toggle-on": toggle_on_path, "toggle-off": toggle_off_path }
+									} %>
 									<%= check_box_tag :published, 1, checked, options %>
 								<% end %>
 							</div>
