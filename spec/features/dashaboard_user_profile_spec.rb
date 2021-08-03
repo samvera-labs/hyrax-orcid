@@ -115,8 +115,7 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
     let(:orcid_work) {}
 
     before do
-      # Using let! is causing strange fcrepo errors
-      # Ldp::Conflict: Can't call create on an existing resource
+      # I am not sure let! does what i need
       orcid_identity && work && orcid_work
 
       visit hyrax.dashboard_profile_path(user.to_param, locale: "en")
