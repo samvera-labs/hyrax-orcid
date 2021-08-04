@@ -51,6 +51,9 @@ module Hyrax
         Hyrax::CurationConcern.actor_factory.insert_before(*actors)
         Hyrax::CurationConcern.actor_factory.use Hyrax::Actors::Orcid::PublishWorkActor
 
+        # Insert an extra step in the Blacklight rendering pipeline where our JSON can be parsed
+        Blacklight::Rendering::Pipeline.operations.insert(1, Hyrax::Orcid::Blacklight::Rendering::PipelineJsonExtractor)
+
         # Append our locales so they have precedence
         I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join('config', 'locales', '*.{rb,yml}')]
 
