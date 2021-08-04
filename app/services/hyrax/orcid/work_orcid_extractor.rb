@@ -6,8 +6,6 @@ module Hyrax
       include Hyrax::Orcid::WorkFormNameHelper
       include Hyrax::Orcid::OrcidHelper
 
-      TARGET_TERMS = %i[creator contributor].freeze
-
       def initialize(work)
         @work = work
         @orcids = []
@@ -34,8 +32,9 @@ module Hyrax
         []
       end
 
+      # FIXME: `GenericWork.json_fields` could be a configuration option
       def target_terms
-        (TARGET_TERMS & work_type_terms)
+        (GenericWork.json_fields & work_type_terms)
       end
 
       protected

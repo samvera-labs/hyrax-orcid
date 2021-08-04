@@ -26,7 +26,7 @@ module Hyrax
           end
 
           def name_blank?(field, obj)
-            return false unless field.in? [:creator]
+            return false unless field.in? GenericWork.json_fields
 
             recursive_blank?(Array(obj).map { |o| o.reject { |k, _v| k == "#{field}_name_type" } })
           end
