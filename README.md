@@ -16,21 +16,27 @@ In your model, include the `Hyrax::Orcid::WorkBehavior` concern
 bundle exec rspec `find spec -name *_spec.rb | grep -v internal_test_hyrax`
 ```
 
-When running the specs, if yousee the following error:
+## Development
 
-```bash
-Failure/Error: work.save
+The app uses an sqlite database which is stored inside `spec/internal_test_hyrax/db`. If you wish to nuke your app and start again, delete this file,
+then you will need to ensure that the db is created, migrations are run and seeds imported before the app will start, by using something like this to start the web container:
 
-      Ldp::Conflict:
-        Can't call create on an existing resource (http://fcrepo:8080/fcrepo/rest/test/5t/34/sj/56/5t34sj56t)
+```
+command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
 ```
 
-You can try to remove the volumes for the app - this will however mean you need to recreate the repositories.
+You will need to create a new user before you can login. Admin users are found within the `spec/internal_test_hyrax/config/role_map.yml`. Login to the rails console and create a user:
 
-```bash
-dc down --volumes; dc build; dc up -d web; docker attach hyrax-orcid_web_1
+```ruby
+User.create(email: 'archivist1@example.com', password: 'test1234')
 ```
 
+If you get to a situation where you cannot create works, your admin set might be missing:
+
+```ruby
+rails app:hyrax:default_collection_types:create
+rails app:hyrax:default_admin_set:create
+```
 
 ## License
 
