@@ -59,4 +59,23 @@ en:
           profile, if you click here to <a href="%{approval_path}">approve this action</a>.
       published: |
         The work has been published to your ORCID profile, you can now delete the notification.
+    profile:
+      heading_suffix: Synced from ORCID
+      employment:
+        title: Employment
+      funding:
+        title: Funding
+      education:
+        title: Education
+      works:
+        title: Works
+      distinctions:
+        title: Distinctions
+      websites:
+        title: Websites
+      memberships:
+        title: Memberships and Services
+      other:
+        title: Misc
+
 
