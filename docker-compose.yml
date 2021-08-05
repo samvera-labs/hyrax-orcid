@@ -3,11 +3,10 @@ version: '3.4'
 volumes:
   fcrepo:
   solr:
-  db:
   redis:
   app:
-  assets:
   cache:
+  assets:
 
 networks:
   internal:
@@ -38,35 +37,16 @@ services:
     networks:
       internal:
 
-  db: &db
-    image: postgres:10-alpine
-    environment: &db_environment
-      PGDATA: /data
-      POSTGRES_PASSWORD: DatabaseFTW
-      POSTGRES_USER: postgres
-      POSTGRES_MULTIPLE_DATABASES: hyrax,hyrax_test
-    volumes:
-      - ./.docker-postgres:/docker-entrypoint-initdb.d
-      - db:/data
-    ports:
-      - "5432:5432"
-    networks:
-      internal:
-
   app: &app
     build:
       context: .
       dockerfile: Dockerfile
       target: dev
     image: hyrax-orcid/dev:latest
+    # NOTE: To setup the db before the app loads, use the following, but its normally unncessarily slow if you dont have migrations to run
+    # command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
     command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
     environment: &web_environment
-      DATABASE_ADAPTER: postgresql
-      DATABASE_NAME: hyrax
-      DATABASE_HOST: db
-      DATABASE_PASSWORD: DatabaseFTW
-      DATABASE_USER: postgres
-      DATABASE_TEST_NAME: hyrax_test
       # End of copy
       FCREPO_HOST: fcrepo
       FCREPO_PORT: 8080
@@ -94,30 +74,13 @@ services:
     environment:
       <<: *web_environment
     depends_on:
-      - db
       - solr
       - fcrepo
       - redis
-      - db_migrate
     stdin_open: true
     tty: true
     ports:
       - 3000:3000
-
-  db_migrate:
-    <<: *app
-    entrypoint: ["sh", "-c"]
-    command: 'cd /home/app/bin/ && ./db-migrate-seed.sh'
-    environment:
-      <<: *web_environment
-      DB_HOST: db
-      DB_PORT: 5432
-      #FCREPO_HOST: fcrepo
-      #FCREPO_PORT: 8080
-      SOLR_HOST: solr
-      SOLR_PORT: 8983
-    depends_on:
-      - db
 
   redis: &redis
     image: redis:4
