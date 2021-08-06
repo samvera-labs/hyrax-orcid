@@ -1,0 +1,9 @@
+<% reader = Hyrax::Orcid::Record::ReaderService.new(orcid_identity) %>
+
+<% orcid_identity.selected_sync_preferences.each do |key| %>
+	<% method_name = "read_#{key.underscore.singularize}" %>
+
+	<% next unless reader.respond_to?(method_name) %>
+
+	<%= render "hyrax/orcid/users/partials/#{key}", key: key, entries: reader.send(method_name) %>
+<% end %>

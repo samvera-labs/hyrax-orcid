@@ -52,29 +52,52 @@
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
   }
 
-  h2 {
-    display: inline;
-    font-size: 17px;
-    font-weight: bold;
-    margin: 5px 5px 0;
-  }
+  .list-group {
+    padding-right: 0px;
 
-  .heading-suffix {
-    color: #949393;
-    font-style: italic;
-  }
-
-  .list-entry {
-    padding: 10px;
-
-    &:nth-child(odd) {
-      background-color: #F9F9F9;
+    &:last-child {
+      padding-right: 0px;
     }
 
-    h3 {
-      font-weight: normal;
-      margin-bottom: 5px;
-      margin-top: 0px;
+    .list-group-heading {
+      padding: 15px 15px 10px 15px;
+    }
+
+    h2 {
+      display: inline;
+      font-size: 17px;
+      font-weight: bold;
+      margin: 5px 5px 0;
+    }
+
+    .heading-suffix {
+      color: #949393;
+      font-style: italic;
+    }
+
+    .list-entry {
+      padding: 10px;
+
+      &:nth-child(odd) {
+        background-color: #F9F9F9;
+      }
+
+      h3 {
+        font-weight: normal;
+        margin-bottom: 5px;
+        margin-top: 7px;
+      }
+
+      ul {
+        padding: 0;
+        margin: 10px 0 0 0;
+
+        li {
+          list-style: none;
+          font-size: 13px;
+          margin-bottom: 0px;
+        }
+      }
     }
   }
 }

@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 module Hyrax
-  module Dashboard
-    module Orcid
+  module Orcid
+    module Dashboard
       class OrcidIdentitiesController < ApplicationController
+        include Hyrax::Orcid::RouteHelper
+
         with_themed_layout "dashboard"
         before_action :authenticate_user!
 
@@ -17,7 +19,7 @@ module Hyrax
             flash[:error] = I18n.t("orcid_identity.preferences.create.failure", error: authorization_body.dig("error"))
           end
 
-          redirect_to dashboard_profile_path(current_user)
+          redirect_to hyrax_routes.dashboard_profile_path(current_user)
         end
 
         def update
@@ -27,7 +29,7 @@ module Hyrax
             flash[:error] = I18n.t("orcid_identity.preferences.update.failure")
           end
 
-          redirect_back fallback_location: dashboard_profile_path(current_user)
+          redirect_back fallback_location: hyrax_routes.dashboard_profile_path(current_user)
         end
 
         def destroy
@@ -37,37 +39,38 @@ module Hyrax
           current_user.orcid_identity.destroy
           flash[:notice] = I18n.t("orcid_identity.preferences.destroy.success")
 
-          redirect_back fallback_location: dashboard_profile_path(current_user)
+          redirect_back fallback_location: hyrax_routes.dashboard_profile_path(current_user)
         end
 
         protected
 
-          def permitted_preference_params
-            params.require(:orcid_identity).permit(:work_sync_preference, profile_sync_preference: {})
-          end
+        def permitted_preference_params
+          params.require(:orcid_identity).permit(:work_sync_preference, profile_sync_preference: {})
+        end
 
-          def request_authorization
-            data = {
-              client_id: ENV["ORCID_CLIENT_ID"],
-              client_secret: ENV["ORCID_CLIENT_SECRET"],
-              grant_type: "authorization_code",
-              code: code
-            }
+        def request_authorization
+          # TODO: Put these in an options panel
+          data = {
+            client_id: ENV["ORCID_CLIENT_ID"],
+            client_secret: ENV["ORCID_CLIENT_SECRET"],
+            grant_type: "authorization_code",
+            code: code
+          }
 
-            @authorization_response = Faraday.post(helpers.orcid_token_uri, data.to_query, "Accept" => "application/json")
-          end
+          @authorization_response = Faraday.post(helpers.orcid_token_uri, data.to_query, "Accept" => "application/json")
+        end
 
-          def authorization_successful?
-            @authorization_response.success?
-          end
+        def authorization_successful?
+          @authorization_response.success?
+        end
 
-          def authorization_body
-            JSON.parse(@authorization_response.body)
-          end
+        def authorization_body
+          JSON.parse(@authorization_response.body)
+        end
 
-          def code
-            params.require(:code)
-          end
+        def code
+          params.require(:code)
+        end
       end
     end
   end

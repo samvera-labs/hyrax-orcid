@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
 module Hyrax
-  module Dashboard
-    module Orcid
+  module Orcid
+    module Dashboard
       class WorksController < ::ApplicationController
         def publish
           Hyrax::Orcid::PublishWorkJob.send(action, work, identity)

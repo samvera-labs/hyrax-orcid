@@ -15,10 +15,10 @@ class OrcidIdentity < ApplicationRecord
   end
 
   def self.profile_sync_preference
-    %i[employment funding education works distinctions websites memberships other].freeze
+    %i[educations employments fundings peer-reviews].freeze
   end
 
-  def published_works
-    @_pubished_works ||= Hyrax::Orcid::Work::ReaderService.new(self).read
+  def selected_sync_preferences
+    profile_sync_preference.select { |_k, v| v == "1" }.keys
   end
 end

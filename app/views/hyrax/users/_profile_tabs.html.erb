@@ -8,4 +8,11 @@
 	<%= render 'activity', presenter: presenter %>
 </div> <!-- /tab-content -->
 
-<%= render "hyrax/users/orcid/profile", presenter: presenter %>
+<% if Flipflop.enabled?(:orcid_identities) && presenter.user.orcid_identity? %>
+	<div
+		id="orcid-profile"
+		class="js-orcid-profile"
+		data-orcid-profile-path="<%= hyrax_orcid_routes.users_orcid_profile_path(presenter.user.orcid_identity.orcid_id) %>"
+	>
+	</div>
+<% end %>
