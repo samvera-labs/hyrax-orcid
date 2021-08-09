@@ -12,7 +12,7 @@ var onLoad = function() {
       url: $target.data("orcid-profile-path"),
       beforeSend: function(_xhr, _settings) {
         // Add spinner and remove existing content
-        $target.append($("<div/>", { class: "js-orcid-progress", text: "Requesting Profile" }))
+        $target.append($("<div/>", { class: "orcid-progress js-orcid-progress", text: "Requesting Profile..." }))
       },
       success: function(data, _status, _xhr) {
         $target.append(data)
@@ -21,7 +21,7 @@ var onLoad = function() {
         console.log("Error:", status)
       },
       complete: function(_xhr, _status){
-         $(".js-orcid-progress").remove()
+        $(".js-orcid-progress").remove()
       }
     });
   }

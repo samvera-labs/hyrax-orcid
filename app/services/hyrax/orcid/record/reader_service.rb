@@ -22,7 +22,7 @@ module Hyrax
           response.dig("fundings", "group")
         end
 
-        def read_peer_reviews
+        def read_peer_review
           response.dig("peer-reviews", "group")
         end
 

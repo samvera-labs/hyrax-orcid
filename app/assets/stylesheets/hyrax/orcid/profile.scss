@@ -1,55 +1,15 @@
-.btn {
-  &.float-right {
-    float: right;
-  }
-
-  &.margin-bottom {
-    margin-bottom: 10px;
-  }
-}
-
-#works-table {
-  border: 1px solid #ddd;
-}
-
-.badge-success {
-  background-color: #28a745;
-  color: #fff;
-}
-
-// Form elements
-.multi_value {
-  .clearfix {
-    height: 1px;
-    width: 100%;
-
-    &:after {
-      clear: both;
-      content: "";
-      display: table;
-    }
-  }
-
-  .json-fields-listing {
-    &.listing .input-group, .controlled_vocabulary .listing .input-group {
-      margin-bottom: 0;
-    }
-
-    li {
-      border-bottom: 1px solid #ebebeb;
-      margin: 0;
-      padding: 0 0 15px 0;
-
-      label {
-        margin: 10px 0 0px;
-      }
-    }
-  }
-}
-
 #orcid-profile {
+  margin-top: 20px;
+
   h1, h2, h3, h4, h5, h6 {
     font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  }
+
+  .orcid-progress {
+    text-align: center;
+    padding: 50px 0;
+    font-weight: bold;
+    color: #333;
   }
 
   .list-group {
@@ -76,7 +36,12 @@
     }
 
     .list-entry {
+      border-bottom: 1px solid #DDDDDD;
       padding: 10px;
+
+      &:last-child {
+        border-bottom: none;
+      }
 
       &:nth-child(odd) {
         background-color: #F9F9F9;
@@ -90,7 +55,7 @@
 
       ul {
         padding: 0;
-        margin: 10px 0 0 0;
+        margin: 10px 0 3px 0;
 
         li {
           list-style: none;
