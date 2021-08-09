@@ -28,6 +28,7 @@ en:
           fundings: Funding
           educations: Education and Qualifications
           peer-reviews: Peer Reviews
+          works: Works
       work_sync:
         title: Works Sent to ORCID
         intro: |
@@ -65,5 +66,6 @@ en:
         title: Education
       peer-reviews:
         title: Peer Reviews
-
+      works:
+        title: Works
 

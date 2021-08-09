@@ -26,6 +26,14 @@ module Hyrax
           response.dig("peer-reviews", "group")
         end
 
+        def read_work
+          res = Faraday.send(:get, request_url(type: :works, put_code: work_codes.join(",")), nil, headers)
+
+          return {} unless res.success?
+
+          JSON.parse(res.body).dig("bulk")
+        end
+
         protected
 
         def response
@@ -38,8 +46,8 @@ module Hyrax
           end
         end
 
-        def request_url
-          orcid_api_uri(@identity.orcid_id, :record)
+        def request_url(type: :record, put_code: nil)
+          orcid_api_uri(@identity.orcid_id, type, put_code)
         end
 
         def headers
@@ -47,6 +55,10 @@ module Hyrax
             "authorization" => "Bearer #{@identity.access_token}",
             "Content-Type" => "application/json"
           }
+        end
+
+        def work_codes
+          response.dig("works", "group").map { |hsh| hsh.dig("work-summary").first.dig("put-code") }
         end
       end
     end

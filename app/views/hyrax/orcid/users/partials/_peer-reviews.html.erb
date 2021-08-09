@@ -9,7 +9,7 @@
 			<% entry = group.dig("peer-review-summary").first %>
 
 			<div class="list-entry">
-				<h3><%= entry.dig("title", "title", "value") %></h3>
+				<h3><%= api_title(entry) %></h3>
 				<ul>
 					<li><%= entry.dig('convening-organization', 'name') %></li>
 					<li><%= api_date(entry['completion-date']) %></li>

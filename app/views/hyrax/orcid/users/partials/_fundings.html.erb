@@ -9,7 +9,7 @@
 			<% entry = group.dig("funding-summary").first %>
 
 			<div class="list-entry">
-				<h3><%= entry.dig("title", "title", "value") %></h3>
+				<h3><%= api_title(entry) %></h3>
 				<ul>
 					<li><%= "#{entry.dig('organization', 'name')} (#{entry.dig('organization', 'address', 'city')})" %></li>
 					<li><%= "#{api_date(entry['start-date'])} - #{api_date(entry['end-date'])} | #{entry.dig('type')}" %></li>
