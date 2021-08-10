@@ -22,11 +22,11 @@ module Hyrax
           response.dig("fundings", "group")
         end
 
-        def read_peer_review
+        def read_peer_reviews
           response.dig("peer-reviews", "group")
         end
 
-        def read_work
+        def read_works
           res = Faraday.send(:get, request_url(type: :works, put_code: work_codes.join(",")), nil, headers)
 
           return {} unless res.success?

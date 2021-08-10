@@ -57,7 +57,6 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
         "orcid": orcid_id
       }.to_json
     end
-    let(:faraday_response) { instance_double(Faraday::Response, body: response_body, headers: {}, success?: true) }
 
     before do
       stub_request(:post, "https://sandbox.orcid.org/oauth/token")
@@ -81,7 +80,7 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
     end
 
     it "redirects back to the users profile" do
-      expect(page).to have_current_path(hyrax.dashboard_profile_path(user.to_param, locale: "en"))
+      expect(page).to have_current_path(hyrax.dashboard_profile_path(user.to_param))
     end
 
     it "shows the correct information" do

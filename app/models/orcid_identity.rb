@@ -15,7 +15,7 @@ class OrcidIdentity < ApplicationRecord
   end
 
   def self.profile_sync_preference
-    %i[educations employments fundings peer-reviews works].freeze
+    %i[education employment funding peer_reviews works].freeze
   end
 
   def selected_sync_preferences

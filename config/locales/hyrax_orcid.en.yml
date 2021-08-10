@@ -24,10 +24,10 @@ en:
         intro: |
           Your repository profile page will import the following fields from your ORCID profile.
         preferences:
-          employments: Employment
-          fundings: Funding
-          educations: Education and Qualifications
-          peer-reviews: Peer Reviews
+          employment: Employment
+          funding: Funding
+          education: Education and Qualifications
+          peer_reviews: Peer Reviews
           works: Works
       work_sync:
         title: Works Sent to ORCID
@@ -58,13 +58,13 @@ en:
         The work has been published to your ORCID profile, you can now delete the notification.
     profile:
       heading_suffix: Synced from ORCID
-      employments:
+      employment:
         title: Employment
-      fundings:
+      funding:
         title: Funding
-      educations:
+      education:
         title: Education
-      peer-reviews:
+      peer_reviews:
         title: Peer Reviews
       works:
         title: Works
