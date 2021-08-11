@@ -27,18 +27,18 @@ module Hyrax
         end
 
         def read_works
-          res = Faraday.send(:get, request_url(type: :works, put_code: work_codes.join(",")), nil, headers)
+          response = perform_works_request
 
-          return {} unless res.success?
+          return {} unless response.success?
 
-          JSON.parse(res.body).dig("bulk")
+          JSON.parse(response.body).dig("bulk")
         end
 
         protected
 
         def response
           @_response ||= begin
-            response = Faraday.send(:get, request_url, nil, headers)
+            response = perform_record_request
 
             return {} unless response.success?
 
@@ -59,6 +59,16 @@ module Hyrax
 
         def work_codes
           response.dig("works", "group").map { |hsh| hsh.dig("work-summary").first.dig("put-code") }
+        end
+
+        # NOTE: This is hear so its easier to mock
+        def perform_record_request
+          Faraday.send(:get, request_url, nil, headers)
+        end
+
+        # NOTE: This is hear so its easier to mock
+        def perform_works_request
+          Faraday.send(:get, request_url(type: :works, put_code: work_codes.join(",")), nil, headers)
         end
       end
     end

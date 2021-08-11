@@ -3,6 +3,8 @@
 module Hyrax
   module Orcid
     class UsersController < ApplicationController
+      before_action :enabled?, :connected?
+
       def show
         render "show", layout: false
       end
@@ -16,6 +18,18 @@ module Hyrax
 
       def orcid_id
         params.require(:orcid_id)
+      end
+
+      def connected?
+        return if orcid_identity.present?
+
+        raise ActiveRecord::RecordNotFound, "User has not linked their account to ORCID"
+      end
+
+      def enabled?
+        return if Flipflop.enabled?(:orcid_identities)
+
+        raise ActionController::RoutingError, "The feature is not currently enabled"
       end
     end
   end
