@@ -6,6 +6,6 @@
 	<% next unless reader.respond_to?(method_name) %>
 
 	<% collection = reader.send(method_name) %>
-	<% presenter = "Hyrax::Orcid::Profile#{key.classify}Presenter".constantize.new(collection) %>
+	<% presenter = "Hyrax::Orcid::Profile::#{key.classify}Presenter".constantize.new(collection) %>
 	<%= render "hyrax/orcid/users/partials/card", presenter: presenter %>
 <% end %>
