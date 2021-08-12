@@ -2,7 +2,7 @@
 
 module Hyrax
   module Orcid
-    module GenericWorkFormBehavior
+    module WorkFormBehavior
       extend ActiveSupport::Concern
 
       class_methods do
