@@ -8,5 +8,26 @@ require "bolognese"
 
 module Hyrax
   module Orcid
+    # Setup a configuration class that allows users to override these settings
+    # with their own configuration, or add ENV variables.
+    class << self
+      attr_accessor :configuration
+    end
+
+    def self.configure
+      self.configuration ||= Configuration.new
+
+      yield(configuration)
+    end
+
+    class Configuration
+      attr_accessor :client_id, :client_secret, :authorization_redirect_url
+
+      def initialize
+        @client_id = ENV["ORCID_CLIENT_ID"]
+        @client_secret = ENV["ORCID_CLIENT_SECRET"]
+        @authorization_redirect_url = ENV["ORCID_AUTHORIZATION_REDIRECT_URL"]
+      end
+    end
   end
 end

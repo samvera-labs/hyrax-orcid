@@ -13,10 +13,6 @@ module Hyrax
             config.eager_load = true
           end
         end
-
-        # NOTE: Tempfix until admin interface is available
-        file = File.read(Rails.root.join("..", "..", ".env"))
-        file.split(/[\n\r]+/).map { |s| s.split(/:[\s]+/) }.to_h.map { |k, v| ENV[k] = v if v.present? } if file.present?
       end
 
       # Allow flipflop to load config/features.rb from the Hyrax gem:

@@ -10,6 +10,32 @@ when cloning, need to:
 
 In your model, include the `Hyrax::Orcid::WorkBehavior` concern
 
+## Install
+
+```bash
+rails hyrax:orcid:install:migrations
+```
+
+# Configuration
+
+Add an initializer to your app with the following block:
+
+```ruby
+Hyrax::Orcid.configure do |config|
+  config.client_id = "YOUR-APP-ID"
+  config.client_secret = "your-secret-token"
+  config.authorization_redirect_url = "http://your-repo.com/dashboard/orcid_identity/new"
+end
+```
+
+You can also set the following ENV varibles before your app starts:
+
+```bash
+ORCID_CLIENT_ID: YOUR-APP-ID
+ORCID_CLIENT_SECRET: your-secret-token
+ORCID_AUTHORIZATION_REDIRECT: http://your-repo.com/dashboard/orcid_identity/new
+```
+
 ## Testing
 
 ```bash
@@ -34,7 +60,7 @@ User.create(email: 'archivist1@example.com', password: 'test1234')
 If you get to a situation where you cannot create works, your admin set might be missing:
 
 ```ruby
-rails app:hyrax:default_collection_types:create
+rails app:hyrax:default_collection_types:create;
 rails app:hyrax:default_admin_set:create
 ```
 

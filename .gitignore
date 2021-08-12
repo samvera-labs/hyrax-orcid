@@ -18,5 +18,5 @@ coverage/
 tmp/
 # rspec failure tracking
 .rspec_status
-.env
+config/initializers/hyrax/orcid/configure.rb
 core

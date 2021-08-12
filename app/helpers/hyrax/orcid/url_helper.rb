@@ -14,10 +14,10 @@ module Hyrax
       # TODO: Move ENV vars to options panel
       def orcid_authorize_uri
         params = {
-          client_id: ENV["ORCID_CLIENT_ID"],
+          client_id: Hyrax::Orcid.configuration.client_id,
           scope: "/activities/update /read-limited",
           response_type: "code",
-          redirect_uri: ENV["ORCID_REDIRECT"]
+          redirect_uri: Hyrax::Orcid.configuration.authorization_redirect_url
         }
 
         "https://#{orcid_domain}/oauth/authorize?#{params.to_query}"

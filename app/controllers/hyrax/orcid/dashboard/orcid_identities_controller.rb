@@ -51,8 +51,8 @@ module Hyrax
         def request_authorization
           # TODO: Put these in an options panel
           data = {
-            client_id: ENV["ORCID_CLIENT_ID"],
-            client_secret: ENV["ORCID_CLIENT_SECRET"],
+            client_id: Hyrax::Orcid.configuration.client_id,
+            client_secret: Hyrax::Orcid.configuration.client_secret,
             grant_type: "authorization_code",
             code: code
           }
