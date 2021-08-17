@@ -12,11 +12,14 @@ In your model, include the `Hyrax::Orcid::WorkBehavior` concern
 
 ## Install
 
+The installer will copy over any migrations and insert the assets into your applications asset pipeline. Just run the following:
+
 ```bash
-rails hyrax:orcid:install:migrations
+bundle exec rails g hyrax:orcid:install
+bundle exec rails db:migrate
 ```
 
-# Configuration
+## Configuration
 
 Add an initializer to your app with the following block:
 
