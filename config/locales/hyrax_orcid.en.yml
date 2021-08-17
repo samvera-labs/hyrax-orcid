@@ -22,7 +22,7 @@ en:
         connect_button_text: Connect to ORCID
       profile_sync:
         intro: |
-          Your repository profile page will import the following fields from your ORCID profile.
+          Your repository profile page will display the following fields from your ORCID profile.
         preferences:
           employment: Employment
           funding: Funding
