@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateOrcidWorks < ActiveRecord::Migration[5.2]
+class CreateOrcidWorks < ActiveRecord::Migration<%= migration_version %>
   def change
     create_table :orcid_works do |t|
       t.references :orcid_identity

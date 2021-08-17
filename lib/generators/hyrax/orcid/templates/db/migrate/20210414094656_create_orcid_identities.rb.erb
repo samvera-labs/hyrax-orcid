@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class CreateOrcidIdentities < ActiveRecord::Migration[5.2]
+class CreateOrcidIdentities < ActiveRecord::Migration<%= migration_version %>
   def change
     create_table :orcid_identities do |t|
       t.belongs_to :user
