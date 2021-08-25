@@ -69,6 +69,9 @@ module Hyrax
         # Add the JSON processing code to the default presenter
         Hyrax::WorkShowPresenter.prepend Hyrax::Orcid::WorkShowPresenterBehavior
 
+        # Allow the JSON fields to be indexed individually
+        Hyrax::WorkIndexer.include Hyrax::Orcid::WorkIndexerBehavior
+
         # All work types and their forms will require the following concerns to be included
         Hyrax::GenericWorkForm.include Hyrax::Orcid::WorkFormBehavior
         GenericWork.include Hyrax::Orcid::WorkBehavior

@@ -33,7 +33,7 @@ module Hyrax
           query_string = "(contributor_tesim:\"*#{id}*\" OR creator_tesim:\"*#{id}*\") AND visibility_ssi:open"
           result = ActiveFedora::SolrService.get(query_string, row: 1_000_000)
 
-          result['response']['docs'].map { |doc| ActiveFedora::SolrHit.new(doc) }
+          result["response"]["docs"].map { |doc| ActiveFedora::SolrHit.new(doc) }
         end
       end
     end
