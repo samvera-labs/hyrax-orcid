@@ -67,6 +67,22 @@ rails app:hyrax:default_collection_types:create;
 rails app:hyrax:default_admin_set:create
 ```
 
+I've had issues with the tasks, so if it's still not working, login with the Admin user and create a new Admin Set Collection manually with the title "admin_set/default"
+
+### Snippets
+
+If I find a useful snippet that might be useful, i'll add it below incase it helps anyone else.
+
+#### Instantiate Work Presenter
+
+```ruby
+user = User.first
+ability = Ability.new(user)
+work = GenericWork.last
+presenter = Hyrax::WorkShowPresenter.new(work, ability)
+presenter.solr_document
+```
+
 ## License
 
 The gem is available as open source under the terms of the [Apache License 2.0](https://opensource.org/licenses/Apache-2.0).
