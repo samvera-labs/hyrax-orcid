@@ -26,15 +26,15 @@ module Bolognese
       end
 
       def write_creator
-        write_involved("creators")
+        write_participants("creators")
       end
 
       def write_contributor
-        write_involved("contributors")
+        write_participants("contributors")
       end
 
       def write_editor
-        write_involved("contributors").select { |cont| cont["contributor_contributor_type"] == "Editor" }
+        write_participants("contributors").select { |cont| cont["contributor_contributor_type"] == "Editor" }
       end
 
       def write_publisher
@@ -151,7 +151,7 @@ module Bolognese
 
       protected
 
-        def write_involved(type)
+        def write_participants(type)
           key = type.to_s.singularize
 
           meta.dig(type)&.map do |item|

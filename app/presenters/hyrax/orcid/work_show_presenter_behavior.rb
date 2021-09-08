@@ -13,21 +13,22 @@ module Hyrax
       end
 
       def creator
-        involved(:creator)
+        participants(:creator)
       end
 
       def contributor
-        involved(:contributor)
+        participants(:contributor)
       end
 
       private
 
-      def involved(term)
-        involved = JSON.parse(solr_document.public_send(term).first.presence || "[]")
+      def participants(term)
+        byebug
+        participants = JSON.parse(solr_document.public_send(term).first.presence || "[]")
 
-        return if involved.blank?
+        return if participants.blank?
 
-        involved.pluck("#{term}_name")
+        participants.pluck("#{term}_name")
       end
     end
   end
