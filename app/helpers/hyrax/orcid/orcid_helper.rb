@@ -10,6 +10,8 @@ module Hyrax
       }x.freeze
 
       def validate_orcid(orcid)
+        return if orcid.blank?
+
         orcid = orcid.match(ORCID_REGEX)
 
         orcid.to_s.gsub(/[[:space:]]/, "-") if orcid.present?

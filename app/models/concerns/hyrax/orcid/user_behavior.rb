@@ -29,8 +29,7 @@ module Hyrax
           # options = { fl: [:id], rows: 1_000_000 }
 
           # For some reason, `'` causes the query to return no results, so we need to use `\"`
-          id = orcid_identity.orcid_id
-          query_string = "(contributor_tesim:\"*#{id}*\" OR creator_tesim:\"*#{id}*\") AND visibility_ssi:open"
+          query_string = "work_orcids_tsim:#{orcid_identity.orcid_id} AND visibility_ssi:open"
           result = ActiveFedora::SolrService.get(query_string, row: 1_000_000)
 
           result["response"]["docs"].map { |doc| ActiveFedora::SolrHit.new(doc) }

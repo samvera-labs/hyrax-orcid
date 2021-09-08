@@ -7,6 +7,8 @@ module Hyrax
     module WorkIndexerBehavior
       extend ActiveSupport::Concern
 
+      include Hyrax::Orcid::OrcidHelper
+
       FIELD_ORDERS = {
         creator: ["creator_name", "creator_orcid"],
         contributor: ["contributor_name", "contributor_orcid"]
@@ -14,19 +16,50 @@ module Hyrax
 
       def generate_solr_document
         super.tap do |solr_doc|
-          solr_doc["creator_display_ssim"] = format_names(:creator) if object.respond_to?(:creator)
-          solr_doc["contributor_display_ssim"] = format_names(:contributor) if object.respond_to?(:contributor)
+          FIELD_ORDERS.keys.each do |field|
+            solr_doc["#{field}_display_ssim"] = format_names(field) if object.respond_to?(field)
+          end
+
+          solr_doc["work_orcids_tsim"] = extract_orcids
         end
       end
 
       private
 
       def format_names(field)
-        return if object&.send(field)&.first.blank?
+        json = extract_field_json(field)
 
-        JSON.parse(object.send(field).first).collect do |hash|
-          hash.slice(*FIELD_ORDERS[field]).values.map(&:presence).compact.map(&:strip).join(', ')
+        return if json.blank?
+
+        json.collect do |hash|
+          hash
+            .then { |h| h.slice(*FIELD_ORDERS[field]) }
+            .then(&:values)
+            .then { |a| a.map(&:presence).compact.map(&:strip) }
+            .then { |a| a.join(', ') }
         end
+      end
+
+      def extract_orcids
+        FIELD_ORDERS
+          .keys
+          .then { |a| a.map { |field| extract_field_json(field) } }
+          .then(&:flatten)
+          .then(&:compact)
+          .then { |a| a.pluck(*orcid_keys) }
+          .then(&:flatten)
+          .then { |a| a.reject(&:blank?) }
+          .then { |a| a.map { |v| validate_orcid(v) } }
+      end
+
+      def extract_field_json(field)
+        JSON.parse(object.send(field).first || "")
+      rescue JSON::ParserError
+        nil
+      end
+
+      def orcid_keys
+        FIELD_ORDERS.values.flatten.select { |v| v.match?(/_orcid/) }
       end
     end
   end
