@@ -23,7 +23,6 @@ module Hyrax
       private
 
       def participants(term)
-        byebug
         participants = JSON.parse(solr_document.public_send(term).first.presence || "[]")
 
         return if participants.blank?

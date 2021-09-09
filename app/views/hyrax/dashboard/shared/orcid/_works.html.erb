@@ -24,8 +24,8 @@
 
 					<tr class="referenced-work">
 						<td><%= link_to doc["title_tesim"].first, routes.send("hyrax_#{type}_path", doc["id"]) %></td>
-						<td><%= involved_to_string(:creator, doc["creator_tesim"]) %></td>
-						<td><%= involved_to_string(:contributor, doc["contributor_tesim"]) %></td>
+						<td><%= participant_to_string(:creator, doc["creator_tesim"]) %></td>
+						<td><%= participant_to_string(:contributor, doc["contributor_tesim"]) %></td>
 						<td><%= doc["human_readable_type_tesim"].first %></td>
 						<td><%= visibility_badge doc["visibility_ssi"] %></td>
 						<td>Deposit</td>

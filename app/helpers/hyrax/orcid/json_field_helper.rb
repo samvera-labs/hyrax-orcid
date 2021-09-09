@@ -3,7 +3,7 @@
 module Hyrax
   module Orcid
     module JsonFieldHelper
-      def involved_to_string(type, arr)
+      def participant_to_string(type, arr)
         return "-" if arr.blank?
 
         arr
