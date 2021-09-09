@@ -17,7 +17,7 @@ module Hyrax
           mount Hyrax::Orcid::Engine => "/"
         end
 
-        User.include Hyrax::Orcid::UserBehavior
+        ::User.include Hyrax::Orcid::UserBehavior
 
         # Add any required helpers, for routes, api metadata etc
         Hyrax::HyraxHelperBehavior.include Hyrax::Orcid::HelperBehavior
@@ -45,7 +45,7 @@ module Hyrax
         Hyrax::CurationConcern.actor_factory.use Hyrax::Actors::Orcid::PublishWorkActor
 
         # Insert an extra step in the Blacklight rendering pipeline where our JSON can be parsed
-        Blacklight::Rendering::Pipeline.operations.insert(1, Hyrax::Orcid::Blacklight::Rendering::PipelineJsonExtractor)
+        ::Blacklight::Rendering::Pipeline.operations.insert(1, Hyrax::Orcid::Blacklight::Rendering::PipelineJsonExtractor)
 
         # Insert our JSON actor before the Model is saved
         Hyrax::CurationConcern.actor_factory.insert_before Hyrax::Actors::ModelActor, Hyrax::Actors::Orcid::JSONFieldsActor
