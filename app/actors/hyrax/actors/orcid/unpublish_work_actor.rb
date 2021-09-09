@@ -15,9 +15,7 @@ module Hyrax
           def unpublish_work(env)
             return unless enabled?
 
-            # TODO: Put this in a configuration object
-            action = "perform_#{Rails.env.development? ? 'now' : 'later'}"
-            Hyrax::Orcid::UnpublishWorkDelegatorJob.send(action, env.curation_concern)
+            Hyrax::Orcid::UnpublishWorkDelegatorJob.perform_later(env.curation_concern)
           end
 
         private

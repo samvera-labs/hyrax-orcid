@@ -21,9 +21,7 @@ module Hyrax
           def delegate_work_strategy(env)
             return unless enabled? && visible?(env)
 
-            # TODO: Put this in a configuration object
-            action = "perform_#{Rails.env.development? ? 'now' : 'later'}"
-            Hyrax::Orcid::IdentityStrategyDelegatorJob.send(action, env.curation_concern)
+            Hyrax::Orcid::IdentityStrategyDelegatorJob.perform_later(env.curation_concern)
           end
 
         private

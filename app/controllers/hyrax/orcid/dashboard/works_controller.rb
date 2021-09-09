@@ -5,7 +5,7 @@ module Hyrax
     module Dashboard
       class WorksController < ::ApplicationController
         def publish
-          Hyrax::Orcid::PublishWorkJob.send(action, work, identity)
+          Hyrax::Orcid::PublishWorkJob.perform_later(work, identity)
 
           respond_to do |f|
             f.html do
@@ -19,7 +19,7 @@ module Hyrax
         end
 
         def unpublish
-          Hyrax::Orcid::UnpublishWorkJob.send(action, work, identity)
+          Hyrax::Orcid::UnpublishWorkJob.perform_later(work, identity)
 
           respond_to do |f|
             f.json do
@@ -40,11 +40,6 @@ module Hyrax
 
         def permitted_params
           params.permit(:work_id, :orcid_id)
-        end
-
-        # TODO: Put this in a configuration object
-        def action
-          "perform_#{Rails.env.development? ? 'now' : 'later'}"
         end
       end
     end

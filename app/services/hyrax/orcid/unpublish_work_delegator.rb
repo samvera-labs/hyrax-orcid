@@ -10,9 +10,7 @@ module Hyrax
 
       # If the work includes our default processable terms
       def perform
-        orcids = Hyrax::Orcid::WorkOrcidExtractor.new(@work).extract
-
-        orcids.each { |orcid| delegate(orcid) }
+        Hyrax::Orcid::WorkOrcidExtractor.new(@work).extract.each { |orcid| delegate(orcid) }
       end
 
       protected
@@ -21,9 +19,7 @@ module Hyrax
         def delegate(orcid_id)
           return if (identity = OrcidIdentity.find_by(orcid_id: orcid_id)).blank?
 
-          # TODO: Put this in a configuration object
-          action = "perform_#{Rails.env.development? ? 'now' : 'later'}"
-          Hyrax::Orcid::UnpublishWorkJob.send(action, @work, identity)
+          Hyrax::Orcid::UnpublishWorkJob.perform_later(@work, identity)
         end
     end
   end

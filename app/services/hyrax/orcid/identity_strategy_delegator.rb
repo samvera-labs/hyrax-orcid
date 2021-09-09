@@ -26,9 +26,7 @@ module Hyrax
         def perform_user_strategy(orcid_id)
           return if (identity = OrcidIdentity.find_by(orcid_id: orcid_id)).blank?
 
-          # TODO: Put this in a configuration object
-          action = "perform_#{Rails.env.development? ? 'now' : 'later'}"
-          Hyrax::Orcid::PerformIdentityStrategyJob.send(action, @work, identity)
+          Hyrax::Orcid::PerformIdentityStrategyJob.perform_later(@work, identity)
         end
 
         def validate!
