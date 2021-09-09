@@ -7,6 +7,10 @@ module Hyrax
     class Engine < Rails::Engine
       isolate_namespace Hyrax::Orcid
 
+      config.before_initialize do
+        Rails.application.configure { config.eager_load = true } if Rails.env.development?
+      end
+
       # Allow flipflop to load config/features.rb from the Hyrax gem:
       initializer "configure" do
         Flipflop::FeatureLoader.current.append(self)
