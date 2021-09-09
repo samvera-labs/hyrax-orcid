@@ -7,61 +7,17 @@ module Hyrax
     class Engine < Rails::Engine
       isolate_namespace Hyrax::Orcid
 
-      config.before_initialize do
-        if Rails.env.development?
-          Rails.application.configure do
-            config.eager_load = true
-          end
-        end
-      end
-
       # Allow flipflop to load config/features.rb from the Hyrax gem:
       initializer "configure" do
         Flipflop::FeatureLoader.current.append(self)
       end
 
-      # Automount this engine
-      # Only do this because this is just for us and we don't need to allow control over the mount to the application
       config.after_initialize do
         Rails.application.routes.prepend do
           mount Hyrax::Orcid::Engine => "/"
         end
-      end
 
-      def self.dynamically_include_mixins
-        # NOTE: This is a temp fix because of development loading issues
         User.include Hyrax::Orcid::UserBehavior
-        # ::User.class_eval do
-        #   has_one :orcid_identity, dependent: :destroy
-
-        #   def orcid_identity_from_authorization(params)
-        #     transformed = params.symbolize_keys
-        #     transformed[:orcid_id] = transformed.delete(:orcid)
-
-        #     create_orcid_identity(transformed)
-        #   end
-
-        #   def orcid_identity?
-        #     orcid_identity.present?
-        #   end
-
-        #   def orcid_referenced_works
-        #     @_orcid_referenced_works ||= begin
-        #       return [] if orcid_identity.blank?
-
-        #       # NOTE: I'm trying to avoid returning ID's and performing a Fedora query if I can help it,
-        #       # but if we need to instantiate the Model objects, this can be done by returning just the ID
-        #       # options = { fl: [:id], rows: 1_000_000 }
-
-        #       # For some reason, `'` causes the query to return no results, so we need to use `\"`
-        #       id = orcid_identity.orcid_id
-        #       query_string = "(contributor_tesim:\"*#{id}*\" OR creator_tesim:\"*#{id}*\") AND visibility_ssi:open"
-        #       result = ActiveFedora::SolrService.get(query_string, row: 1_000_000)
-
-        #       result['response']['docs'].map { |doc| ActiveFedora::SolrHit.new(doc) }
-        #     end
-        #   end
-        # end
 
         # Add any required helpers, for routes, api metadata etc
         Hyrax::HyraxHelperBehavior.include Hyrax::Orcid::HelperBehavior
@@ -99,12 +55,6 @@ module Hyrax
 
         # Append our locales so they have precedence
         I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join("config", "locales", "*.{rb,yml}")]
-      end
-
-      if Rails.env.development?
-        config.to_prepare { Hyrax::Orcid::Engine.dynamically_include_mixins }
-      else
-        config.after_initialize { Hyrax::Orcid::Engine.dynamically_include_mixins }
       end
     end
   end
