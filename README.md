@@ -39,6 +39,27 @@ ORCID_CLIENT_SECRET: your-secret-token
 ORCID_AUTHORIZATION_REDIRECT: http://your-repo.com/dashboard/orcid_identity/new
 ```
 
+## Integration into Hyku
+
+Hyrax Orcid is designed to be used with Hyrax, but you can also use it with Hyku if you perform a few manual tasks.
+
+First, include the Helper methods into your application:
+
+```ruby
+include Hyrax::Orcid::HelperBehavior
+```
+
+Add the assets to your application.{js, css}:
+
+```js
+//= require hyrax/orcid/application
+```
+
+```css
+*= require hyrax/orcid/application
+```
+
+
 ## Testing
 
 ```bash
