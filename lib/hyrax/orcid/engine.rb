@@ -9,6 +9,10 @@ module Hyrax
 
       config.before_initialize do
         Rails.application.configure { config.eager_load = true } if Rails.env.development?
+
+        Rails.application.routes.prepend do
+          mount Hyrax::Orcid::Engine => "/"
+        end
       end
 
       # Allow flipflop to load config/features.rb from the Hyrax gem:
@@ -16,11 +20,7 @@ module Hyrax
         Flipflop::FeatureLoader.current.append(self)
       end
 
-      config.after_initialize do
-        Rails.application.routes.prepend do
-          mount Hyrax::Orcid::Engine => "/"
-        end
-
+      def self.dynamically_include_mixins
         ::User.include Hyrax::Orcid::UserBehavior
 
         # Add any required helpers, for routes, api metadata etc
@@ -59,6 +59,12 @@ module Hyrax
 
         # Append our locales so they have precedence
         I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join("config", "locales", "*.{rb,yml}")]
+      end
+
+      if Rails.env.development?
+        config.to_prepare { Hyrax::Orcid::Engine.dynamically_include_mixins }
+      else
+        config.after_initialize { Hyrax::Orcid::Engine.dynamically_include_mixins }
       end
     end
   end
