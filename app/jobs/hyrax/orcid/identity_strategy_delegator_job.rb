@@ -4,6 +4,7 @@ module Hyrax
   module Orcid
     class IdentityStrategyDelegatorJob < ApplicationJob
       queue_as Hyrax.config.ingest_queue_name
+      discard_on ArgumentError
 
       def perform(work)
         return unless Flipflop.enabled?(:orcid_identities)
