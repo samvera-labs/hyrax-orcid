@@ -21,12 +21,17 @@ module Hyrax
     end
 
     class Configuration
-      attr_accessor :client_id, :client_secret, :authorization_redirect_url
+      attr_accessor :client_id, :client_secret, :authorization_redirect_url, :work_reader
 
       def initialize
         @client_id = ENV["ORCID_CLIENT_ID"]
         @client_secret = ENV["ORCID_CLIENT_SECRET"]
         @authorization_redirect_url = ENV["ORCID_AUTHORIZATION_REDIRECT_URL"]
+
+        @work_reader = {
+          reader_class: "Bolognese::Metadata",
+          from: "hyrax_work"
+        }
       end
     end
   end

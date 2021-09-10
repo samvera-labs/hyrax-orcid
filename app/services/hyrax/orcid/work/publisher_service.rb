@@ -34,8 +34,10 @@ module Hyrax
           # TODO: figure out how to get the correct types here
           # TODO: try and think of a better way to get the put_code into the xml writer
           def xml
+            reader_class, from = Hyrax::Orcid.configuration.work_reader.slice(:reader_class, :from).values
+
             input = @work.attributes.merge(has_model: @work.has_model.first).to_json
-            meta = Bolognese::Metadata.new(input: input, from: "orcid_hyrax_work")
+            meta = reader_class.constantize.new(input: input, from: from)
 
             meta.orcid_xml("other", orcid_work.put_code)
           end
