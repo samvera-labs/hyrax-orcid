@@ -29,7 +29,7 @@ module Hyrax
         @authorization_redirect_url = ENV["ORCID_AUTHORIZATION_REDIRECT_URL"]
 
         @work_reader = {
-          reader_class: "Bolognese::Metadata",
+          meta_class_name: "Bolognese::Metadata",
           from: "hyrax_work"
         }
       end

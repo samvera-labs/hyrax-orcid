@@ -31,14 +31,14 @@ module Hyrax
 
         protected
 
-          # TODO: figure out how to get the correct types here
-          # TODO: try and think of a better way to get the put_code into the xml writer
           def xml
-            reader_class, from = Hyrax::Orcid.configuration.work_reader.slice(:reader_class, :from).values
+            meta_class_name, from = Hyrax::Orcid.configuration.work_reader.slice(:meta_class_name, :from).values
 
             input = @work.attributes.merge(has_model: @work.has_model.first).to_json
-            meta = reader_class.constantize.new(input: input, from: from)
+            meta = meta_class_name.constantize.new(input: input, from: from)
 
+            # TODO: figure out how to get the correct types here
+            # TODO: try and think of a better way to get the put_code into the xml writer
             meta.orcid_xml("other", orcid_work.put_code)
           end
 
