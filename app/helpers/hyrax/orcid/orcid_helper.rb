@@ -4,7 +4,7 @@ module Hyrax
   module Orcid
     module OrcidHelper
       ORCID_REGEX = %r{
-        (?:(http|https):\/\/
+        (?:(?:http|https):\/\/
         (?:www\.(?:sandbox\.)?)?orcid\.org\/)?
         (\d{4}[[:space:]-]\d{4}[[:space:]-]\d{4}[[:space:]-]\d{3}[0-9X]+)
       }x.freeze
@@ -12,7 +12,8 @@ module Hyrax
       def validate_orcid(orcid)
         return if orcid.blank?
 
-        orcid = orcid.match(ORCID_REGEX)
+        # Ensure we only return the last match, which should be the Orcid ID
+        orcid = Array.wrap(orcid.match(ORCID_REGEX).to_a).last
 
         orcid.to_s.gsub(/[[:space:]]/, "-") if orcid.present?
       end
