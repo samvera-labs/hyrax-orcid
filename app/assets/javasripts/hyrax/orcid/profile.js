@@ -1,6 +1,6 @@
-var onLoad = function() {
+var HyraxOrcidOnLoad = function() {
   // Prevent JS being loaded twice
-  if ($("body").attr("data-js-loaded") === "true") {
+  if ($("body").attr("data-hyrax-orcid-js-loaded") === "true") {
     return false
   }
 
@@ -26,9 +26,9 @@ var onLoad = function() {
     });
   }
 
-  $("body").attr("data-js-loaded", "true")
+  $("body").attr("data-hyrax-orcid-js-loaded", "true")
 }
 
 // Ensure that page load (via turbolinks) and page refresh (via browser request) both load JS
-$(document).ready(onLoad)
-$(document).on("turbolinks:load", onLoad)
+$(document).ready(HyraxOrcidOnLoad)
+$(document).on("turbolinks:load", HyraxOrcidOnLoad)
