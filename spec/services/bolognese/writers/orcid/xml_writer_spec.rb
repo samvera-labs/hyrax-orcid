@@ -151,3 +151,4 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
     end
   end
 end
+
