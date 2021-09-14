@@ -39,7 +39,7 @@ module Hyrax
 
             # TODO: figure out how to get the correct types here
             # TODO: try and think of a better way to get the put_code into the xml writer
-            meta.orcid_xml("other", orcid_work.put_code)
+            meta.hyrax_orcid_xml("other", orcid_work.put_code)
           end
 
           def request_url

@@ -25,7 +25,7 @@ RSpec.describe Hyrax::Orcid::Work::PublisherService do
   let(:meta) { Bolognese::Metadata.new(input: input, from: "hyrax_work") }
   let(:type) { "other" }
   let(:put_code) { "123456" }
-  let(:xml) { meta.hyrax_work_orcid_xml(type, put_code) }
+  let(:xml) { meta.hyrax_orcid_xml(type, put_code) }
   let(:orcid_work) { create(:orcid_work, orcid_identity: orcid_identity, work_uuid: work.id, put_code: put_code) }
   let(:faraday_response) { instance_double(Faraday::Response, body: "", headers: response_headers, success?: true) }
   let(:response_headers) { { "location" => url } }
@@ -38,7 +38,7 @@ RSpec.describe Hyrax::Orcid::Work::PublisherService do
 
     context "when the work has not been published to ORCID yet" do
       # Even though we have the put_code set, not passing it in here, will remove it from the XML output
-      let(:xml) { meta.hyrax_work_orcid_xml(type, nil) }
+      let(:xml) { meta.hyrax_orcid_xml(type, nil) }
       let(:put_code) { "198765" }
       let(:url) { "https://api.sandbox.orcid.org/#{api_version}/#{orcid_id}/work" }
       let(:response_headers) do

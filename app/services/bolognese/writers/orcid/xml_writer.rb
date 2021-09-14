@@ -11,7 +11,7 @@ module Bolognese
         # NOTE: I really don't like having to have the put_code injected here, but
         # we need to pass it in from the orcid_work instance somehow and this is the
         # best solution I have right now
-        def hyrax_work_orcid_xml(type, put_code = nil)
+        def hyrax_orcid_xml(type, put_code = nil)
           root_attributes = {
             "xmlns:common" => "http://www.orcid.org/ns/common",
             "xmlns:work" => "http://www.orcid.org/ns/work",
