@@ -28,7 +28,15 @@ Hyrax::Orcid.configure do |config|
   config.client_id = "YOUR-APP-ID"
   config.client_secret = "your-secret-token"
   config.authorization_redirect_url = "http://your-repo.com/dashboard/orcid_identity/new"
+
+  config.bolognese = {
+    # The work reader method, excluding the _reader suffix
+    reader_method: "hyrax_work", 
+    # The writer class that provides the XML body which is sent to Orcid
+    xml_writer_class_name: "Bolognese::Writers::Xml::WorkWriter"
+  }
 end
+
 ```
 
 You can also set the following ENV varibles before your app starts:

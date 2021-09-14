@@ -70,11 +70,11 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
   let(:meta) { Bolognese::Metadata.new(input: input, from: "hyrax_work") }
   let(:type) { "other" }
   let(:put_code) { nil }
-  let(:orcid_xml) { meta.orcid_xml(type, put_code) }
-  let(:doc) { Nokogiri::XML(orcid_xml) }
+  let(:hyrax_work_orcid_xml) { meta.hyrax_work_orcid_xml(type, put_code) }
+  let(:doc) { Nokogiri::XML(hyrax_work_orcid_xml) }
 
   it "includes the module into the Metadata class" do
-    expect(Bolognese::Metadata.new).to respond_to(:orcid_xml)
+    expect(Bolognese::Metadata.new).to respond_to(:hyrax_work_orcid_xml)
   end
 
   describe "the schema" do
@@ -96,7 +96,7 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
     end
   end
 
-  describe "#orcid_xml" do
+  describe "#hyrax_work_orcid_xml" do
     context "when `put_code` is provided" do
       let(:put_code) { "987654321" }
 
@@ -114,7 +114,7 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
         Dir.chdir(xml_path) do
           schema = Nokogiri::XML::Schema(IO.read(schema_file))
 
-          doc = Nokogiri::XML(orcid_xml)
+          doc = Nokogiri::XML(hyrax_work_orcid_xml)
           expect(schema.validate(doc)).to be_empty
         end
       end

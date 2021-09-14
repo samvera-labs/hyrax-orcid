@@ -21,16 +21,18 @@ module Hyrax
     end
 
     class Configuration
-      attr_accessor :client_id, :client_secret, :authorization_redirect_url, :work_reader
+      attr_accessor :client_id, :client_secret, :authorization_redirect_url, :bolognese
 
       def initialize
         @client_id = ENV["ORCID_CLIENT_ID"]
         @client_secret = ENV["ORCID_CLIENT_SECRET"]
         @authorization_redirect_url = ENV["ORCID_AUTHORIZATION_REDIRECT_URL"]
 
-        @work_reader = {
-          meta_class_name: "Bolognese::Metadata",
-          from: "hyrax_work"
+        @bolognese = {
+          # The work reader method, excluding the _reader suffix
+          reader_method: "hyrax_work", 
+          # The XML builder class that provides the XML body which is sent to Orcid
+          xml_builder_class_name: "Bolognese::Writers::Orcid::HyraxXmlBuilder"
         }
       end
     end

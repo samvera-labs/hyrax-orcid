@@ -3,8 +3,8 @@
 # rubocop:disable Metrics/ClassLength
 module Bolognese
   module Writers
-    module Xml
-      class WorkWriter
+    module Orcid
+      class HyraxXmlBuilder
         PERMITTED_EXTERNAL_IDENTIFIERS = %w[issn isbn].freeze
         CONTRIBUTOR_MAP = {
           "author" => ["Author"],
