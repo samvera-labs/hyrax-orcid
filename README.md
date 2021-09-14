@@ -35,6 +35,9 @@ Hyrax::Orcid.configure do |config|
     # The writer class that provides the XML body which is sent to Orcid
     xml_writer_class_name: "Bolognese::Writers::Xml::WorkWriter"
   }
+
+  # If you want to debug or run all jobs inline, set this to :perform_now - defaults to :perform_later
+  config.active_job_type = :perform_now
 end
 
 ```

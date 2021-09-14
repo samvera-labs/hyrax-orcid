@@ -4,6 +4,8 @@ module Hyrax
   module Actors
     module Orcid
       class PublishWorkActor < ::Hyrax::Actors::AbstractActor
+        include Hyrax::Orcid::ActiveJobType
+
         def create(env)
           delegate_work_strategy(env)
 
@@ -21,7 +23,7 @@ module Hyrax
           def delegate_work_strategy(env)
             return unless enabled? && visible?(env)
 
-            Hyrax::Orcid::IdentityStrategyDelegatorJob.perform_later(env.curation_concern)
+            Hyrax::Orcid::IdentityStrategyDelegatorJob.send(active_job_type, env.curation_concern)
           end
 
         private

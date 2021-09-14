@@ -5,6 +5,8 @@
 module Hyrax
   module Orcid
     class IdentityStrategyDelegator
+      include Hyrax::Orcid::ActiveJobType
+
       def initialize(work)
         @work = work
 
@@ -26,7 +28,7 @@ module Hyrax
         def perform_user_strategy(orcid_id)
           return if (identity = OrcidIdentity.find_by(orcid_id: orcid_id)).blank?
 
-          Hyrax::Orcid::PerformIdentityStrategyJob.perform_later(@work, identity)
+          Hyrax::Orcid::PerformIdentityStrategyJob.send(active_job_type, @work, identity)
         end
 
         def validate!

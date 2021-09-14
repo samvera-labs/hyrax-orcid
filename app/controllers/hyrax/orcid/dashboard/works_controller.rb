@@ -4,8 +4,10 @@ module Hyrax
   module Orcid
     module Dashboard
       class WorksController < ::ApplicationController
+        include Hyrax::Orcid::ActiveJobType
+
         def publish
-          Hyrax::Orcid::PublishWorkJob.perform_later(work, identity)
+          Hyrax::Orcid::PublishWorkJob.send(active_job_type, work, identity)
 
           respond_to do |f|
             f.html do
@@ -19,7 +21,7 @@ module Hyrax
         end
 
         def unpublish
-          Hyrax::Orcid::UnpublishWorkJob.perform_later(work, identity)
+          Hyrax::Orcid::UnpublishWorkJob.send(active_job_type, work, identity)
 
           respond_to do |f|
             f.json do

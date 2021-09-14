@@ -4,6 +4,8 @@
 module Hyrax
   module Orcid
     class UnpublishWorkDelegator
+      include Hyrax::Orcid::ActiveJobType
+
       def initialize(work)
         @work = work
       end
@@ -19,7 +21,7 @@ module Hyrax
         def delegate(orcid_id)
           return if (identity = OrcidIdentity.find_by(orcid_id: orcid_id)).blank?
 
-          Hyrax::Orcid::UnpublishWorkJob.perform_later(@work, identity)
+          Hyrax::Orcid::UnpublishWorkJob.send(active_job_type, @work, identity)
         end
     end
   end

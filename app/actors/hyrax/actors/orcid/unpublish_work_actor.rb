@@ -4,6 +4,8 @@ module Hyrax
   module Actors
     module Orcid
       class UnpublishWorkActor < ::Hyrax::Actors::AbstractActor
+        include Hyrax::Orcid::ActiveJobType
+
         def destroy(env)
           unpublish_work(env)
 
@@ -15,7 +17,7 @@ module Hyrax
           def unpublish_work(env)
             return unless enabled?
 
-            Hyrax::Orcid::UnpublishWorkDelegatorJob.perform_later(env.curation_concern)
+            Hyrax::Orcid::UnpublishWorkDelegatorJob.send(active_job_type, env.curation_concern)
           end
 
         private
