@@ -130,6 +130,10 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
         it { expect(doc.xpath("//common:title/text()").to_s).to eq title }
       end
 
+      describe "short-description" do
+        it { expect(doc.xpath("//work:short-description/text()").to_s).to eq description }
+      end
+
       describe "creators" do
         it { expect(doc.xpath("//work:contributor").count).to eq 3 }
 

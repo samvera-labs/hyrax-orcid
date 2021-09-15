@@ -35,7 +35,8 @@ module Bolognese
             @xml[:common].title @metadata.titles.first.dig("title")
           end
 
-          @xml[:work].type @type
+          xml_short_description
+          xml_work_type
 
           # NOTE: A full list of external-id-type: https://pub.orcid.org/v2.1/identifiers
           @xml[:common].send("external-ids") do
@@ -52,6 +53,19 @@ module Bolognese
         # rubocop:enable Metrics/MethodLength
 
         protected
+
+        # NOTE: Allowed work types - this are found in the work-2.1.xsd
+        # artistic-performance, book-chapter, book-review, book, conference-abstract, conference-paper, conference-poster, data-set, dictionary-entry, disclosure, dissertation, edited-book, encyclopedia-entry, invention, journal-article, journal-issue, lecture-speech, license, magazine-article, manual, newsletter-article, newspaper-article, online-resource, other, patent, registered-copyright, report, research-technique, research-tool, spin-off-company, standards-and-policy, supervised-student-publication, technical-standard, test, translation, trademark, website, working-paper
+          def xml_work_type
+            @xml[:work].type @type
+          end
+
+          def xml_short_description
+            description = @metadata.descriptions.first&.dig("description") || ""
+
+            # The maximum length of this field is 5000 and truncate appends an ellipsis
+            @xml[:work].send("short-description", description.truncate(4997))
+          end
 
           def xml_internal_identifier
             # We should always have a UUID, but specs might not be saving works and will fail otherwise
@@ -110,8 +124,6 @@ module Bolognese
               end
             end
           end
-
-        private
 
           def xml_contributor_name(name)
             @xml[:work].send("credit-name", name)
