@@ -29,7 +29,7 @@
 	</div>
 </div>
 
-<% if Flipflop.enabled?(:orcid_identities) %>
+<% if Flipflop.enabled?(:orcid_identities) && current_user.orcid_identity? %>
 	<div class="panel panel-default">
 		<div class="panel-body">
 			<%= render "hyrax/dashboard/shared/orcid/works" %>
