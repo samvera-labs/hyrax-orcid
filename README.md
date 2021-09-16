@@ -39,7 +39,6 @@ Hyrax::Orcid.configure do |config|
   # If you want to debug or run all jobs inline, set this to :perform_now - defaults to :perform_later
   config.active_job_type = :perform_now
 end
-
 ```
 
 You can also set the following ENV varibles before your app starts:
@@ -70,6 +69,11 @@ Add the assets to your application.{js, css}:
 *= require hyrax/orcid/application
 ```
 
+Within the Dashboard, go to `Settings/Features` and enable the Hyrax Orcid feature flipper.
+
+### Integration into HykuAddons
+
+HykuAddons is an opinionated addition to Hyku. Go to `Settings/Account Settings` and enter your Orcid application authorisation credentials into the correct fields under "Hyrax orcid settings". 
 
 ## Testing
 
