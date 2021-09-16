@@ -11,7 +11,7 @@ module Hyrax
 
           respond_to do |f|
             f.html do
-              flash[:notice] = I18n.t("orcid_identity.notify.published")
+              flash[:notice] = I18n.t("hyrax.orcid.notify.published")
               redirect_back fallback_location: notifications_path
             end
             f.json do

@@ -14,9 +14,9 @@ module Hyrax
 
           if authorization_successful?
             current_user.orcid_identity_from_authorization(authorization_body)
-            flash[:notice] = I18n.t("orcid_identity.preferences.create.success")
+            flash[:notice] = I18n.t("hyrax.orcid.preferences.create.success")
           else
-            flash[:error] = I18n.t("orcid_identity.preferences.create.failure", error: authorization_body.dig("error"))
+            flash[:error] = I18n.t("hyrax.orcid.preferences.create.failure", error: authorization_body.dig("error"))
           end
 
           redirect_to hyrax_routes.dashboard_profile_path(current_user)
@@ -24,9 +24,9 @@ module Hyrax
 
         def update
           if current_user.orcid_identity.update(permitted_preference_params)
-            flash[:notice] = I18n.t("orcid_identity.preferences.update.success")
+            flash[:notice] = I18n.t("hyrax.orcid.preferences.update.success")
           else
-            flash[:error] = I18n.t("orcid_identity.preferences.update.failure")
+            flash[:error] = I18n.t("hyrax.orcid.preferences.update.failure")
           end
 
           redirect_back fallback_location: hyrax_routes.dashboard_profile_path(current_user)
@@ -37,7 +37,7 @@ module Hyrax
           raise ActiveRecord::RecordNotFound unless current_user.orcid_identity&.id == params["id"].to_i
 
           current_user.orcid_identity.destroy
-          flash[:notice] = I18n.t("orcid_identity.preferences.destroy.success")
+          flash[:notice] = I18n.t("hyrax.orcid.preferences.destroy.success")
 
           redirect_back fallback_location: hyrax_routes.dashboard_profile_path(current_user)
         end

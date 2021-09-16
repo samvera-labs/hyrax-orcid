@@ -56,13 +56,13 @@ module Hyrax
           def notify_unpublished
             return if primary_user?
 
-            subject = I18n.t("orcid_identity.unpublish.notification.subject", depositor_description: depositor_description)
+            subject = I18n.t("hyrax.orcid.unpublish.notification.subject", depositor_description: depositor_description)
             params = {
               depositor_profile: orcid_profile_uri(depositor.orcid_identity.orcid_id),
               depositor_description: depositor_description,
               work_title: @work.title.first
             }
-            body = I18n.t("orcid_identity.unpublish.notification.body", params)
+            body = I18n.t("hyrax.orcid.unpublish.notification.body", params)
 
             depositor.send_message(@identity.user, body, subject)
           end

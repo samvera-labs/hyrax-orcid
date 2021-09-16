@@ -146,7 +146,7 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
       let(:work) { create(:work, :private, **work_attributes) }
 
       it "does not display the work" do
-        expect(page).to have_content(I18n.t("orcid_identity.preferences.works.nothing_found"))
+        expect(page).to have_content(I18n.t("hyrax.orcid.preferences.works.nothing_found"))
         expect(page).not_to have_selector("tr.referenced-work", count: 1)
         expect(page).not_to have_field("referenced-work-#{work.id}")
       end
