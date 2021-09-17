@@ -57,6 +57,8 @@ en:
             profile, if you click here to <a href="%{approval_path}">approve this action</a>.
         published: |
           The work has been published to your ORCID profile, you can now delete the notification.
+        error: |
+          An error seems to have occured. This may be because the work has been removed or it's visibility set to non public. Please delete the notification.
       profile:
         heading_suffix: Synced from ORCID
         employment:
