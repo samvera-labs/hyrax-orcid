@@ -6,6 +6,8 @@ module Hyrax
       class WorksController < ::ApplicationController
         include Hyrax::Orcid::ActiveJobType
 
+        rescue_from "Ldp::Gone", with: :ldp_gone_error
+
         def publish
           Hyrax::Orcid::PublishWorkJob.send(active_job_type, work, identity)
 
@@ -42,6 +44,11 @@ module Hyrax
 
         def permitted_params
           params.permit(:work_id, :orcid_id)
+        end
+        def ldp_gone_error
+          flash[:error] = I18n.t("hyrax.orcid.notify.error")
+
+          redirect_to hyrax_routes.notifications_path
         end
       end
     end
