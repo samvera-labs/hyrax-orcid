@@ -27,6 +27,7 @@ Add an initializer to your app with the following block:
 Hyrax::Orcid.configure do |config|
   config.client_id = "YOUR-APP-ID"
   config.client_secret = "your-secret-token"
+  # The authorisation return URL you entered when creating the Orcid Application. Should be your repository URL and `/dashboard/orcid_identity/new`
   config.authorization_redirect_url = "http://your-repo.com/dashboard/orcid_identity/new"
 
   config.bolognese = {
