@@ -5,6 +5,7 @@ module Hyrax
     module Dashboard
       class WorksController < ::ApplicationController
         include Hyrax::Orcid::ActiveJobType
+        include Hyrax::Orcid::RouteHelper
 
         rescue_from "Ldp::Gone", with: :ldp_gone_error
 
@@ -14,7 +15,8 @@ module Hyrax
           respond_to do |f|
             f.html do
               flash[:notice] = I18n.t("hyrax.orcid.notify.published")
-              redirect_back fallback_location: notifications_path
+              # I am not using redirect_back, as if the user gets stuck on the publish path it'll redirect to death
+              redirect_to hyrax_routes.notifications_path
             end
             f.json do
               render json: { success: true }.to_json, status: 200
@@ -45,6 +47,7 @@ module Hyrax
         def permitted_params
           params.permit(:work_id, :orcid_id)
         end
+
         def ldp_gone_error
           flash[:error] = I18n.t("hyrax.orcid.notify.error")
 
