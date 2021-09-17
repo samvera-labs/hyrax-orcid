@@ -1,6 +1,6 @@
-var HyraxOrcidOnLoad = function() {
+var hyraxOrcidProfileOnLoad = function() {
   // Prevent JS being loaded twice
-  if ($("body").attr("data-hyrax-orcid-js-loaded") === "true") {
+  if ($("body").attr("data-hyrax-orcid-profile-js-loaded") === "true") {
     return false
   }
 
@@ -26,9 +26,9 @@ var HyraxOrcidOnLoad = function() {
     });
   }
 
-  $("body").attr("data-hyrax-orcid-js-loaded", "true")
+  $("body").attr("data-hyrax-orcid-profile-js-loaded", "true")
 }
 
 // Ensure that page load (via turbolinks) and page refresh (via browser request) both load JS
-$(document).ready(HyraxOrcidOnLoad)
-$(document).on("turbolinks:load", HyraxOrcidOnLoad)
+$(document).ready(hyraxOrcidProfileOnLoad)
+$(document).on("turbolinks:load", hyraxOrcidProfileOnLoad)
