@@ -165,7 +165,7 @@ RSpec.describe Hyrax::Orcid::Work::PublisherService do
     it { expect(service.send(:xml)).to be_a(String) }
   end
 
-  describe "#previously_uploaded?" do
+  describe "#previously_published?" do
     context "when the work was published" do
       let(:put_code) { "123456" }
 
@@ -173,11 +173,11 @@ RSpec.describe Hyrax::Orcid::Work::PublisherService do
         orcid_identity.orcid_works << orcid_work
       end
 
-      it { expect(service.send(:previously_uploaded?)).to be true }
+      it { expect(service.send(:previously_published?)).to be true }
     end
 
     context "when the work was not published" do
-      it { expect(service.send(:previously_uploaded?)).to be false }
+      it { expect(service.send(:previously_published?)).to be false }
     end
   end
 

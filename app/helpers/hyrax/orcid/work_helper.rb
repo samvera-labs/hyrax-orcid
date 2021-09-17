@@ -19,7 +19,7 @@ module Hyrax
         end
       end
 
-      def previously_uploaded?
+      def previously_published?
         orcid_work.put_code.present?
       end
 

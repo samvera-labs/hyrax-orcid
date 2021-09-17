@@ -13,7 +13,7 @@ module Hyrax
         end
 
         def publish
-          request_method = previously_uploaded? ? :put : :post
+          request_method = previously_published? ? :put : :post
 
           @response = Faraday.send(request_method, request_url, xml, headers)
 
