@@ -20,6 +20,7 @@ module Hyrax
       yield(configuration)
     end
 
+    # Use the defaults and reset the memoized variable
     def self.reset_configuration
       self.configuration = nil
 
