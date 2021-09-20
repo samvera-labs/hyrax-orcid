@@ -49,7 +49,6 @@ module Hyrax
         end
 
         def request_authorization
-          # TODO: Put these in an options panel
           data = {
             client_id: Hyrax::Orcid.configuration.client_id,
             client_secret: Hyrax::Orcid.configuration.client_secret,
