@@ -84,6 +84,8 @@ bundle exec rspec `find spec -name *_spec.rb | grep -v internal_test_hyrax`
 
 ## Development
 
+### Potential Issues
+
 The app uses an sqlite database which is stored inside `spec/internal_test_hyrax/db`. If you wish to nuke your app and start again, delete this file,
 then you will need to ensure that the db is created, migrations are run and seeds imported before the app will start, by using something like this to start the web container:
 
@@ -106,19 +108,21 @@ rails app:hyrax:default_admin_set:create
 
 I've had issues with the tasks, so if it's still not working, login with the Admin user and create a new Admin Set Collection manually with the title "admin_set/default"
 
-### Snippets
+## TODO
 
-If I find a useful snippet that might be useful, i'll add it below incase it helps anyone else.
+There are a number of outstanding items that should be addressed in the future: 
 
-#### Instantiate Work Presenter
+### Hyrax Orcid Gem
 
-```ruby
-user = User.first
-ability = Ability.new(user)
-work = GenericWork.last
-presenter = Hyrax::WorkShowPresenter.new(work, ability)
-presenter.solr_document
-```
++ JSON fields should be extracted into its own Gem allowing configuration via YML - this is on the HA developers list but time hasn't been found
+
+### Hyku/HykuAddons related items
+
+Because this Gem was developed to eventually work with Hyku Addons, there are a number of items that are Hyku/HykuAddons related: 
+
++ Orcid Types are all 'other', there needs to be a map between Orcid Work Types and Hyrax Work Types, please see HyraxXmlBuilder for a list of types
++ The Orcid Contributor types need to be mapped to Hyrax Work Contributor types
+
 
 ## License
 
