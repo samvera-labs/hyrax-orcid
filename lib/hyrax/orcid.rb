@@ -15,9 +15,19 @@ module Hyrax
     end
 
     def self.configure
-      self.configuration ||= Configuration.new
+      load_configuration
 
       yield(configuration)
+    end
+
+    def self.reset_configuration
+      self.configuration = nil
+
+      load_configuration
+    end
+
+    def self.load_configuration
+      self.configuration ||= Configuration.new
     end
 
     class Configuration
