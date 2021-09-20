@@ -12,7 +12,7 @@ module Hyrax
         def new
           request_authorization
 
-          if authorization_successful?
+          if @authorization_response.success?
             current_user.orcid_identity_from_authorization(authorization_body)
             flash[:notice] = I18n.t("hyrax.orcid.preferences.create.success")
           else
@@ -57,10 +57,6 @@ module Hyrax
           }
 
           @authorization_response = Faraday.post(helpers.orcid_token_uri, data.to_query, "Accept" => "application/json")
-        end
-
-        def authorization_successful?
-          @authorization_response.success?
         end
 
         def authorization_body
