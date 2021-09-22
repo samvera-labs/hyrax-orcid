@@ -17,7 +17,11 @@ module Hyrax
 
           @response = Faraday.send(request_method, request_url, xml, headers)
 
-          update_identity if @response.success?
+          if @response.success?
+            update_identity
+          else
+            notify_contributor_error
+          end
         end
 
         def unpublish
@@ -63,6 +67,20 @@ module Hyrax
               work_title: @work.title.first
             }
             body = I18n.t("hyrax.orcid.unpublish.notification.body", params)
+
+            depositor.send_message(@identity.user, body, subject)
+          end
+
+          def notify_contributor_error
+            error = Hash.from_xml(@response.body)
+
+            subject = I18n.t("hyrax.orcid.publish.error.notification.subject")
+            params = {
+              work_title: @work.title.first,
+              short_error: error.dig("error", "user_message"),
+              full_error: error.dig("error", "developer_message"),
+            }
+            body = I18n.t("hyrax.orcid.publish.error.notification.body", params)
 
             depositor.send_message(@identity.user, body, subject)
           end

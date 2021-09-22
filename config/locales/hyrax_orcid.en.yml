@@ -40,11 +40,19 @@ en:
             manual: Do not automatically sync or notify me about new public works - syncing is available via the works section below.
         works:
           title: Works
-          nothing_found: There are currently no locals works in which your Orcid ID is referenced as a creator or contributor.
+          nothing_found: There are currently no locals works in which your ORCID ID is referenced as a creator or contributor.
+      publish:
+        error:
+          notification:
+            subject: |
+              An error occured when attempting to publish a work to ORCID
+            body: |
+              The following error has occured whilst publishing "%{work_title}", in which you are credited as a collaborator: "%{short_error}".<br><br>
+              Full error message:<br><br>"%{full_error}"
       unpublish:
         notification:
           subject: |
-            %{depositor_description} has removed a work
+            %{depositor_description} has removed a work from ORCID
           body: |
             <a href="%{depositor_profile}">%{depositor_description}</a> has removed a work inwhich you were a collatorator "%{work_title}".
       notify:
