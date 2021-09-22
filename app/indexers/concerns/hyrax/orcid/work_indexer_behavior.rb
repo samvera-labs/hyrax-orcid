@@ -18,7 +18,7 @@ module Hyrax
       # work contributors and store those in a Solr array.
       def generate_solr_document
         super.tap do |solr_doc|
-          FIELD_ORDERS.keys.each do |field|
+          FIELD_ORDERS.each_key do |field|
             solr_doc["#{field}_display_ssim"] = format_names(field) if object.respond_to?(field)
           end
 

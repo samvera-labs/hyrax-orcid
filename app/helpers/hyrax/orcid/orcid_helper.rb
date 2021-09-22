@@ -7,7 +7,7 @@ module Hyrax
         (?:(?:http|https):\/\/
         (?:www\.(?:sandbox\.)?)?orcid\.org\/)?
         (\d{4}[[:space:]-]\d{4}[[:space:]-]\d{4}[[:space:]-]\d{3}[0-9X]+)
-      }x.freeze
+      }x
 
       def validate_orcid(orcid)
         return if orcid.blank?

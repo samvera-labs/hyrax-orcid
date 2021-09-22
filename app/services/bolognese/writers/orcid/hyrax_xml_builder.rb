@@ -29,7 +29,6 @@ module Bolognese
 
         # Fields guide:
         # https://github.com/ORCID/ORCID-Source/blob/master/orcid-api-web/tutorial/works.md#work-fields
-        # rubocop:disable Metrics/MethodLength
         def build
           @xml[:work].title do
             @xml[:common].title @metadata.titles.first.dig("title")
