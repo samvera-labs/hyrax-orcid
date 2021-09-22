@@ -38,5 +38,3 @@ RSpec.describe Hyrax::Orcid::Profile::WorkPresenter do
     end
   end
 end
-
-

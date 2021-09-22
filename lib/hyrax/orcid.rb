@@ -41,14 +41,14 @@ module Hyrax
 
         @bolognese = {
           # The work reader method, excluding the _reader suffix
-          reader_method: "hyrax_work", 
+          reader_method: "hyrax_work",
           # The XML builder class that provides the XML body which is sent to Orcid
           xml_builder_class_name: "Bolognese::Writers::Orcid::HyraxXmlBuilder"
         }
 
-        # How to perform the active jobs that are created. This is useful for debugging the jobs and 
+        # How to perform the active jobs that are created. This is useful for debugging the jobs and
         # generated XML or if you want to run all jobs inline.
-        # `:perform_later` or `:perform_now` 
+        # `:perform_later` or `:perform_now`
         @active_job_type = :perform_later
       end
     end

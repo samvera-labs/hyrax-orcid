@@ -51,9 +51,9 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
         "access_token": access_token,
         "token_type": "bearer",
         "refresh_token": "55a45c88-59d7-4646-b30e-836b3dead62c",
-        "expires_in": 631138518,
+        "expires_in": 631_138_518,
         "scope": "/read-limited /activities/update",
-        "name": "Johnny Testing" ,
+        "name": "Johnny Testing",
         "orcid": orcid_id
       }.to_json
     end
@@ -134,7 +134,7 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
     end
 
     context "when the user has a synced referenced work" do
-      let(:orcid_work) { orcid_identity.orcid_works.create(work_uuid: work.id, put_code: 123456) }
+      let(:orcid_work) { orcid_identity.orcid_works.create(work_uuid: work.id, put_code: 123_456) }
 
       it "displays the work with sync checked" do
         expect(page).to have_selector("tr.referenced-work", count: 1)

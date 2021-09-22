@@ -14,9 +14,9 @@ module Hyrax
 
           protected
 
-          def parsed_values
-            JSON.parse(values.first).pluck("#{config.itemprop}_name")
-          end
+            def parsed_values
+              JSON.parse(values.first).pluck("#{config.itemprop}_name")
+            end
         end
       end
     end

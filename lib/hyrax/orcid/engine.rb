@@ -20,6 +20,7 @@ module Hyrax
         Flipflop::FeatureLoader.current.append(self)
       end
 
+      # rubocop:disable Metrics/MethodLength
       def self.dynamically_include_mixins
         ::User.include Hyrax::Orcid::UserBehavior
 
@@ -60,6 +61,7 @@ module Hyrax
         # Append our locales so they have precedence
         I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join("config", "locales", "*.{rb,yml}")]
       end
+      # rubocop:enable Metrics/MethodLength
 
       if Rails.env.development?
         config.to_prepare { Hyrax::Orcid::Engine.dynamically_include_mixins }

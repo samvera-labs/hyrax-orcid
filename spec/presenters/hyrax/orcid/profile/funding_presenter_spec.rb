@@ -35,5 +35,3 @@ RSpec.describe Hyrax::Orcid::Profile::FundingPresenter do
     end
   end
 end
-
-

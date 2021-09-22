@@ -35,5 +35,3 @@ RSpec.describe Hyrax::Orcid::Profile::EducationPresenter do
     end
   end
 end
-
-

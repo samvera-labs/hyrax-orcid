@@ -35,4 +35,3 @@ RSpec.describe Hyrax::Orcid::Profile::PeerReviewPresenter do
     end
   end
 end
-

@@ -36,23 +36,23 @@ module Hyrax
 
         protected
 
-        def work
-          @_work ||= ActiveFedora::Base.find(permitted_params.dig(:work_id))
-        end
+          def work
+            @_work ||= ActiveFedora::Base.find(permitted_params.dig(:work_id))
+          end
 
-        def identity
-          @_identity ||= OrcidIdentity.find_by(orcid_id: permitted_params.dig(:orcid_id))
-        end
+          def identity
+            @_identity ||= OrcidIdentity.find_by(orcid_id: permitted_params.dig(:orcid_id))
+          end
 
-        def permitted_params
-          params.permit(:work_id, :orcid_id)
-        end
+          def permitted_params
+            params.permit(:work_id, :orcid_id)
+          end
 
-        def ldp_gone_error
-          flash[:error] = I18n.t("hyrax.orcid.notify.error")
+          def ldp_gone_error
+            flash[:error] = I18n.t("hyrax.orcid.notify.error")
 
-          redirect_to hyrax_routes.notifications_path
-        end
+            redirect_to hyrax_routes.notifications_path
+          end
       end
     end
   end

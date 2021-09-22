@@ -13,6 +13,7 @@ module Hyrax
 
         private
 
+          # rubocop:disable Metrics/AbcSize
           def jsonify_fields(env)
             env.curation_concern.class.json_fields.each do |field|
               if name_blank?(field, env.attributes[field]) || recursive_blank?(env.attributes[field])
@@ -24,6 +25,7 @@ module Hyrax
               env.attributes[field] = Array(env.attributes[field]) if env.curation_concern.class.multiple?(field)
             end
           end
+          # rubocop:enable Metrics/AbcSize
 
           def name_blank?(field, obj)
             return false unless field.in? GenericWork.json_fields

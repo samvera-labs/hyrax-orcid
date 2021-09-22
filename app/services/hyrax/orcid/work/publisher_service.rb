@@ -78,7 +78,7 @@ module Hyrax
             params = {
               work_title: @work.title.first,
               short_error: error.dig("error", "user_message"),
-              full_error: error.dig("error", "developer_message"),
+              full_error: error.dig("error", "developer_message")
             }
             body = I18n.t("hyrax.orcid.publish.error.notification.body", params)
 

@@ -24,7 +24,7 @@ RSpec.describe "Links", type: :request do
     it "raises an error" do
       get url
 
-      expect(response).to have_http_status(200)
+      expect(response).to have_http_status(:ok)
     end
   end
 

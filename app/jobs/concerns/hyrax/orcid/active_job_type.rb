@@ -6,7 +6,7 @@ module Hyrax
       extend ActiveSupport::Concern
 
       def active_job_type
-        Hyrax::Orcid.configuration.active_job_type 
+        Hyrax::Orcid.configuration.active_job_type
       end
     end
   end

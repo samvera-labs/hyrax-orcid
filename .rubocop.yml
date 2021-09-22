@@ -16,7 +16,7 @@ RSpec/ExampleLength:
   Max: 25
 
 Layout/LineLength:
-  Max: 250
+  Enabled: false
 
 RSpec/DescribeClass:
   Exclude:
@@ -24,6 +24,15 @@ RSpec/DescribeClass:
 
 Style/FrozenStringLiteralComment:
   Enabled: true
+
+RSpec/LetSetup:
+  Enabled: false
+
+RSpec/NamedSubject:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false
 
 Layout/IndentationConsistency:
   EnforcedStyle: indented_internal_methods

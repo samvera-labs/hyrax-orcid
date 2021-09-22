@@ -36,42 +36,41 @@ module Hyrax
 
         protected
 
-        def response
-          @_response ||= begin
-            response = perform_record_request
+          def response
+            @_response ||= begin
+              response = perform_record_request
 
-            return {} unless response.success?
+              return {} unless response.success?
 
-            JSON.parse(response.body).dig("activities-summary")
+              JSON.parse(response.body).dig("activities-summary")
+            end
           end
-        end
 
-        def request_url(type: :record, put_code: nil)
-          orcid_api_uri(@identity.orcid_id, type, put_code)
-        end
+          def request_url(type: :record, put_code: nil)
+            orcid_api_uri(@identity.orcid_id, type, put_code)
+          end
 
-        def headers
-          {
-            "authorization" => "Bearer #{@identity.access_token}",
-            "Content-Type" => "application/json"
-          }
-        end
+          def headers
+            {
+              "authorization" => "Bearer #{@identity.access_token}",
+              "Content-Type" => "application/json"
+            }
+          end
 
-        def work_codes
-          response.dig("works", "group").map { |hsh| hsh.dig("work-summary").first.dig("put-code") }
-        end
+          def work_codes
+            response.dig("works", "group").map { |hsh| hsh.dig("work-summary").first.dig("put-code") }
+          end
 
-        # NOTE: This is hear so its easier to mock
-        def perform_record_request
-          Faraday.send(:get, request_url, nil, headers)
-        end
+          # NOTE: This is hear so its easier to mock
+          def perform_record_request
+            Faraday.send(:get, request_url, nil, headers)
+          end
 
-        # NOTE: This is hear so its easier to mock
-        def perform_works_request
-          Faraday.send(:get, request_url(type: :works, put_code: work_codes.join(",")), nil, headers)
-        end
+          # NOTE: This is hear so its easier to mock
+          def perform_works_request
+            Faraday.send(:get, request_url(type: :works, put_code: work_codes.join(",")), nil, headers)
+          end
       end
     end
   end
 end
-

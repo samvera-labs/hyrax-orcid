@@ -78,5 +78,3 @@ RSpec.describe Hyrax::Orcid::Record::ReaderService do
     end
   end
 end
-
-

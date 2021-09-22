@@ -16,21 +16,21 @@ module Hyrax
 
       protected
 
-      def orcid_id
-        params.require(:orcid_id)
-      end
+        def orcid_id
+          params.require(:orcid_id)
+        end
 
-      def connected?
-        return if orcid_identity.present?
+        def connected?
+          return if orcid_identity.present?
 
-        raise ActiveRecord::RecordNotFound, "User has not linked their account to ORCID"
-      end
+          raise ActiveRecord::RecordNotFound, "User has not linked their account to ORCID"
+        end
 
-      def enabled?
-        return if Flipflop.enabled?(:orcid_identities)
+        def enabled?
+          return if Flipflop.enabled?(:orcid_identities)
 
-        raise ActionController::RoutingError, "The feature is not currently enabled"
-      end
+          raise ActionController::RoutingError, "The feature is not currently enabled"
+        end
     end
   end
 end

@@ -2,7 +2,7 @@
 
 # This is a factory class which builds the required headers for a valid Orcid XML document
 # and then passes the actual building of the XML to another class, which can be changed
-# via the Hyrax::Orcid configuration. 
+# via the Hyrax::Orcid configuration.
 # The builder class must implement a `build` method and access the correct types, but that is all.
 module Bolognese
   module Writers

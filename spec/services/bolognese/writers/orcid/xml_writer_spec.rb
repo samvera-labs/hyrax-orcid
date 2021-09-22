@@ -8,7 +8,7 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
   let(:creator1_last_name) { "Hageneuer" }
   let(:creator1) do
     {
-      "creator_name" => "#{creator1_first_name} #{creator1_last_name}",
+      "creator_name" => "#{creator1_first_name} #{creator1_last_name}"
     }
   end
   let(:creator2_first_name) { "Johnny" }
@@ -27,7 +27,7 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
   let(:contributor1) do
     {
       "contributor_name" => "#{contributor1_first_name} #{contributor1_last_name}",
-      "contributor_orcid" => "https://orcid.org/#{contributor1_orcid}",
+      "contributor_orcid" => "https://orcid.org/#{contributor1_orcid}"
     }
   end
   let(:date_created) { "#{created_year}-08-19" }
@@ -155,4 +155,3 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
     end
   end
 end
-

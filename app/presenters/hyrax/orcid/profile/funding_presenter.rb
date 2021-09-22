@@ -15,7 +15,7 @@ module Hyrax
             {
               title: entry.dig("title", "title", "value"),
               items: [
-                "#{entry.dig('organization', 'name')} (#{entry.dig('organization', 'address', 'city')})" ,
+                "#{entry.dig('organization', 'name')} (#{entry.dig('organization', 'address', 'city')})",
                 "#{date_from_hash(entry['start-date'])} - #{date_from_hash(entry['end-date'])} | #{entry.dig('type')}",
                 grant(entry),
                 url(entry)
@@ -26,17 +26,17 @@ module Hyrax
 
         protected
 
-        def grant(entry)
-          ids = external_ids(entry)
+          def grant(entry)
+            ids = external_ids(entry)
 
-          "#{ids.dig('external-id-type').humanize}: #{ids.dig('external-id-value')}"
-        end
+            "#{ids.dig('external-id-type').humanize}: #{ids.dig('external-id-value')}"
+          end
 
-        def url(entry)
-          url = external_ids(entry).dig('external-id-url', 'value')
+          def url(entry)
+            url = external_ids(entry).dig('external-id-url', 'value')
 
-          "URL: #{h.link_to url, url}"
-        end
+            "URL: #{h.link_to url, url}"
+          end
       end
     end
   end

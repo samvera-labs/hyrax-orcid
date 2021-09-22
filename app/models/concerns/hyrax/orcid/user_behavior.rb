@@ -27,7 +27,7 @@ module Hyrax
 
             return [] if orcid_identity.blank?
 
-            # We need to string concat here, so can't use single quotes (') around the query_string, 
+            # We need to string concat here, so can't use single quotes (') around the query_string,
             # but solr requires that we use double quotes within the string or it will fail.
             query_string = "work_orcids_tsim:\"#{orcid_identity.orcid_id}\" AND visibility_ssi:open"
             result = ActiveFedora::SolrService.get(query_string, row: 1_000_000)

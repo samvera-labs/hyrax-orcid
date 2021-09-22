@@ -31,4 +31,3 @@ RSpec.describe Hyrax::WorkIndexer do
     expect(solr_document.fetch("work_orcids_tsim")).to eq [orcid1, orcid2, orcid3]
   end
 end
-

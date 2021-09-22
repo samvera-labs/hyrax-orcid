@@ -55,7 +55,7 @@ RSpec.describe User, type: :model do
     let(:contributor1) do
       {
         "contributor_name" => "#{contributor1_first_name} #{contributor1_last_name}",
-        "contributor_orcid" => "https://orcid.org/#{contributor1_orcid}",
+        "contributor_orcid" => "https://orcid.org/#{contributor1_orcid}"
       }
     end
     let(:work1_attributes) do

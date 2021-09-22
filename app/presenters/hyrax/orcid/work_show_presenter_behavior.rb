@@ -22,13 +22,13 @@ module Hyrax
 
       private
 
-      def participants(term)
-        participants = JSON.parse(solr_document.public_send(term).first.presence || "[]")
+        def participants(term)
+          participants = JSON.parse(solr_document.public_send(term).first.presence || "[]")
 
-        return if participants.blank?
+          return if participants.blank?
 
-        participants.pluck("#{term}_name")
-      end
+          participants.pluck("#{term}_name")
+        end
     end
   end
 end
