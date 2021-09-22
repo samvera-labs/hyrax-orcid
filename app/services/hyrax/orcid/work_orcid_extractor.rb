@@ -18,10 +18,9 @@ module Hyrax
 
           next if json.blank?
 
-          json
-            .then { |j| JSON.parse(j) }
-            .select { |person| person.dig(target).present? }
-            .each { |person| @orcids << validate_orcid(person.dig(target)) }
+          json.then { |j| JSON.parse(j) }
+              .select { |person| person.dig(target).present? }
+              .each { |person| @orcids << validate_orcid(person.dig(target)) }
         end
 
         @orcids.compact.uniq
