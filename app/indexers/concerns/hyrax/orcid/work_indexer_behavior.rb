@@ -14,6 +14,8 @@ module Hyrax
         contributor: ["contributor_name", "contributor_orcid"]
       }.freeze
 
+      # Instead of text searching for Orcid IDs, this method will extrct a list of Orcid IDs from the 
+      # work contributors and store those in a Solr array. 
       def generate_solr_document
         super.tap do |solr_doc|
           FIELD_ORDERS.keys.each do |field|

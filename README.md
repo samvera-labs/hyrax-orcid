@@ -123,6 +123,9 @@ Because this Gem was developed to eventually work with Hyku Addons, there are a 
 + Orcid Types are all 'other', there needs to be a map between Orcid Work Types and Hyrax Work Types, please see HyraxXmlBuilder for a list of types
 + The Orcid Contributor types need to be mapped to Hyrax Work Contributor types
 
+## To Investigate
+
++ What happens when a public work is published, then made restricted - I think it is likely it will fail to write the update because of the visibility check within the `PublishWorkActive`
 
 ## License
 
