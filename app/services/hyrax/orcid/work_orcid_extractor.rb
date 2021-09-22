@@ -9,8 +9,6 @@ module Hyrax
       def initialize(work)
         @work = work
         @orcids = []
-
-        validate!
       end
 
       def extract
@@ -20,9 +18,10 @@ module Hyrax
 
           next if json.blank?
 
-          JSON.parse(json).select { |person| person.dig(target).present? }.each do |person|
-            @orcids << validate_orcid(person.dig(target))
-          end
+          json
+            .then { |j| JSON.parse(j) }
+            .select { |person| person.dig(target).present? }
+            .each { |person| @orcids << validate_orcid(person.dig(target)) }
         end
 
         @orcids.compact.uniq
@@ -46,10 +45,6 @@ module Hyrax
         # Required for WorkFormNameable to function correctly
         def meta_model
           @work.class.name
-        end
-
-        def validate!
-          raise ArgumentError, "A work is required" unless @work.is_a?(ActiveFedora::Base)
         end
     end
   end

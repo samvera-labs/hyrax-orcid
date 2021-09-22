@@ -22,20 +22,6 @@ RSpec.describe Hyrax::Orcid::WorkOrcidExtractor do
   let(:orcid_id) { user.orcid_identity.orcid_id }
   let(:orcid_id2) { "0000-1111-2222-3333" }
 
-  describe ".new" do
-    context "when arguments are used" do
-      it "doesn't raise" do
-        expect { described_class.new(work) }.not_to raise_error
-      end
-    end
-
-    context "when invalid type is used" do
-      it "raises" do
-        expect { described_class.new("not_a_work") }.to raise_error(ArgumentError)
-      end
-    end
-  end
-
   describe "#extract" do
     it "returns an array" do
       expect(service.extract).to be_a(Array)
