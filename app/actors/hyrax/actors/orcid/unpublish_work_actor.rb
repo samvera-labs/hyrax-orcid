@@ -23,7 +23,7 @@ module Hyrax
         private
 
           def enabled?
-            Flipflop.enabled?(:orcid_identities)
+            Flipflop.enabled?(:hyrax_orcid)
           end
       end
     end

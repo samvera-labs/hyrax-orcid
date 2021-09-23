@@ -15,7 +15,7 @@ module Hyrax
 
       # If the work includes our default processable terms
       def perform
-        return unless Flipflop.enabled?(:orcid_identities)
+        return unless Flipflop.enabled?(:hyrax_orcid)
 
         orcids = Hyrax::Orcid::WorkOrcidExtractor.new(@work).extract
 

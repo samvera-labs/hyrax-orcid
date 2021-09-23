@@ -17,14 +17,14 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
     allow_any_instance_of(Ability).to receive(:can?).with(:new, anything).and_return(true)
 
     allow(Flipflop).to receive(:enabled?).and_call_original
-    allow(Flipflop).to receive(:enabled?).with(:orcid_identities).and_return(true)
+    allow(Flipflop).to receive(:enabled?).with(:hyrax_orcid).and_return(true)
 
     sign_in user
   end
 
   describe "when the feature is disabled" do
     before do
-      allow(Flipflop).to receive(:enabled?).with(:orcid_identities).and_return(false)
+      allow(Flipflop).to receive(:enabled?).with(:hyrax_orcid).and_return(false)
 
       visit hyrax.dashboard_profile_path(user.to_param, locale: "en")
     end

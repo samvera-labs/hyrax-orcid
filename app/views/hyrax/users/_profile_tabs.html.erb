@@ -8,7 +8,7 @@
 	<%= render 'activity', presenter: presenter %>
 </div> <!-- /tab-content -->
 
-<% if Flipflop.enabled?(:orcid_identities) && presenter.user.orcid_identity? %>
+<% if Flipflop.enabled?(:hyrax_orcid) && presenter.user.orcid_identity? %>
 	<div
 		id="orcid-profile"
 		class="js-orcid-profile"

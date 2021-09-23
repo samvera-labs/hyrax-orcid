@@ -29,13 +29,13 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
     work.visibility = Hydra::AccessControls::AccessRight::VISIBILITY_TEXT_VALUE_PUBLIC
 
     allow(Flipflop).to receive(:enabled?).and_call_original
-    allow(Flipflop).to receive(:enabled?).with(:orcid_identities).and_return(true)
+    allow(Flipflop).to receive(:enabled?).with(:hyrax_orcid).and_return(true)
 
     ActiveJob::Base.queue_adapter = :test
   end
 
   describe "#create" do
-    context "when orcid_identities is enabled" do
+    context "when hyrax_orcid is enabled" do
       it "enqueues a job" do
         expect { actor.create(env) }.to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
           .with(work)
@@ -43,9 +43,9 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
       end
     end
 
-    context "when orcid_identities is disabled" do
+    context "when hyrax_orcid is disabled" do
       before do
-        allow(Flipflop).to receive(:enabled?).with(:orcid_identities).and_return(false)
+        allow(Flipflop).to receive(:enabled?).with(:hyrax_orcid).and_return(false)
       end
 
       it "does not enqueue a job" do
@@ -65,7 +65,7 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
   end
 
   describe "#update" do
-    context "when orcid_identities is enabled" do
+    context "when hyrax_orcid is enabled" do
       it "enqueues a job" do
         expect { actor.update(env) }.to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
           .with(work)
@@ -73,9 +73,9 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
       end
     end
 
-    context "when orcid_identities is disabled" do
+    context "when hyrax_orcid is disabled" do
       before do
-        allow(Flipflop).to receive(:enabled?).with(:orcid_identities).and_return(false)
+        allow(Flipflop).to receive(:enabled?).with(:hyrax_orcid).and_return(false)
       end
 
       it "does not enqueue a job" do

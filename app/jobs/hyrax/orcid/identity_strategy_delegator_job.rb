@@ -7,7 +7,7 @@ module Hyrax
       discard_on ArgumentError
 
       def perform(work)
-        return unless Flipflop.enabled?(:orcid_identities)
+        return unless Flipflop.enabled?(:hyrax_orcid)
 
         Hyrax::Orcid::IdentityStrategyDelegator.new(work).perform
       end

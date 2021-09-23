@@ -27,7 +27,7 @@ module Hyrax
         end
 
         def enabled?
-          return if Flipflop.enabled?(:orcid_identities)
+          return if Flipflop.enabled?(:hyrax_orcid)
 
           raise ActionController::RoutingError, "The feature is not currently enabled"
         end
