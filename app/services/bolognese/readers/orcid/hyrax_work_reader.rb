@@ -10,28 +10,28 @@ module Bolognese
       module HyraxWorkReader
         OPTION_EXCLUDES = %i[doi id url sandbox validate ra].freeze
 
-        def read_hyrax_work(string: nil, **options)
+        def read_hyrax_json_work(string: nil, **options)
           read_options = ActiveSupport::HashWithIndifferentAccess.new(options.except(*OPTION_EXCLUDES))
 
           meta = string.present? ? Maremma.from_json(string) : {}
 
           {
             "id" => meta.fetch('id', nil),
-            "identifiers" => read_orcid_hyrax_work_identifiers(meta),
-            "types" => read_orcid_hyrax_work_types(meta),
+            "identifiers" => read_hyrax_json_work_identifiers(meta),
+            "types" => read_hyrax_json_work_types(meta),
             "doi" => normalize_doi(meta.fetch('doi', nil)&.first),
-            "titles" => read_orcid_hyrax_work_titles(meta),
-            "creators" => read_orcid_hyrax_work_creators(meta),
-            "contributors" => read_orcid_hyrax_work_contributors(meta),
-            "publication_year" => read_orcid_hyrax_work_publication_year(meta),
-            "descriptions" => read_orcid_hyrax_work_descriptions(meta),
-            "subjects" => read_orcid_hyrax_work_subjects(meta)
+            "titles" => read_hyrax_json_work_titles(meta),
+            "creators" => read_hyrax_json_work_creators(meta),
+            "contributors" => read_hyrax_json_work_contributors(meta),
+            "publication_year" => read_hyrax_json_work_publication_year(meta),
+            "descriptions" => read_hyrax_json_work_descriptions(meta),
+            "subjects" => read_hyrax_json_work_subjects(meta)
           }.merge(read_options)
         end
 
         private
 
-          def read_orcid_hyrax_work_types(meta)
+          def read_hyrax_json_work_types(meta)
             # TODO: Map work.resource_type or work.
             resource_type_general = "Other"
             hyrax_resource_type = meta.fetch('has_model', nil) || "Work"
@@ -43,23 +43,23 @@ module Bolognese
             }.compact
           end
 
-          def read_orcid_hyrax_work_creators(meta)
+          def read_hyrax_json_work_creators(meta)
             orcid_json_authors(meta, :creator)
           end
 
-          def read_orcid_hyrax_work_contributors(meta)
+          def read_hyrax_json_work_contributors(meta)
             orcid_json_authors(meta, :contributor)
           end
 
-          def read_orcid_hyrax_work_titles(meta)
+          def read_hyrax_json_work_titles(meta)
             Array.wrap(meta.fetch("title", nil)).select(&:present?).collect { |r| { "title" => sanitize(r) } }
           end
 
-          def read_orcid_hyrax_work_descriptions(meta)
+          def read_hyrax_json_work_descriptions(meta)
             Array.wrap(meta.fetch("description", nil)).select(&:present?).collect { |r| { "description" => sanitize(r) } }
           end
 
-          def read_orcid_hyrax_work_publication_year(meta)
+          def read_hyrax_json_work_publication_year(meta)
             date = meta.fetch("date_created", nil)&.first
             date ||= meta.fetch("date_uploaded", nil)
             Date.edtf(date.to_s).year
@@ -67,15 +67,15 @@ module Bolognese
             Time.zone.today.year
           end
 
-          def read_orcid_hyrax_work_subjects(meta)
+          def read_hyrax_json_work_subjects(meta)
             Array.wrap(meta.fetch("keyword", nil)).select(&:present?).collect { |r| { "subject" => sanitize(r) } }
           end
 
-          def read_orcid_hyrax_work_identifiers(meta)
+          def read_hyrax_json_work_identifiers(meta)
             Array.wrap(meta.fetch("identifier", nil)).select(&:present?).collect { |r| { "identifier" => sanitize(r) } }
           end
 
-          def read_orcid_hyrax_work_publisher(meta)
+          def read_hyrax_json_work_publisher(meta)
             # Fallback to ':unav' since this is a required field for datacite
             # TODO: Should this default to application_name?
             parse_attributes(meta.fetch("publisher")).to_s.strip.presence || ":unav"

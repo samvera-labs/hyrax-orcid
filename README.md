@@ -32,7 +32,7 @@ Hyrax::Orcid.configure do |config|
 
   config.bolognese = {
     # The work reader method, excluding the _reader suffix
-    reader_method: "hyrax_work", 
+    reader_method: "hyrax_json_work",
     # The writer class that provides the XML body which is sent to Orcid
     xml_writer_class_name: "Bolognese::Writers::Xml::WorkWriter"
   }
@@ -74,7 +74,7 @@ Within the Dashboard, go to `Settings/Features` and enable the Hyrax Orcid featu
 
 ### Integration into HykuAddons
 
-HykuAddons is an opinionated addition to Hyku. Go to `Settings/Account Settings` and enter your Orcid application authorisation credentials into the correct fields under "Hyrax orcid settings". 
+HykuAddons is an opinionated addition to Hyku. Go to `Settings/Account Settings` and enter your Orcid application authorisation credentials into the correct fields under "Hyrax orcid settings".
 
 ## Testing
 
@@ -110,7 +110,7 @@ I've had issues with the tasks, so if it's still not working, login with the Adm
 
 ## TODO
 
-There are a number of outstanding items that should be addressed in the future: 
+There are a number of outstanding items that should be addressed in the future:
 
 ### Hyrax Orcid Gem
 
@@ -118,7 +118,7 @@ There are a number of outstanding items that should be addressed in the future:
 
 ### Hyku/HykuAddons related items
 
-Because this Gem was developed to eventually work with Hyku Addons, there are a number of items that are Hyku/HykuAddons related: 
+Because this Gem was developed to eventually work with Hyku Addons, there are a number of items that are Hyku/HykuAddons related:
 
 + Orcid Types are all 'other', there needs to be a map between Orcid Work Types and Hyrax Work Types, please see HyraxXmlBuilder for a list of types
 + The Orcid Contributor types need to be mapped to Hyrax Work Contributor types

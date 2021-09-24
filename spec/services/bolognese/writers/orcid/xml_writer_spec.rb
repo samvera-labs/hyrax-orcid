@@ -67,7 +67,7 @@ RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
   let(:model_class) { GenericWork }
   let(:work) { model_class.new(attributes) }
   let(:input) { work.attributes.merge(has_model: work.has_model.first).to_json }
-  let(:meta) { Bolognese::Metadata.new(input: input, from: "hyrax_work") }
+  let(:meta) { Bolognese::Metadata.new(input: input, from: "hyrax_json_work") }
   let(:type) { "other" }
   let(:put_code) { nil }
   let(:hyrax_orcid_xml) { meta.hyrax_orcid_xml(type, put_code) }
