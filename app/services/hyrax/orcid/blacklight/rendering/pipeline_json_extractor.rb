@@ -17,7 +17,7 @@ module Hyrax
             def parsed_values
               JSON.parse(values.first).pluck("#{config.itemprop}_name")
             rescue JSON::ParserError
-              values.first
+              values
             end
         end
       end
