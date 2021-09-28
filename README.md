@@ -79,7 +79,8 @@ HykuAddons is an opinionated addition to Hyku. Go to `Settings/Account Settings`
 ## Testing
 
 ```bash
-bundle exec rspec `find spec -name *_spec.rb | grep -v internal_test_hyrax`
+docker-compose exec web bundle exec rspec
+
 ```
 
 ## Development
