@@ -35,7 +35,7 @@ module Bolognese
 
         # Override this class if you wish to have more specific writers
         def xml_builder
-          Hyrax::Orcid.configuration.bolognese.dig(:xml_builder_class_name).constantize
+          Hyrax::Orcid.configuration.bolognese[:xml_builder_class_name].constantize
         end
       end
     end

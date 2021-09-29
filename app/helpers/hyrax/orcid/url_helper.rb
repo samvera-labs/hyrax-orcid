@@ -14,10 +14,10 @@ module Hyrax
       # TODO: Move ENV vars to options panel
       def orcid_authorize_uri
         params = {
-          client_id: Hyrax::Orcid.configuration.client_id,
+          client_id: Hyrax::Orcid.configuration.auth[:client_id],
+          redirect_uri: Hyrax::Orcid.configuration.auth[:redirect_url],
           scope: "/activities/update /read-limited",
-          response_type: "code",
-          redirect_uri: Hyrax::Orcid.configuration.authorization_redirect_url
+          response_type: "code"
         }
 
         "https://#{orcid_domain}/oauth/authorize?#{params.to_query}"
@@ -42,7 +42,11 @@ module Hyrax
       protected
 
         def orcid_domain
-          "#{'sandbox.' unless Rails.env.production?}orcid.org"
+          "#{'sandbox.' unless orcid_production_environment?}orcid.org"
+        end
+
+        def orcid_production_environment?
+          Hyrax::Orcid.configuration.environment.to_sym == :production
         end
     end
   end

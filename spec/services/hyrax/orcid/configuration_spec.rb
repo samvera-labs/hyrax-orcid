@@ -3,18 +3,30 @@
 require 'rails_helper'
 
 RSpec.describe Hyrax::Orcid::Configuration do
+  let(:client_id) { "TEST123" }
+  let(:client_secret) { "1234567890" }
+  let(:redirect_url) { "http://testurl.com" }
+  let(:reader_method) { "test_work" }
+  let(:builder_class_name) { "TestWorkBuilder" }
+  let(:active_job_type) { :perform_now }
+  let(:environment) { :production }
+
   context "when overwritten" do
     before do
       Hyrax::Orcid.configure do |config|
         config.bolognese = {
-          reader_method: "test_work",
-          xml_builder_class_name: "TestWorkBuilder"
+          reader_method: reader_method,
+          xml_builder_class_name: builder_class_name
         }
 
-        config.client_id = "TEST123"
-        config.client_secret = "1234567890"
-        config.authorization_redirect_url = "http://testurl.com"
-        config.active_job_type = :perform_now
+        config.auth = {
+          client_id: client_id,
+          client_secret: client_secret,
+          redirect_url: redirect_url
+        }
+
+        config.environment = environment
+        config.active_job_type = active_job_type
       end
     end
 
@@ -22,11 +34,12 @@ RSpec.describe Hyrax::Orcid::Configuration do
       Hyrax::Orcid.reset_configuration
     end
 
-    it { expect(Hyrax::Orcid.configuration.bolognese.dig(:reader_method)).to eq "test_work" }
-    it { expect(Hyrax::Orcid.configuration.bolognese.dig(:xml_builder_class_name)).to eq "TestWorkBuilder" }
-    it { expect(Hyrax::Orcid.configuration.client_id).to eq "TEST123" }
-    it { expect(Hyrax::Orcid.configuration.client_secret).to eq "1234567890" }
-    it { expect(Hyrax::Orcid.configuration.authorization_redirect_url).to eq "http://testurl.com" }
-    it { expect(Hyrax::Orcid.configuration.active_job_type).to eq :perform_now }
+    it { expect(Hyrax::Orcid.configuration.auth[:client_id]).to eq client_id }
+    it { expect(Hyrax::Orcid.configuration.auth[:client_secret]).to eq client_secret }
+    it { expect(Hyrax::Orcid.configuration.auth[:redirect_url]).to eq redirect_url }
+    it { expect(Hyrax::Orcid.configuration.bolognese[:reader_method]).to eq reader_method }
+    it { expect(Hyrax::Orcid.configuration.bolognese[:xml_builder_class_name]).to eq builder_class_name }
+    it { expect(Hyrax::Orcid.configuration.environment).to eq environment }
+    it { expect(Hyrax::Orcid.configuration.active_job_type).to eq active_job_type }
   end
 end

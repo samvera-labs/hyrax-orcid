@@ -25,10 +25,15 @@ Add an initializer to your app with the following block:
 
 ```ruby
 Hyrax::Orcid.configure do |config|
-  config.client_id = "YOUR-APP-ID"
-  config.client_secret = "your-secret-token"
-  # The authorisation return URL you entered when creating the Orcid Application. Should be your repository URL and `/dashboard/orcid_identity/new`
-  config.authorization_redirect_url = "http://your-repo.com/dashboard/orcid_identity/new"
+	# :sandbox or :production
+	config.environment = :sandbox
+
+	config.auth = {
+		client_id: "YOUR-APP-ID",
+		client_secret: "your-secret-token",
+		# The authorisation return URL you entered when creating the Orcid Application. Should be your repository URL and `/dashboard/orcid_identity/new`
+		redirect_url: "http://your-repo.com/dashboard/orcid_identity/new"
+	}
 
   config.bolognese = {
     # The work reader method, excluding the _reader suffix
@@ -45,6 +50,7 @@ end
 You can also set the following ENV varibles before your app starts:
 
 ```bash
+ORCID_ENVIRONMENT: sandbox
 ORCID_CLIENT_ID: YOUR-APP-ID
 ORCID_CLIENT_SECRET: your-secret-token
 ORCID_AUTHORIZATION_REDIRECT: http://your-repo.com/dashboard/orcid_identity/new

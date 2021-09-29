@@ -29,6 +29,9 @@ WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage
 
 Rails.application.routes.default_url_options[:host] = 'www.example.com'
 
+# Try and suppress depreciation warnings
+ActiveSupport::Deprecation.silenced = true
+
 # This avoids us having issues with the test hyrax app factories being registered
 # FactoryBot.definition_file_paths = [Rails.root.join("..", "..", "spec", "factories")]
 # FactoryBot.find_definitions

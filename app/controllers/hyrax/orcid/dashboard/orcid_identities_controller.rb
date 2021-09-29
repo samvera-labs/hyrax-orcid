@@ -50,8 +50,8 @@ module Hyrax
 
           def request_authorization
             data = {
-              client_id: Hyrax::Orcid.configuration.client_id,
-              client_secret: Hyrax::Orcid.configuration.client_secret,
+              client_id: Hyrax::Orcid.configuration.auth[:client_id],
+              client_secret: Hyrax::Orcid.configuration.auth[:client_secret],
               grant_type: "authorization_code",
               code: code
             }

@@ -32,12 +32,16 @@ module Hyrax
     end
 
     class Configuration
-      attr_accessor :client_id, :client_secret, :authorization_redirect_url, :bolognese, :active_job_type
+      attr_accessor :environment, :auth, :bolognese, :active_job_type
 
       def initialize
-        @client_id = ENV["ORCID_CLIENT_ID"]
-        @client_secret = ENV["ORCID_CLIENT_SECRET"]
-        @authorization_redirect_url = ENV["ORCID_AUTHORIZATION_REDIRECT_URL"]
+        @environment = ENV["ORCID_ENVIRONMENT"] || :sandbox
+
+        @auth = {
+          client_id: ENV["ORCID_CLIENT_ID"],
+          client_secret: ENV["ORCID_CLIENT_SECRET"],
+          redirect_url: ENV["ORCID_AUTHORIZATION_REDIRECT_URL"]
+        }
 
         @bolognese = {
           # The work reader method, excluding the _reader suffix

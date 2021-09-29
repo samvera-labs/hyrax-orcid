@@ -36,7 +36,7 @@ module Hyrax
         protected
 
           def xml
-            reader_method = Hyrax::Orcid.configuration.bolognese.dig(:reader_method)
+            reader_method = Hyrax::Orcid.configuration.bolognese[:reader_method]
 
             input = @work.attributes.merge(has_model: @work.has_model.first).to_json
             meta = Bolognese::Metadata.new(input: input, from: reader_method)
