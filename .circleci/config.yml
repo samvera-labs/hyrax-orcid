@@ -55,7 +55,7 @@ jobs:
       - samvera/install_solr_core:
           solr_config_path: 'spec/internal_test_hyrax/solr/config'
 
-      - run: bundle exec rake app:db:create app:db:migrate
+      - run: bundle exec rake app:hyrax:orcid:install:migrations app:db:create app:db:schema:load
 
       # Setup CodeClimate
       - run:
