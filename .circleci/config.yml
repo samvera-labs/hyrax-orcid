@@ -18,7 +18,7 @@ jobs:
         default: 4
 
     executor:
-      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
+      name: 'samvera/ruby_fcrepo_solr_redis'
       ruby_version: << parameters.ruby_version >>
 
     parallelism: 4
@@ -44,18 +44,6 @@ jobs:
       REDIS_NAMESPACE_QUIET: "true"
 
     steps:
-      - run:
-          name: Install the FITS
-          command: |
-            mkdir ~/fits
-            wget "https://github.com/harvard-lts/fits/releases/download/1.4.1/fits-1.4.1.zip"
-            unzip -d ~/fits/ "fits-1.4.1.zip"
-            chmod a+x ~/fits/fits.sh
-            ln -s ~/fits/fits.sh ~/fits/fits
-            rm "fits-1.4.1.zip"
-            echo "export PATH=$HOME/fits:$PATH" >> $BASH_ENV
-            source $BASH_ENV
-
       - samvera/cached_checkout
 
       - run: git submodule init && git submodule update
@@ -72,7 +60,7 @@ jobs:
 
       - run: bundle exec rails g hyrax:orcid:install
 
-      - run: bundle exec rake app:db:create app:db:migrate app:zookeeper:upload
+      - run: bundle exec rake app:db:create app:db:migrate
 
       # Setup CodeClimate
       - run:
