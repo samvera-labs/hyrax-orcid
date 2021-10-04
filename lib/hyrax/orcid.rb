@@ -32,7 +32,7 @@ module Hyrax
     end
 
     class Configuration
-      attr_accessor :environment, :auth, :bolognese, :active_job_type
+      attr_accessor :environment, :auth, :bolognese, :active_job_type, :hyrax_json_actor, :blacklight_pipeline_actor
 
       def initialize
         @environment = ENV["ORCID_ENVIRONMENT"] || :sandbox
@@ -54,6 +54,10 @@ module Hyrax
         # generated XML or if you want to run all jobs inline.
         # `:perform_later` or `:perform_now`
         @active_job_type = :perform_later
+
+        # Allow these to be set by implementing host, otherwise it is impossible to remove them from the middleware stack
+        @hyrax_json_actor = "Hyrax::Actors::Orcid::JSONFieldsActor"
+        @blacklight_pipeline_actor = "Hyrax::Orcid::Blacklight::Rendering::PipelineJsonExtractor"
       end
     end
   end

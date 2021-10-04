@@ -50,10 +50,12 @@ module Hyrax
         Hyrax::CurationConcern.actor_factory.use Hyrax::Actors::Orcid::PublishWorkActor
 
         # Insert an extra step in the Blacklight rendering pipeline where our JSON can be parsed
-        ::Blacklight::Rendering::Pipeline.operations.insert(1, Hyrax::Orcid::Blacklight::Rendering::PipelineJsonExtractor)
+        operation = Hyrax::Orcid.configuration.blacklight_pipeline_actor
+        ::Blacklight::Rendering::Pipeline.operations.insert(1, operation.constantize) if operation.present?
 
         # Insert our JSON actor before the Model is saved
-        Hyrax::CurationConcern.actor_factory.insert_before Hyrax::Actors::ModelActor, Hyrax::Actors::Orcid::JSONFieldsActor
+        actor = Hyrax::Orcid.configuration.hyrax_json_actor
+        Hyrax::CurationConcern.actor_factory.insert_before Hyrax::Actors::ModelActor, actor.constantize if actor.present?
 
         # Prepend our views so they have precedence
         ActionController::Base.prepend_view_path(paths["app/views"].existent)

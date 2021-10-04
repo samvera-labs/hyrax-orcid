@@ -56,6 +56,8 @@ ORCID_CLIENT_SECRET: your-secret-token
 ORCID_AUTHORIZATION_REDIRECT: http://your-repo.com/dashboard/orcid_identity/new
 ```
 
+You can then access the values like so `reader_method = Hyrax::Orcid.configuration.bolognese[:reader_method]`
+
 ## Integration into Hyku
 
 Hyrax Orcid is designed to be used with Hyrax, but you can also use it with Hyku if you perform a few manual tasks.
