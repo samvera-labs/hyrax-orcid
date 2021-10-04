@@ -32,7 +32,13 @@ module Hyrax
     end
 
     class Configuration
-      attr_accessor :environment, :auth, :bolognese, :active_job_type, :hyrax_json_actor, :blacklight_pipeline_actor
+      attr_accessor :environment,
+                    :auth,
+                    :bolognese,
+                    :active_job_type,
+                    :hyrax_json_actor,
+                    :blacklight_pipeline_actor,
+                    :work_types
 
       def initialize
         @environment = ENV["ORCID_ENVIRONMENT"] || :sandbox
@@ -58,6 +64,9 @@ module Hyrax
         # Allow these to be set by implementing host, otherwise it is impossible to remove them from the middleware stack
         @hyrax_json_actor = "Hyrax::Actors::Orcid::JSONFieldsActor"
         @blacklight_pipeline_actor = "Hyrax::Orcid::Blacklight::Rendering::PipelineJsonExtractor"
+
+        # An array of work types that should implement the creator/contributor Orcid json fields
+        @work_types = ["GenericWork"]
       end
     end
   end

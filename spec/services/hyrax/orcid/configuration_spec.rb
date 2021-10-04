@@ -12,6 +12,7 @@ RSpec.describe Hyrax::Orcid::Configuration do
   let(:environment) { :production }
   let(:hyrax_json_actor) { nil }
   let(:blacklight_pipeline_actor) { nil }
+  let(:work_types) { ["TestForm"] }
 
   context "when overwritten" do
     before do
@@ -29,9 +30,9 @@ RSpec.describe Hyrax::Orcid::Configuration do
 
         config.environment = environment
         config.active_job_type = active_job_type
-
         config.hyrax_json_actor = hyrax_json_actor
         config.blacklight_pipeline_actor = blacklight_pipeline_actor
+        config.work_types = work_types
       end
     end
 
@@ -48,5 +49,6 @@ RSpec.describe Hyrax::Orcid::Configuration do
     it { expect(Hyrax::Orcid.configuration.active_job_type).to eq active_job_type }
     it { expect(Hyrax::Orcid.configuration.hyrax_json_actor).to be_nil }
     it { expect(Hyrax::Orcid.configuration.blacklight_pipeline_actor).to be_nil }
+    it { expect(Hyrax::Orcid.configuration.work_types).to eq work_types }
   end
 end

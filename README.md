@@ -44,6 +44,7 @@ Hyrax::Orcid.configure do |config|
 
   # If you want to debug or run all jobs inline, set this to :perform_now - defaults to :perform_later
   config.active_job_type = :perform_now
+	config.work_types = ["YourWorkType", "GenericWork"]
 end
 ```
 
