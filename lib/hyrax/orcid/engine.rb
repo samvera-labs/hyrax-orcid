@@ -28,7 +28,8 @@ module Hyrax
         Hyrax::HyraxHelperBehavior.include Hyrax::Orcid::HelperBehavior
 
         # Add the JSON processing code to the default presenter
-        Hyrax::WorkShowPresenter.prepend Hyrax::Orcid::WorkShowPresenterBehavior
+        presenter_behavior = Hyrax::Orcid.configuration.presenter_behavior
+        Hyrax::WorkShowPresenter.prepend presenter_behavior.constantize if presenter_behavior.present?
 
         # Allow the JSON fields to be indexed individually
         Hyrax::WorkIndexer.include Hyrax::Orcid::WorkIndexerBehavior

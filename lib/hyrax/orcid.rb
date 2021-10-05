@@ -38,7 +38,8 @@ module Hyrax
                     :active_job_type,
                     :hyrax_json_actor,
                     :blacklight_pipeline_actor,
-                    :work_types
+                    :work_types,
+                    :presenter_behavior
 
       def initialize
         @environment = ENV["ORCID_ENVIRONMENT"] || :sandbox
@@ -67,6 +68,8 @@ module Hyrax
 
         # An array of work types that should implement the creator/contributor Orcid json fields
         @work_types = ["GenericWork"]
+
+        @presenter_behavior = "Hyrax::Orcid::WorkShowPresenterBehavior"
       end
     end
   end
