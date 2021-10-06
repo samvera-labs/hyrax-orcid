@@ -35,12 +35,9 @@ module Hyrax
         Hyrax::WorkIndexer.include Hyrax::Orcid::WorkIndexerBehavior
 
         # All work types and their forms will require the following concerns to be included
-
-        if (work_types = Hyrax::Orcid.configuration.work_types).present?
-          work_types.each do |work_type|
-            "Hyrax::#{work_type}Form".constantize.include Hyrax::Orcid::WorkFormBehavior
-            work_type.constantize.include Hyrax::Orcid::WorkBehavior
-          end
+        Array.wrap(Hyrax::Orcid.configuration.work_types).reject(&:blank?).each do |work_type|
+          "Hyrax::#{work_type}Form".constantize.include Hyrax::Orcid::WorkFormBehavior
+          work_type.constantize.include Hyrax::Orcid::WorkBehavior
         end
 
         # Insert our custom reader and writer to process works ready before publishing
