@@ -1,5 +1,6 @@
 <% if f.object.multiple? key %>
-	<% type = f.object.model.json_fields.include?(key) ? :multi_value_json : :multi_value %>
+  <% # This file is used by collections too, which will not have JSON fields/Orcid support %>
+	<% type = f.object.model.respond_to?(:json_fields) && f.object.model.json_fields.include?(key) ? :multi_value_json : :multi_value %>
   <%= f.input key, as: type, input_html: { class: 'form-control' }, required: f.object.required?(key) %>
 <% else %>
   <%= f.input key, required: f.object.required?(key) %>
