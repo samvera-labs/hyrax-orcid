@@ -35,11 +35,13 @@ module Hyrax
         Hyrax::WorkIndexer.include Hyrax::Orcid::WorkIndexerBehavior
 
         # All work types and their forms will require the following concerns to be included
-        work_types = Hyrax::Orcid.configuration.work_types
-        work_types.each do |work_type|
-          "Hyrax::#{work_type}Form".constantize.include Hyrax::Orcid::WorkFormBehavior
-          work_type.constantize.include Hyrax::Orcid::WorkBehavior
-        end if work_types.present?
+
+        if (work_types = Hyrax::Orcid.configuration.work_types).present?
+          work_types.each do |work_type|
+            "Hyrax::#{work_type}Form".constantize.include Hyrax::Orcid::WorkFormBehavior
+            work_type.constantize.include Hyrax::Orcid::WorkBehavior
+          end
+        end
 
         # Insert our custom reader and writer to process works ready before publishing
         Bolognese::Metadata.prepend Bolognese::Writers::Orcid::XmlWriter
