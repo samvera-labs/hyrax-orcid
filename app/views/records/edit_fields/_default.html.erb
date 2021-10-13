@@ -1,3 +1,5 @@
+<%# This span is here so that we can track the included partials within a test %>
+<span data-flag="hyrax-orcid-default"></span>
 <% if f.object.multiple? key %>
   <% # This file is used by collections too, which will not have JSON fields/Orcid support %>
 	<% type = f.object.model.respond_to?(:json_fields) && f.object.model.json_fields.include?(key) ? :multi_value_json : :multi_value %>
