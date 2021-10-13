@@ -662,7 +662,7 @@ GEM
       multi_json (~> 1.3)
       multi_xml (~> 0.5)
       rack (>= 1.2, < 3)
-    oj (3.13.2)
+    oj (3.13.9)
     oj_mimic_json (1.0.1)
     openseadragon (0.6.0)
       rails (> 3.2.0)
@@ -984,7 +984,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
-  ammeter
+  ammeter (~> 1.1)
   bixby (~> 1.0.0)
   bootsnap (>= 1.1.0)
   bootstrap-sass (~> 3.0)
@@ -994,9 +994,9 @@ DEPENDENCIES
   coffee-rails (~> 4.2)
   devise
   devise-guests (~> 0.6)
-  factory_bot_rails
+  factory_bot_rails (~> 6.2)
   fcrepo_wrapper
-  flipflop
+  flipflop (~> 2.6)
   hyrax (~> 2.9)
   hyrax-orcid!
   jbuilder (~> 2.5)
@@ -1007,10 +1007,10 @@ DEPENDENCIES
   riiif (~> 2.0)
   rsolr (>= 1.0, < 3)
   rspec-rails
-  rspec_junit_formatter
+  rspec_junit_formatter (~> 0.4)
   sass-rails (~> 5.0)
   selenium-webdriver
-  shoulda-matchers
+  shoulda-matchers (~> 5.0)
   simplecov (= 0.17.1, < 0.18)
   solr_wrapper (>= 0.3)
   spring
@@ -1020,9 +1020,9 @@ DEPENDENCIES
   twitter-typeahead-rails (= 0.11.1.pre.corejavascript)
   tzinfo-data
   uglifier (>= 1.3.0)
-  web-console
+  web-console (~> 3.7)
   webdrivers (~> 4.0)
-  webmock
+  webmock (~> 3.14)
 
 BUNDLED WITH
-   2.1.4
+   2.2.29

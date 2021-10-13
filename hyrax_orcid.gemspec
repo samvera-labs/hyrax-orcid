@@ -5,7 +5,7 @@ $LOAD_PATH.push File.expand_path("lib", __dir__)
 require_relative "lib/hyrax/orcid/version"
 
 Gem::Specification.new do |spec|
-  spec.name = "hyrax-orcid"
+  spec.name          = "hyrax-orcid"
   spec.version       = Hyrax::Orcid::VERSION
   spec.authors       = ["Paul Danelli"]
   spec.email         = ["prdanelli@gmail.com"]
@@ -33,19 +33,19 @@ Gem::Specification.new do |spec|
   spec.add_dependency "flipflop", "~> 2.6"
   spec.add_dependency "bolognese", "~> 1.9", ">= 1.9.9"
 
-  spec.add_development_dependency "flipflop"
-  spec.add_development_dependency "ammeter"
-  spec.add_development_dependency "capybara"
+  spec.add_development_dependency "flipflop", "~> 2.6"
+  spec.add_development_dependency "ammeter", "~> 1.1"
+  spec.add_development_dependency "capybara", "~> 3.35"
   spec.add_development_dependency "chromedriver-helper", "~> 2.1"
   spec.add_development_dependency "bixby", "~> 1.0.0"
-  spec.add_development_dependency "factory_bot_rails"
-  spec.add_development_dependency "rspec_junit_formatter"
-  spec.add_development_dependency "rspec-rails"
-  spec.add_development_dependency "shoulda-matchers"
+  spec.add_development_dependency "factory_bot_rails", "~> 6.2"
+  spec.add_development_dependency "rspec_junit_formatter", "~> 0.4"
+  spec.add_development_dependency "rspec-rails", "~> 2.2"
+  spec.add_development_dependency "shoulda-matchers", "~> 5.0"
   spec.add_development_dependency "webdrivers", "~> 4.0"
-  spec.add_development_dependency "webmock"
-  spec.add_development_dependency "byebug"
-  spec.add_development_dependency "web-console"
+  spec.add_development_dependency "webmock", "~> 3.14"
+  spec.add_development_dependency "byebug", "~> 11.1"
+  spec.add_development_dependency "web-console", "~> 3.7"
 
   # Workaround for cc-test-reporter with SimpleCov 0.18.
   # Stop upgrading SimpleCov until the following issue will be resolved.
