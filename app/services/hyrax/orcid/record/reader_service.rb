@@ -27,11 +27,11 @@ module Hyrax
         end
 
         def read_works
-          response = perform_works_request
+          work_response = perform_works_request
 
-          return {} unless response.success?
+          return {} unless work_response.success?
 
-          JSON.parse(response.body).dig("bulk")
+          JSON.parse(work_response.body).dig("bulk")
         end
 
         protected
@@ -58,6 +58,8 @@ module Hyrax
           end
 
           def work_codes
+            return [] if response.blank?
+
             response.dig("works", "group").map { |hsh| hsh.dig("work-summary").first.dig("put-code") }
           end
 
