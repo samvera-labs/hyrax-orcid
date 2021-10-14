@@ -25,15 +25,15 @@ Add an initializer to your app with the following block:
 
 ```ruby
 Hyrax::Orcid.configure do |config|
-	# :sandbox or :production
-	config.environment = :sandbox
+  # :sandbox or :production
+  config.environment = :sandbox
 
-	config.auth = {
-		client_id: "YOUR-APP-ID",
-		client_secret: "your-secret-token",
-		# The authorisation return URL you entered when creating the Orcid Application. Should be your repository URL and `/dashboard/orcid_identity/new`
-		redirect_url: "http://your-repo.com/dashboard/orcid_identity/new"
-	}
+  config.auth = {
+    client_id: "YOUR-APP-ID",
+    client_secret: "your-secret-token",
+    # The authorisation return URL you entered when creating the Orcid Application. Should be your repository URL and `/dashboard/orcid_identity/new`
+    redirect_url: "http://your-repo.com/dashboard/orcid_identity/new"
+  }
 
   config.bolognese = {
     # The work reader method, excluding the _reader suffix
@@ -44,7 +44,7 @@ Hyrax::Orcid.configure do |config|
 
   # If you want to debug or run all jobs inline, set this to :perform_now - defaults to :perform_later
   config.active_job_type = :perform_now
-	config.work_types = ["YourWorkType", "GenericWork"]
+  config.work_types = ["YourWorkType", "GenericWork"]
 end
 ```
 
