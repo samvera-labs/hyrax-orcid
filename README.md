@@ -2,15 +2,13 @@
 
 Orcid integration for Hyrax/Hyku
 
-when cloning, need to:
-
-`git submodule init && git submodule update`
-
-## Activating for a model
-
-In your model, include the `Hyrax::Orcid::WorkBehavior` concern
-
 ## Install
+
+Add the following to your Gemfile:
+
+```ruby
+gem 'hyrax-orcid', git: 'https://github.com/ubiquitypress/hyrax-orcid', branch: 'main'
+```
 
 The installer will copy over any migrations and insert the assets into your applications asset pipeline. Just run the following:
 
@@ -85,6 +83,10 @@ Within the Dashboard, go to `Settings/Features` and enable the Hyrax Orcid featu
 
 HykuAddons is an opinionated addition to Hyku. Go to `Settings/Account Settings` and enter your Orcid application authorisation credentials into the correct fields under "Hyrax orcid settings".
 
+## Activating for a model
+
+Add the following to your work models, `include Hyrax::Orcid::WorkBehavior`.
+
 ## Testing
 
 ```bash
@@ -93,6 +95,10 @@ docker-compose exec web bundle exec rspec
 ```
 
 ## Development
+
+When cloning, you will need to run from the `spec/internal_test_hyrax` folder:
+
+`git submodule init && git submodule update`
 
 ### Potential Issues
 
