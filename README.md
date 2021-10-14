@@ -40,8 +40,7 @@ Hyrax::Orcid.configure do |config|
     xml_writer_class_name: "Bolognese::Writers::Xml::WorkWriter"
   }
 
-  # If you want to debug or run all jobs inline, set this to :perform_now - defaults to :perform_later
-  config.active_job_type = :perform_now
+  config.active_job_type = :perform_later
   config.work_types = ["YourWorkType", "GenericWork"]
 end
 ```
