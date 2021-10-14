@@ -60,7 +60,7 @@ module Hyrax
         # How to perform the active jobs that are created. This is useful for debugging the jobs and
         # generated XML or if you want to run all jobs inline.
         # `:perform_later` or `:perform_now`
-        @active_job_type = :perform_later
+        @active_job_type = :perform_now
 
         # Allow these to be set by implementing host, otherwise it is impossible to remove them from the middleware stack
         @hyrax_json_actor = "Hyrax::Actors::Orcid::JSONFieldsActor"
