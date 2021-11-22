@@ -20,6 +20,14 @@ module Hyrax
         Flipflop::FeatureLoader.current.append(self)
       end
 
+      config.after_initialize do
+        # Prepend our views so they have precedence
+        ActionController::Base.prepend_view_path(paths["app/views"].existent)
+
+        # Append our locales so they have precedence
+        I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join("config", "locales", "*.{rb,yml}")]
+      end
+
       # rubocop:disable Metrics/MethodLength
       def self.dynamically_include_mixins
         ::User.include Hyrax::Orcid::UserBehavior
@@ -59,12 +67,6 @@ module Hyrax
         # Insert our JSON actor before the Model is saved
         actor = Hyrax::Orcid.configuration.hyrax_json_actor
         Hyrax::CurationConcern.actor_factory.insert_before Hyrax::Actors::ModelActor, actor.constantize if actor.present?
-
-        # Prepend our views so they have precedence
-        ActionController::Base.prepend_view_path(paths["app/views"].existent)
-
-        # Append our locales so they have precedence
-        I18n.load_path += Dir[Hyrax::Orcid::Engine.root.join("config", "locales", "*.{rb,yml}")]
       end
       # rubocop:enable Metrics/MethodLength
 
