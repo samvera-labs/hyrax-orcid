@@ -95,9 +95,18 @@ docker-compose exec web bundle exec rspec
 
 ## Development
 
-When cloning, you will need to run from the `spec/internal_test_hyrax` folder:
+When cloning, you will need to bring in the Hyrax submodule by: 
 
-`git submodule init && git submodule update`
+```bash
+cd spec/internal_test_hyrax; 
+git submodule init && git submodule update
+```
+
+Then you can build the application from the root folder (`cd ../../`): 
+
+```bash
+docker-compose up --build web
+```
 
 ### Potential Issues
 
