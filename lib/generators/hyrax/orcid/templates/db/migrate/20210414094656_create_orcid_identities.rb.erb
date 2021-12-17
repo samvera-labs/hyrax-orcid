@@ -2,7 +2,7 @@
 
 class CreateOrcidIdentities < ActiveRecord::Migration<%= migration_version %>
   def self.up
-		return if table_exists?(:orcid_identities)
+    return if table_exists?(:orcid_identities)
 
     create_table :orcid_identities do |t|
       t.belongs_to :user
@@ -21,7 +21,7 @@ class CreateOrcidIdentities < ActiveRecord::Migration<%= migration_version %>
     end
   end
 
-	def self.down
-		drop_table(:orcid_identities)
-	end
+  def self.down
+    drop_table(:orcid_identities)
+  end
 end
