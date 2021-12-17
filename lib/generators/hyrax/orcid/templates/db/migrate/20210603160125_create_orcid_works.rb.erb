@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class CreateOrcidWorks < ActiveRecord::Migration<%= migration_version %>
-  def change
+  def self.up
+    return if table_exists?(:orcid_identities)
+
     create_table :orcid_works do |t|
       t.references :orcid_identity
       t.string :work_uuid
@@ -10,5 +12,9 @@ class CreateOrcidWorks < ActiveRecord::Migration<%= migration_version %>
 
       t.index :work_uuid
     end
+  end
+
+  def self.down
+    drop_table(:orcid_identities)
   end
 end
