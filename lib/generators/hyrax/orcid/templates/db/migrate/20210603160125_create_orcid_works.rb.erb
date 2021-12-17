@@ -2,7 +2,7 @@
 
 class CreateOrcidWorks < ActiveRecord::Migration<%= migration_version %>
   def self.up
-    return if table_exists?(:orcid_identities)
+    return if table_exists?(:orcid_works)
 
     create_table :orcid_works do |t|
       t.references :orcid_identity
@@ -15,6 +15,6 @@ class CreateOrcidWorks < ActiveRecord::Migration<%= migration_version %>
   end
 
   def self.down
-    drop_table(:orcid_identities)
+    drop_table(:orcid_works)
   end
 end
