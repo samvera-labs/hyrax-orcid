@@ -1,7 +1,9 @@
 # frozen_string_literal: true
 
 class CreateOrcidIdentities < ActiveRecord::Migration<%= migration_version %>
-  def change
+  def self.up
+    return if table_exists?(:orcid_identities)
+
     create_table :orcid_identities do |t|
       t.belongs_to :user
       t.string :name
@@ -17,5 +19,9 @@ class CreateOrcidIdentities < ActiveRecord::Migration<%= migration_version %>
 
       t.timestamps
     end
+  end
+
+  def self.down
+    drop_table(:orcid_identities)
   end
 end
