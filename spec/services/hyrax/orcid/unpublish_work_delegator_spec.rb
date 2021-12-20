@@ -22,6 +22,7 @@ RSpec.describe Hyrax::Orcid::UnpublishWorkDelegator do
   let(:orcid_id) { user.orcid_identity.orcid_id }
 
   before do
+    allow(Hyrax::Orcid.configuration).to receive(:active_job_type).and_return(:perform_later)
     ActiveJob::Base.queue_adapter = :test
   end
 

@@ -29,6 +29,8 @@ RSpec.describe Hyrax::Orcid::IdentityStrategyDelegator do
   before do
     allow(Flipflop).to receive(:enabled?).and_call_original
     allow(Flipflop).to receive(:enabled?).with(:hyrax_orcid).and_return(true)
+    allow(Hyrax::Orcid.configuration).to receive(:active_job_type).and_return(:perform_later)
+    ActiveJob::Base.queue_adapter = :test
   end
 
   describe ".new" do
