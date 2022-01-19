@@ -6,6 +6,8 @@ class OrcidIdentity < ApplicationRecord
   belongs_to :user
   has_many :orcid_works, dependent: :destroy
 
+  after_create :set_user_orcid_id
+
   validates :access_token, :token_type, :refresh_token, :expires_in, :scope, :orcid_id, presence: true
   validates_associated :user
 
@@ -20,5 +22,11 @@ class OrcidIdentity < ApplicationRecord
 
   def selected_sync_preferences
     profile_sync_preference.select { |_k, v| v == "1" }.keys
+  end
+
+  protected
+
+  def set_user_orcid_id
+    user.update(orcid: orcid_id)
   end
 end
