@@ -7,7 +7,7 @@ RUN         echo "deb http://deb.debian.org/debian buster-backports main" >> /et
          && apt-get clean
 
 COPY        lib/hyrax/orcid/version.rb ./lib/hyrax/orcid/version.rb
-COPY        hyrax-orcid.gemspec ./hyrax-orcid.gemspec
+COPY        hyrax_orcid.gemspec ./hyrax_orcid.gemspec
 COPY        Gemfile ./Gemfile
 COPY        Gemfile.lock ./Gemfile.lock
 COPY        spec/internal_test_hyrax/Gemfile ./spec/internal_test_hyrax/Gemfile
