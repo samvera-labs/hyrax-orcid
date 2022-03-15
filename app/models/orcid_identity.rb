@@ -26,7 +26,7 @@ class OrcidIdentity < ApplicationRecord
 
   protected
 
-  def set_user_orcid_id
-    user.update(orcid: orcid_id)
-  end
+    def set_user_orcid_id
+      user.update(orcid: orcid_id)
+    end
 end

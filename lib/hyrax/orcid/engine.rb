@@ -29,7 +29,8 @@ module Hyrax
       end
 
       # rubocop:disable Metrics/MethodLength
-      def self.dynamically_include_mixins
+      # rubocop:disable Metrics/AbcSize
+      def self.mixins
         ::User.include Hyrax::Orcid::UserBehavior
 
         # Add any required helpers, for routes, api metadata etc
@@ -68,13 +69,10 @@ module Hyrax
         actor = Hyrax::Orcid.configuration.hyrax_json_actor
         Hyrax::CurationConcern.actor_factory.insert_before Hyrax::Actors::ModelActor, actor.constantize if actor.present?
       end
+      # rubocop:enable Metrics/AbcSize
       # rubocop:enable Metrics/MethodLength
 
-      if Rails.env.development?
-        config.to_prepare { Hyrax::Orcid::Engine.dynamically_include_mixins }
-      else
-        config.after_initialize { Hyrax::Orcid::Engine.dynamically_include_mixins }
-      end
+      config.send(Rails.env.development? ? :to_prepare : :after_initialize) { Hyrax::Orcid::Engine.mixins }
     end
   end
 end

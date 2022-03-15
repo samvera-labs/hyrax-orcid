@@ -41,6 +41,7 @@ module Hyrax
                     :work_types,
                     :presenter_behavior
 
+      # rubocop:disable Metrics/MethodLength
       def initialize
         @environment = ENV["ORCID_ENVIRONMENT"] || :sandbox
 
@@ -71,6 +72,7 @@ module Hyrax
 
         @presenter_behavior = "Hyrax::Orcid::WorkShowPresenterBehavior"
       end
+      # rubocop:enable Metrics/MethodLength
     end
   end
 end
