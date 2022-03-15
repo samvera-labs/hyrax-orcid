@@ -48,8 +48,21 @@ RSpec.describe Hyrax::Orcid::IdentityStrategyDelegator do
   end
 
   describe "#perform" do
+    let(:headers) do
+      {
+        "Accept" => "*/*",
+        "Accept-Encoding" => "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
+        "Authorization" => "Bearer #{orcid_identity.access_token}",
+        "Content-Type" => "application/vnd.orcid+xml",
+        "User-Agent" => "Faraday v0.17.4"
+      }
+    end
+
     before do
       allow(service).to receive(:perform_user_strategy).and_call_original
+      stub_request(:post, "https://api.sandbox.orcid.org/v2.1/#{orcid_id}/work")
+        .with(body: "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<work:work xmlns:common=\"http://www.orcid.org/ns/common\" xmlns:work=\"http://www.orcid.org/ns/work\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://www.orcid.org/ns/work /work-2.1.xsd \">\n  <work:title>\n    <common:title>Moomin</common:title>\n  </work:title>\n  <work:short-description/>\n  <work:type>other</work:type>\n  <common:external-ids>\n    <common:external-id>\n      <common:external-id-type>other-id</common:external-id-type>\n      <common:external-id-value>#{work.id}</common:external-id-value>\n      <common:external-id-relationship>self</common:external-id-relationship>\n    </common:external-id>\n  </common:external-ids>\n  <work:contributors>\n    <work:contributor>\n      <common:contributor-orcid>\n        <common:uri>https://orcid.org/#{orcid_id}</common:uri>\n        <common:path>#{orcid_id}</common:path>\n        <common:host>orcid.org</common:host>\n      </common:contributor-orcid>\n      <work:credit-name>John Smith</work:credit-name>\n      <work:contributor-attributes>\n        <work:contributor-sequence>first</work:contributor-sequence>\n        <work:contributor-role>author</work:contributor-role>\n      </work:contributor-attributes>\n    </work:contributor>\n  </work:contributors>\n</work:work>\n", headers: headers)
+        .to_return(status: 200, body: "", headers: {})
     end
 
     context "when the feature is enabled" do
@@ -72,11 +85,14 @@ RSpec.describe Hyrax::Orcid::IdentityStrategyDelegator do
   end
 
   describe "#perform_user_strategy" do
+    before do
+      allow(Hyrax::Orcid::PerformIdentityStrategyJob).to receive(:perform_now).with(work, orcid_identity)
+
+      service.send(:perform_user_strategy, orcid_id)
+    end
+
     it "calls the perform method on the sync class" do
-      expect { service.send(:perform_user_strategy, orcid_id) }
-        .to have_enqueued_job(Hyrax::Orcid::PerformIdentityStrategyJob)
-        .on_queue(Hyrax.config.ingest_queue_name)
-        .with(work, orcid_identity)
+      expect(Hyrax::Orcid::PerformIdentityStrategyJob).to have_received(:perform_now).with(work, orcid_identity)
     end
   end
 end

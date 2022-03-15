@@ -35,11 +35,16 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
   end
 
   describe "#create" do
+    before do
+      allow(Hyrax::Orcid::IdentityStrategyDelegatorJob).to receive(:perform_now).with(work)
+      allow(Hyrax::Orcid::IdentityStrategyDelegator).to receive(:new).with(work)
+
+      actor.create(env)
+    end
+
     context "when hyrax_orcid is enabled" do
-      it "enqueues a job" do
-        expect { actor.create(env) }.to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
-          .with(work)
-          .on_queue(Hyrax.config.ingest_queue_name)
+      it "performs a job" do
+        expect(Hyrax::Orcid::IdentityStrategyDelegatorJob).to have_received(:perform_now).with(work)
       end
     end
 
@@ -49,7 +54,7 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
       end
 
       it "does not enqueue a job" do
-        expect { actor.create(env) }.not_to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
+        expect(Hyrax::Orcid::IdentityStrategyDelegator).not_to have_received(:new).with(work)
       end
     end
 
@@ -59,17 +64,22 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
       end
 
       it "does not enqueue a job" do
-        expect { actor.create(env) }.not_to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
+        expect(Hyrax::Orcid::IdentityStrategyDelegator).not_to have_received(:new).with(work)
       end
     end
   end
 
   describe "#update" do
+    before do
+      allow(Hyrax::Orcid::IdentityStrategyDelegatorJob).to receive(:perform_now).with(work)
+      allow(Hyrax::Orcid::IdentityStrategyDelegator).to receive(:new).with(work)
+
+      actor.update(env)
+    end
+
     context "when hyrax_orcid is enabled" do
-      it "enqueues a job" do
-        expect { actor.update(env) }.to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
-          .with(work)
-          .on_queue(Hyrax.config.ingest_queue_name)
+      it "performs a job" do
+        expect(Hyrax::Orcid::IdentityStrategyDelegatorJob).to have_received(:perform_now).with(work)
       end
     end
 
@@ -79,7 +89,7 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
       end
 
       it "does not enqueue a job" do
-        expect { actor.update(env) }.not_to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
+        expect(Hyrax::Orcid::IdentityStrategyDelegator).not_to have_received(:new).with(work)
       end
     end
 
@@ -89,7 +99,7 @@ RSpec.describe Hyrax::Actors::Orcid::PublishWorkActor do
       end
 
       it "does not enqueue a job" do
-        expect { actor.update(env) }.not_to have_enqueued_job(Hyrax::Orcid::IdentityStrategyDelegatorJob)
+        expect(Hyrax::Orcid::IdentityStrategyDelegator).not_to have_received(:new).with(work)
       end
     end
   end

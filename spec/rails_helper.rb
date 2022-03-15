@@ -25,6 +25,7 @@ require 'noid/rails/rspec'
 require 'devise'
 require 'devise/version'
 require 'webmock/rspec'
+
 WebMock.disable_net_connect!(allow_localhost: true, allow: 'chromedriver.storage.googleapis.com')
 
 Rails.application.routes.default_url_options[:host] = 'www.example.com'
@@ -109,13 +110,6 @@ RSpec.configure do |config|
 
   config.include FactoryBot::Syntax::Methods
 
-  # config.before(:suite) do
-  #   ActiveFedora::Cleaner.clean!
-  # end
-
-  # config.after do
-  #   ActiveFedora::Cleaner.clean!
-  # end
   include Noid::Rails::RSpec
   config.before(:suite) { disable_production_minter! }
   config.after(:suite)  { enable_production_minter! }
@@ -124,6 +118,10 @@ RSpec.configure do |config|
     config.include Devise::Test::ControllerHelpers, type: :controller
   else
     config.include Devise::TestHelpers, type: :controller
+  end
+
+  config.before do
+    ActiveJob::Base.queue_adapter = :test
   end
 
   config.before do |example|

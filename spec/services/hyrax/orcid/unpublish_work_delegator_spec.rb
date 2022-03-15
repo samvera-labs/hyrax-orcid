@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::UnpublishWorkDelegator do
   let(:delegator) { described_class.new(work) }
   let(:sync_preference) { "sync_all" }
@@ -22,15 +20,14 @@ RSpec.describe Hyrax::Orcid::UnpublishWorkDelegator do
   let(:orcid_id) { user.orcid_identity.orcid_id }
 
   before do
-    ActiveJob::Base.queue_adapter = :test
+    allow(Hyrax::Orcid::UnpublishWorkJob).to receive(:perform_now).with(work, orcid_identity)
+
+    delegator.perform
   end
 
   describe "#perform" do
     it "creates a job" do
-      expect { delegator.perform }
-        .to have_enqueued_job(Hyrax::Orcid::UnpublishWorkJob)
-        .on_queue(Hyrax.config.ingest_queue_name)
-        .with(work, orcid_identity)
+      expect(Hyrax::Orcid::UnpublishWorkJob).to have_received(:perform_now).with(work, orcid_identity)
     end
   end
 end

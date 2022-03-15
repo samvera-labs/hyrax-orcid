@@ -33,11 +33,16 @@ RSpec.describe Hyrax::Actors::Orcid::UnpublishWorkActor do
   end
 
   describe "#destroy" do
+    before do
+      allow(Hyrax::Orcid::UnpublishWorkDelegatorJob).to receive(:perform_now).with(work)
+      allow(Hyrax::Orcid::UnpublishWorkDelegator).to receive(:new).with(work)
+
+      actor.destroy(env)
+    end
+
     context "when hyrax_orcid is enabled" do
-      it "enqueues a job" do
-        expect { actor.destroy(env) }.to have_enqueued_job(Hyrax::Orcid::UnpublishWorkDelegatorJob)
-          .with(work)
-          .on_queue(Hyrax.config.ingest_queue_name)
+      it "performs a job" do
+        expect(Hyrax::Orcid::UnpublishWorkDelegatorJob).to have_received(:perform_now).with(work)
       end
     end
 
@@ -46,8 +51,8 @@ RSpec.describe Hyrax::Actors::Orcid::UnpublishWorkActor do
         allow(Flipflop).to receive(:enabled?).with(:hyrax_orcid).and_return(false)
       end
 
-      it "does not enqueue a job" do
-        expect { actor.destroy(env) }.not_to have_enqueued_job(Hyrax::Orcid::UnpublishWorkDelegatorJob)
+      it "does not perform a job" do
+        expect(Hyrax::Orcid::UnpublishWorkDelegator).not_to have_received(:new).with(work)
       end
     end
   end
