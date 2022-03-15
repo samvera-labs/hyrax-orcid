@@ -1,108 +1,58 @@
-# Ripped off from Avalon
 # Base stage for building gems
-FROM        ruby:2.7.2-buster as bundle
-RUN         echo "deb http://deb.debian.org/debian buster-backports main" >> /etc/apt/sources.list \
-         && apt-get update \
-         && rm -rf /var/lib/apt/lists/* \
-         && apt-get clean
+FROM phusion/passenger-ruby27:2.0.0 as base_image
 
-COPY        lib/hyrax/orcid/version.rb ./lib/hyrax/orcid/version.rb
-COPY        hyrax_orcid.gemspec ./hyrax_orcid.gemspec
-COPY        Gemfile ./Gemfile
-COPY        Gemfile.lock ./Gemfile.lock
-COPY        spec/internal_test_hyrax/Gemfile ./spec/internal_test_hyrax/Gemfile
-COPY        spec/internal_test_hyrax/Gemfile.lock ./spec/internal_test_hyrax/Gemfile.lock
+RUN apt-get update && \
+	install_clean --allow-unauthenticated
+		sendmail \
+		libxml2-dev \
+		libxslt-dev \
+		zip \
+		dumb-init \
+		default-jre \
+		ghostscript \
+		imagemagick \
+		libpq-dev \
+		libreoffice \
+		libsasl2-dev \
+		netcat \
+		postgresql-client \
+		rsync \
+		tzdata \
+		unzip \
+		wget \
+		fonts-liberation \
+		libgbm1 \
+		xdg-utils
 
-RUN         gem install bundler -v "$(grep -A 1 "BUNDLED WITH" Gemfile.lock | tail -n 1)" \
-         && bundle config build.nokogiri --use-system-libraries
+RUN cd /tmp && \
+		wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
+		dpkg -i google-chrome-stable_current_amd64.deb && \
+		apt-get install -f
 
-
-# Build development gems
-FROM        bundle as bundle-dev
-RUN         bundle config set without 'production'
-RUN         bundle config set with 'aws development test postgres'
-ENV         CFLAGS=-Wno-error=format-overflow
-RUN         bundle install --jobs=4 --retry=3
-
-
-# Base stage for building final images
-FROM        ruby:2.7.1-slim-buster as base
-
-RUN         apt-get update && apt-get install -y --no-install-recommends curl gnupg2 \
-         && curl -sL http://deb.nodesource.com/setup_8.x | bash -
-RUN         apt-get update && apt-get install -y --no-install-recommends --allow-unauthenticated \
-            nodejs \
-            sendmail \
-            git \
-            libxml2-dev \
-            libxslt-dev \
-            openssh-client \
-            zip \
-            dumb-init \
-            default-jre \
-            # Below copied from hyku's Dockerfile
-            build-essential \
-            ghostscript \
-            imagemagick \
-            libpq-dev \
-            libreoffice \
-            libsasl2-dev \
-            netcat \
-            postgresql-client \
-            rsync \
-            tzdata \
-         	  unzip \
-						wget \
-						fonts-liberation libgbm1 xdg-utils
-
-RUN					cd /tmp && \
-						wget https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb && \
-						dpkg -i google-chrome-stable_current_amd64.deb && \
-						apt-get install -f
-
-RUN					apt-get clean && \
-							rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
-
-
-# If changes are made to fits version or location,
-# amend `LD_LIBRARY_PATH` in docker-compose.yml accordingly.
 RUN mkdir -p /opt/fits && \
-    curl -fSL -o /opt/fits/fits-latest.zip https://projects.iq.harvard.edu/files/fits/files/fits-1.3.0.zip && \
-    cd /opt/fits && unzip fits-latest.zip && chmod +X /opt/fits/fits.sh
+    curl -fsSL -o /opt/fits/fits-latest.zip https://projects.iq.harvard.edu/files/fits/files/fits-1.3.0.zip && \
+    cd /opt/fits && unzip fits-latest.zip && \
+    chmod +X /opt/fits/fits.sh
+ENV PATH=/opt/fits:$PATH
 
-RUN         useradd -m -U app \
-         && su -s /bin/bash -c "mkdir -p /home/app" app
-WORKDIR     /home/app
+RUN	apt-get clean && \
+		rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
+# Entry point from the docker-compose - last stage as Docker works backwards
+FROM base_image as development_image
 
-# Build devevelopment image
-FROM        base as dev
+WORKDIR /home/app
 
-COPY        --from=bundle-dev /usr/local/bundle /usr/local/bundle
+COPY --chown=app:app lib/hyrax/orcid/version.rb ./lib/hyrax/orcid/version.rb
+COPY --chown=app:app hyrax_orcid.gemspec ./hyrax_orcid.gemspec
+COPY --chown=app:app Gemfile ./Gemfile
+COPY --chown=app:app Gemfile.lock ./Gemfile.lock
+COPY --chown=app:app spec/internal_test_hyrax/Gemfile ./spec/internal_test_hyrax/Gemfile
+COPY --chown=app:app spec/internal_test_hyrax/Gemfile.lock ./spec/internal_test_hyrax/Gemfile.lock
 
-ARG         RAILS_ENV=development
-RUN         dpkg -i /chrome.deb || apt-get install -yf
-
-# Build production gems
-FROM        bundle as bundle-prod
-RUN         bundle install --jobs=4 --retry=3 --without development test --with aws production postgres
-
-
-# Build production assets
-FROM        base as assets
-COPY        --from=bundle-prod --chown=app:app /usr/local/bundle /usr/local/bundle
-COPY        --chown=app:app . .
-
-USER        app
-ENV         RAILS_ENV=production
-
-RUN         SECRET_KEY_BASE=$(ruby -r 'securerandom' -e 'puts SecureRandom.hex(64)') bundle exec rake assets:precompile
-
-
-# Build production image
-FROM        base as prod
-COPY        --from=assets --chown=app:app /home/app /home/app
-COPY        --from=bundle-prod --chown=app:app /usr/local/bundle /usr/local/bundle
-
-USER        app
-ENV         RAILS_ENV=production
+ENV CFLAGS=-Wno-error=format-overflow
+RUN bundle config build.nokogiri --use-system-libraries && \
+    bundle config set without "production" && \
+    bundle config set with "aws development test postgres" && \
+    setuser app bundle install --jobs=4 --retry=3 && \
+    chmod 777 -R .bundle/*  # Otherwise `app` owns this file and the host cannot run bundler commands

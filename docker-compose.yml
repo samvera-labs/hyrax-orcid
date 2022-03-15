@@ -11,7 +11,50 @@ volumes:
 networks:
   internal:
 
+x-app: &app
+  build:
+    context: .
+    dockerfile: Dockerfile
+    target: development_image
+  image: hyrax-orcid/dev:latest
+  # NOTE: To setup the db before the app loads, use the following, but its normally unncessarily slow if you dont have migrations to run
+  # command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
+  command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle install && bundle exec rails server -b 0.0.0.0"
+  stdin_open: true
+  tty: true
+  environment:
+    # End of copy
+    FCREPO_HOST: fcrepo
+    FCREPO_PORT: 8080
+    FCREPO_REST_PATH: fcrepo/rest
+    FCREPO_DEV_BASE_PATH: /dev
+    FCREPO_TEST_BASE_PATH: /test
+    IN_DOCKER: "true"
+    LD_LIBRARY_PATH: /opt/fits/tools/mediainfo/linux
+    RAILS_LOG_TO_STDOUT: "true"
+    REDIS_HOST: redis
+    SECRET_KEY_BASE: asdf
+    SOLR_DEVELOPMENT_URL: http://solr:8983/solr/hyrax-development
+    SOLR_TEST_URL: http://solr:8983/solr/hyrax-development
+    PASSENGER_APP_ENV: development
+  volumes:
+    - app:/home/app/spec/internal_test_hyrax/tmp/uploads
+    - assets:/home/app/spec/internal_test_hyrax/public/assets
+    - cache:/home/app/spec/internal_test_hyrax/tmp/cache
+    - .:/home/app
+  networks:
+    internal:
+
 services:
+  web:
+    <<: *app
+    depends_on:
+      - solr
+      - fcrepo
+      - redis
+    ports:
+      - 3000:3000
+
   solr: &solr
     image: solr:8.6.2
     volumes:
@@ -36,51 +79,6 @@ services:
       JAVA_OPTS: '${JAVA_OPTS} -Dfcrepo.modeshape.configuration="classpath:/config/file-simple/repository.json" -Dfcrepo.object.directory="/data/objects" -Dfcrepo.binary.directory="/data/binaries"'
     networks:
       internal:
-
-  app: &app
-    build:
-      context: .
-      dockerfile: Dockerfile
-      target: dev
-    image: hyrax-orcid/dev:latest
-    # NOTE: To setup the db before the app loads, use the following, but its normally unncessarily slow if you dont have migrations to run
-    # command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
-    command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle install && bundle exec rails server -b 0.0.0.0"
-    environment: &web_environment
-      # End of copy
-      FCREPO_HOST: fcrepo
-      FCREPO_PORT: 8080
-      FCREPO_REST_PATH: fcrepo/rest
-      FCREPO_DEV_BASE_PATH: /dev
-      FCREPO_TEST_BASE_PATH: /test
-      IN_DOCKER: "true"
-      LD_LIBRARY_PATH: /opt/fits/tools/mediainfo/linux
-      RAILS_LOG_TO_STDOUT: "true"
-      REDIS_HOST: redis
-      SECRET_KEY_BASE: asdf
-      SOLR_DEVELOPMENT_URL: http://solr:8983/solr/hyrax-development
-      SOLR_TEST_URL: http://solr:8983/solr/hyrax-development
-      PASSENGER_APP_ENV: development
-    volumes:
-      - app:/home/app/spec/internal_test_hyrax/tmp/uploads
-      - assets:/home/app/spec/internal_test_hyrax/public/assets
-      - cache:/home/app/spec/internal_test_hyrax/tmp/cache
-      - .:/home/app
-    networks:
-      internal:
-
-  web:
-    <<: *app
-    environment:
-      <<: *web_environment
-    depends_on:
-      - solr
-      - fcrepo
-      - redis
-    stdin_open: true
-    tty: true
-    ports:
-      - 3000:3000
 
   redis: &redis
     image: redis:4
