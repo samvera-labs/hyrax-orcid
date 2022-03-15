@@ -1,10 +1,6 @@
 version: 2.1
-
 orbs:
-  # For details regarding the commands that are being executed:
-  # https://circleci.com/developer/orbs/orb/samvera/circleci-orb
   samvera: samvera/circleci-orb@0
-
 jobs:
   bundle_lint_test:
     parameters:
@@ -17,6 +13,9 @@ jobs:
       rails_version:
         type: string
         default: 5.2.4.3
+      parallelism:
+        type: integer
+        default: 4
 
     executor:
       name: 'samvera/ruby_fcrepo_solr_redis_postgres'
