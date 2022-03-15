@@ -2,7 +2,7 @@
 
 Orcid integration for Hyrax/Hyku
 
-## Install
+## Install into your Hyrax/Hyku installation
 
 Add the following to your Gemfile:
 
@@ -106,6 +106,18 @@ Then you can build the application from the root folder (`cd ../../`):
 
 ```bash
 docker-compose up --build web
+```
+
+### First boot
+
+By default and for the sake of simplicity, the migrations are checked each time the app starts. If you find this too slow, you can change the startup `command` in the docker-compose.yml file: 
+
+```yaml
+  # Comment out this line
+  # command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
+  
+  # Uncomment this line
+  command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle install && bundle exec rails server -b 0.0.0.0"
 ```
 
 ### Potential Issues
