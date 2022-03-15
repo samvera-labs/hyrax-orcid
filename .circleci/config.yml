@@ -1,6 +1,10 @@
 version: 2.1
+
 orbs:
+  # For details regarding the commands that are being executed:
+  # https://circleci.com/developer/orbs/orb/samvera/circleci-orb
   samvera: samvera/circleci-orb@0
+
 jobs:
   bundle_lint_test:
     parameters:
@@ -13,12 +17,9 @@ jobs:
       rails_version:
         type: string
         default: 5.2.4.3
-      parallelism:
-        type: integer
-        default: 4
 
     executor:
-      name: 'samvera/ruby_fcrepo_solr_redis'
+      name: 'samvera/ruby_fcrepo_solr_redis_postgres'
       ruby_version: << parameters.ruby_version >>
 
     parallelism: 4
@@ -30,16 +31,17 @@ jobs:
       DATABASE_USER: postgres
       DATABASE_TEST_NAME: circle_test
       BUNDLE_PATH: vendor/bundle
-      COVERALLS_PARALLEL: true
+      COVERALLS_PARALLEL: "true"
       BUNDLE_JOBS: 4
       BUNDLE_RETRY: 3
       RAILS_ENV: test
       RACK_ENV: test
       FCREPO_TEST_PORT: 8080/fcrepo
+      FCREPO_PORT: 8080/fcrepo
       SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
       CFLAGS: -Wno-error=format-overflow
       # Enable bulkrax to avoid test failures due to odd view path order
-      SETTINGS__BULKRAX__ENABLED: true
+      SETTINGS__BULKRAX__ENABLED: "true"
       RUBYOPT: "-W:no-deprecated -W:no-experimental"
       REDIS_NAMESPACE_QUIET: "true"
 
