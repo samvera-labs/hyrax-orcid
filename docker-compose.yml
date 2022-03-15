@@ -18,8 +18,8 @@ x-app: &app
     target: development_image
   image: hyrax-orcid/dev:latest
   # NOTE: To setup the db before the app loads, use the following, but its normally unncessarily slow if you dont have migrations to run
-  # command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
-  command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle install && bundle exec rails server -b 0.0.0.0"
+  command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle exec rails db:create && bundle exec rails db:migrate && bundle exec rails server -b 0.0.0.0"
+  # command: bash -c "rm -f spec/internal_test_hyrax/tmp/pids/server.pid && bundle install && bundle exec rails server -b 0.0.0.0"
   stdin_open: true
   tty: true
   environment:
