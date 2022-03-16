@@ -61,12 +61,7 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
     before do
       stub_request(:post, "https://sandbox.orcid.org/oauth/token")
         .with(
-          body: {
-            "client_id": "APP-IK56X6QNRRL9VNOM",
-            "client_secret": "f5154480-039b-4ad5-aaf4-aa6eb272c670",
-            "code": code,
-            "grant_type": "authorization_code"
-          },
+          body: { "client_id": "", "client_secret": "", "code": code, "grant_type": "authorization_code" },
           headers: {
             "Accept": "application/json",
             "Accept-Encoding": "gzip;q=1.0,deflate;q=0.6,identity;q=0.3",
