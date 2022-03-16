@@ -68,7 +68,11 @@ jobs:
           name: Migrate Databse
           command: bundle exec rake app:db:create app:db:migrate
 
-      - samvera/parallel_rspec
+      - run:
+          name: Run RSpec in Parallel
+          command: |
+            mkdir /tmp/test-results
+            bundle exec rspec $(circleci tests glob "spec/**/*_spec.rb" | grep -v "internal_test_hyrax" | circleci tests split --split-by=timings)
 
 workflows:
   ci:
