@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::Configuration do
   let(:client_id) { "TEST123" }
   let(:client_secret) { "1234567890" }

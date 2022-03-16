@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::Strategy::Manual do
   let(:sync_preference) { "manual" }
   let(:service) { described_class.new(work, orcid_identity) }

@@ -1,8 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
-# page.save_screenshot(full: true)
 RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clean: true do
   let(:user) { create(:admin) }
   let(:code) { "123456" }

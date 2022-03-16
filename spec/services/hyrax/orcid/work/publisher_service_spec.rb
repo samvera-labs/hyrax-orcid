@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::Work::PublisherService do
   let(:sync_preference) { "sync_all" }
   let(:service) { described_class.new(work, orcid_identity) }

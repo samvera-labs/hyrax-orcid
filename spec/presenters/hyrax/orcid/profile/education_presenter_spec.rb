@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::Profile::EducationPresenter do
   let(:service) { described_class.new(reader.read_education) }
   let(:reader) { Hyrax::Orcid::Record::ReaderService.new(orcid_identity) }

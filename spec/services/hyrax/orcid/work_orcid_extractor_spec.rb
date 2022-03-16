@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::WorkOrcidExtractor do
   let(:user) { create(:user) }
   let!(:orcid_identity) { create(:orcid_identity, work_sync_preference: sync_preference, user: user) }

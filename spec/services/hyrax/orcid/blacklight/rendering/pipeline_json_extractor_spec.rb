@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Hyrax::Orcid::Blacklight::Rendering::PipelineJsonExtractor do
   let(:document) { instance_double(SolrDocument) }
   let(:context) { double }

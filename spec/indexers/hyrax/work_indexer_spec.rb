@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Hyrax::WorkIndexer do
   subject(:solr_document) { service.generate_solr_document }
   let(:service) { described_class.new(work) }

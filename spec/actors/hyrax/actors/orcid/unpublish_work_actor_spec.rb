@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Hyrax::Actors::Orcid::UnpublishWorkActor do
   subject(:actor) { described_class.new(next_actor) }
   let(:ability) { Ability.new(user) }

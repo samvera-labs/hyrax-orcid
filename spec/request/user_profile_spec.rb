@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 # NOTE: We can't test that exceptions are raised from feature specs: https://github.com/rspec/rspec-rails/issues/1673
 RSpec.describe "Links", type: :request do
   include Hyrax::Orcid::Engine.routes.url_helpers

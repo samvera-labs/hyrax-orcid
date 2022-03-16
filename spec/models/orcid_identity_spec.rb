@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe OrcidIdentity, type: :model do
   let(:work_sync_preference) { { sync_all: 0, sync_notify: 1, manual: 2 } }
 

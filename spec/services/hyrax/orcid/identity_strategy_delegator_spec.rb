@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::IdentityStrategyDelegator do
   let(:service) { described_class.new(work) }
   let(:user) { create(:user) }

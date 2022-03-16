@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require 'rails_helper'
-
 RSpec.describe Hyrax::Orcid::Record::ReaderService do
   let(:service) { described_class.new(orcid_identity) }
   let(:user) { create(:user) }

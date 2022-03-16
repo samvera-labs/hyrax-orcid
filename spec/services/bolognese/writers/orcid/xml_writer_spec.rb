@@ -1,7 +1,5 @@
 # frozen_string_literal: true
 
-require "rails_helper"
-
 RSpec.describe Bolognese::Writers::Orcid::XmlWriter do
   let(:description) { "Swedish comic about the adventures of the residents of Moominvalley." }
   let(:creator1_first_name) { "Sebastian" }
