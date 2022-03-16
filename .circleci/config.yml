@@ -35,7 +35,6 @@ jobs:
       BUNDLE_RETRY: 3
       RAILS_ENV: test
       RACK_ENV: test
-      FCREPO_TEST_PORT: 8080/fcrepo
       FCREPO_PORT: 8080/fcrepo
       SPEC_OPTS: --profile 10 --format RspecJunitFormatter --out /tmp/test-results/rspec.xml --format progress
       CFLAGS: -Wno-error=format-overflow
@@ -47,7 +46,9 @@ jobs:
     steps:
       - samvera/cached_checkout
 
-      - run: git submodule init && git submodule update
+      - run:
+          name: Install submodule
+          command: git submodule init && git submodule update
 
       # FIXME: caching is not working
       - samvera/bundle:
@@ -59,9 +60,13 @@ jobs:
       - samvera/install_solr_core:
           solr_config_path: 'spec/internal_test_hyrax/solr/config'
 
-      - run: bundle exec rails g hyrax:orcid:install
+      - run:
+          name: Install Hyrax Orcid
+          command: bundle exec rails g hyrax:orcid:install
 
-      - run: bundle exec rake app:db:create app:db:migrate
+      - run:
+          name: Migrate Databse
+          command: bundle exec rake app:db:create app:db:migrate
 
       - samvera/parallel_rspec
 
@@ -71,3 +76,4 @@ workflows:
       - bundle_lint_test:
           name: ruby2-7-1
           parallelism: 1
+
