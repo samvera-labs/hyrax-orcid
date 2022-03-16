@@ -8,7 +8,7 @@ Gem::Specification.new do |spec|
   spec.name          = "hyrax-orcid"
   spec.version       = Hyrax::Orcid::VERSION
   spec.authors       = ["Paul Danelli"]
-  spec.email         = ["prdanelli@gmail.com"]
+  spec.email         = ["tech@ubiquitypress.com", "prdanelli@gmail.com"]
 
   spec.summary       = "Hyrax plugin for interacting with ORCID"
   spec.description   = "Tools to link a repository profile with ORCID and process works"
