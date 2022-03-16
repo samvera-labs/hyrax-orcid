@@ -42,6 +42,10 @@ jobs:
       SETTINGS__BULKRAX__ENABLED: "true"
       RUBYOPT: "-W:no-deprecated -W:no-experimental"
       REDIS_NAMESPACE_QUIET: "true"
+      ORCID_ENVIRONMENT: sandbox
+      ORCID_CLIENT_ID: APP-IK56X6QNRRL9VNOM
+      ORCID_CLIENT_SECRET: f5154480-039b-4ad5-aaf4-aa6eb272c670
+      ORCID_AUTHORIZATION_REDIRECT: http://your-repo.com/dashboard/orcid_identity/new
 
     steps:
       - samvera/cached_checkout
