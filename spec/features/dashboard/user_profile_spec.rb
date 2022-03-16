@@ -126,7 +126,7 @@ RSpec.describe "The Dashboard User Profile Page", type: :feature, js: true, clea
     end
 
     context "when the user has a synced referenced work" do
-      let(:orcid_work) { orcid_identity.orcid_works.create(work_uuid: work.id, put_code: 123_456) }
+      let(:orcid_work) { orcid_identity.orcid_works.create(work_uuid: work.id, put_code: 123456) }
 
       it "displays the work with sync checked" do
         expect(page).to have_selector("tr.referenced-work", count: 1)
